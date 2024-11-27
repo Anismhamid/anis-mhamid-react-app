@@ -1,4 +1,5 @@
 export interface User {
+	_id: string;
 	name: {
 		first: string;
 		middle?: string;

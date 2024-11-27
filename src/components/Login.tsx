@@ -1,11 +1,36 @@
-import {FunctionComponent} from "react";
-import {useFormik} from "formik";
+import {FunctionComponent, useEffect, useState} from "react";
+import {FormikValues, useFormik} from "formik";
 import * as yup from "yup";
+import {User} from "../interfaces/User";
+import {useNavigate} from "react-router-dom";
+import {pathes} from "../routes/Routes";
+import Loading from "../assets/loading/Loading";
+import {getAllUsers} from "../services/userServices";
+import {errorMSG, successMSG} from "../assets/taosyify/Toastify";
 
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
-	const formik = useFormik({
+	const [users, setUsers] = useState<User[]>([]);
+	const [loading, setLoading] = useState<boolean>(true);
+	const [render, setRender] = useState<boolean>(true);
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		getAllUsers()
+			.then((response) => {
+				setUsers(response.data);
+				setLoading(false);
+				console.log(response.data);
+			})
+			.catch((error: Error) => {
+				console.log(error);
+			});
+	}, [render]);
+	const tesRendering = () => {
+		setRender(!render);
+	};
+	const formik: FormikValues = useFormik<FormikValues>({
 		initialValues: {email: "", password: ""},
 		validationSchema: yup.object({
 			email: yup
@@ -20,9 +45,22 @@ const Login: FunctionComponent<LoginProps> = () => {
 				.max(20, "Password must be at most 20 characters long"),
 		}),
 		onSubmit: (values) => {
-			console.log(values);
+			const checkUser = users.find((user) => user.email === values.email);
+
+			if (checkUser) {
+				localStorage.setItem("token", JSON.stringify(checkUser._id));
+				navigate(pathes.home);
+				successMSG(`welcome ${values.email}`);
+			} else {
+				errorMSG("invalid password or email");
+				tesRendering();
+			}
 		},
 	});
+
+	if (loading) {
+		return <Loading />;
+	}
 
 	return (
 		<main className='container'>
@@ -60,22 +98,14 @@ const Login: FunctionComponent<LoginProps> = () => {
 					)}
 					<label htmlFor='password'>Password</label>
 				</div>
-				{formik.isSubmitting &&
-					!formik.errors.email &&
-					!formik.errors.password && (
-						<div className='alert alert-danger mt-5' role='alert'>
-							Something went wrong, please try again
-						</div>
-					)}
 				{/* Submit Button */}
 				<button
 					type='submit'
-					className='mt-5 w-100'
-					disabled={formik.isSubmitting}
+					className='mt-5 w-100 bg-gradient'
+					disabled={!formik.dirty || !formik.isValid}
 				>
-					{formik.isSubmitting ? "just a sec..." : "Login"}
+					Login
 				</button>
-
 			</form>
 		</main>
 	);

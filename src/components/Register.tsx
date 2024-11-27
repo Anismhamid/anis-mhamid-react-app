@@ -6,8 +6,10 @@ import {User} from "../interfaces/User";
 interface RegisterProps {}
 
 const Register: FunctionComponent<RegisterProps> = () => {
+	
 	const formik = useFormik<User>({
 		initialValues: {
+			_id: "",
 			name: {
 				first: "",
 				middle: "",
@@ -78,7 +80,6 @@ const Register: FunctionComponent<RegisterProps> = () => {
 		}),
 		onSubmit: (values, {resetForm}) => {
 			console.log("Form submitted with values:", {...values});
-			// To check if Formik is actually calling this function
 			alert("Form submitted");
 			resetForm();
 		},

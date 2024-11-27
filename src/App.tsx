@@ -1,13 +1,14 @@
 import {BrowserRouter as Router, Routes} from "react-router-dom";
-import { routes} from "./routes/Routes";
+import {routes} from "./routes/Routes";
 import Navbar from "./components/Navbar";
+import {ToastContainer} from "react-toastify";
 
 function App() {
 	return (
 		<Router>
-			<Navbar/>
+			<ToastContainer />
+			<Navbar />
 			<Routes>
-				{routes.guests}
 				{routes.login}
 				{routes.home}
 				{routes.register}

@@ -1,19 +1,30 @@
-import {FunctionComponent} from "react";
-import {Link, NavLink} from "react-router-dom";
+import {FunctionComponent, useEffect, useState} from "react";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 
 interface NavbarProps {}
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
+	const navigate = useNavigate();
+	const haveToken: string | null = localStorage.getItem("token") || null;
+	const [chagned, setChagned] = useState<boolean>(false);
+	useEffect(() => {
+		if (haveToken) {
+			setChagned(!chagned);
+			navigate(pathes.home);
+		} else {
+			setChagned(!chagned);
+		}
+	}, []);
 	return (
 		<header className='w-100 sticky-top'>
 			<nav
-				className='navbar navbar-expand-lg bg-body-tertiary w-100'
+				className='p-0 navbar navbar-expand-lg bg-body-tertiary w-100'
 				data-bs-theme='dark'
 			>
 				<div className='container-fluid'>
-					<NavLink className='navbar-brand logo' to='/home'>
-						<img className=' img-fluid' src='/bCards.png' alt='' />
+					<NavLink className='navbar-brand logo' to={pathes.home}>
+						<img className='img-fluid w-75 border' src='/bCards.png' alt='bCards' />
 					</NavLink>
 					<button
 						className='navbar-toggler'
@@ -66,24 +77,40 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
 									</button>
 								</form>
 							</div>
-
-							<div className=' text-light'>
-								<Link
-									to={pathes.login}
-									type='button'
-									className='fw-bold w-50 m-auto'
-								>
-									LOGIN
-								</Link>
-								|
-								<NavLink
-									to={pathes.register}
-									type='button'
-									className='fw-bold w-50 m-auto'
-								>
-									REGISTERY
-								</NavLink>
-							</div>
+							{haveToken ? (
+								<>
+									<Link
+										to={pathes.login}
+										onClick={() => {
+											localStorage.removeItem("token");
+											setChagned(!chagned);
+										}}
+										className='fw-bold w-50 m-auto'
+									>
+										LogOut
+									</Link>
+								</>
+							) : (
+								<>
+									<div className=' text-light'>
+										<Link
+											to={pathes.login}
+											type='button'
+											className='fw-bold w-50 m-auto'
+										>
+											LOGIN
+										</Link>
+										|
+										<NavLink
+											to={pathes.register}
+											type='button'
+											className='fw-bold w-50 m-auto'
+										>
+											REGISTERY
+										</NavLink>
+									</div>
+								</>
+							)}
 						</div>
 					</div>
 				</div>
