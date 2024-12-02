@@ -1,22 +1,31 @@
 import {Route} from "react-router-dom";
-import Home from "../components/Cards";
 import Login from "../components/Login";
 import Register from "../components/Register";
 import FavCards from "../components/FavCards";
 import About from "../components/About";
+import Profile from "../components/Profile";
+import Cards from "../components/Cards";
+import SandBox from "../components/SandBox";
+import MyCards from "../components/MyCards";
 
 export const routes = {
-	home: <Route path='/' element={<Home />} />,
+	cards: <Route path='/' element={<Cards />} />,
 	login: <Route path='/login' element={<Login />} />,
 	register: <Route path='/register' element={<Register />} />,
 	favCards: <Route path='/fav-cards' element={<FavCards />} />,
 	about: <Route path='/about' element={<About />} />,
+	sandBox: <Route path='/sandBox' element={<SandBox />} />,
+	myCards: <Route path='/myCards' element={<MyCards />} />,
+	profile: <Route path='/profile' element={<Profile />} />,
 };
 
 export const pathes = {
-	home: "/",
+	cards: "/",
 	register: "/register",
 	login: "/login",
 	about: "/about",
 	favCards: "/fav-cards",
+	sandBox: "/sandBox",
+	myCards: "/myCards",
+	profile: "/profile",
 };

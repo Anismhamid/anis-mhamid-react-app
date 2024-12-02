@@ -1,58 +1,47 @@
-import {FunctionComponent, useEffect, useState} from "react";
-import Loading from "../assets/loading/Loading";
-import useToken from "../customHooks/useToken";
-import {getCardById, updateLikeStatus} from "../services/cardsServices"; // افترض أننا أضفنا هذه الدالة في الخدمات
+import {FunctionComponent, useState, useEffect} from "react";
+import {getMyCards, toggleLikeCard} from "../services/cardsServices"; // Assuming toggleLikeCard is your API function
 import {Cards} from "../interfaces/Cards";
 import Like from "../assets/likeButton.tsx/Like";
+import Loading from "../assets/loading/Loading";
 
 interface MyCardsProps {}
 
 const MyCards: FunctionComponent<MyCardsProps> = () => {
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const {afterDecode} = useToken();
 
 	useEffect(() => {
-		if (!afterDecode._id) {
-			setLoading(false);
-			return;
-		}
-		try {
-			getCardById(afterDecode._id).then((res) => {
+		getMyCards(
+			"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NzQ5OTM2YWY5ZDNlYTU4ZjYwOGQ1MzEiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjpmYWxzZSwiaWF0IjoxNzMzMTI4Njc3fQ.kc46hW5IEWVjvCYhq9EcAvkcy2RgZGFCEAgogJIXxDQ",
+		)
+			.then((res) => {
 				setCards(res);
 				setLoading(false);
+			})
+			.catch((err) => {
+				console.log(err);
+				setLoading(false);
 			});
-		} catch (err) {
-			console.log("Failed to fetch cards.");
-			setLoading(false);
-		}
-	}, [afterDecode]);
+	}, []);
 
 	const handleLikeToggle = (cardId: string) => {
-		const updatedCards = cards.map((card) => {
-			if (card._id === cardId) {
-				const isLiked = card.likes.includes(afterDecode._id);
-				console.log(isLiked,card._id);
-			}
-			return card;
+		toggleLikeCard(cardId).then((updatedCard:Cards) => {
+			setCards((prevCards) =>
+				prevCards.map((card) =>
+					card._id === cardId ? {...card, likes: updatedCard.likes} : card,
+				),
+			);
 		});
-
-		setCards(updatedCards);
-
-		updateLikeStatus(cardId, afterDecode._id);
 	};
 
-	if (loading) {
-		return <Loading />;
-	}
+	if (loading) return <Loading/>;
 
 	return (
 		<div className='container py-5'>
-			<h2 className='text-light'>My favorite Business Cards</h2>
+			<h2 className='text-light'>My Cards</h2>
 			<div className='row'>
 				{cards.map((card, index) => {
-					const isLiked = card.likes.includes(afterDecode._id);
-
+					const isLiked = card.likes.includes(card._id);
 					return (
 						<div key={index} className='col-12 col-md-6 col-xl-4 my-3'>
 							<div
@@ -94,8 +83,11 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 										<p className='card-text text-start lead fw-bold'>
 											City: {card.address.city}
 										</p>
-										<button className='btn btn-outline-danger'>
-											{card.likes ? "Unfavorite" : "Favorite"}
+										<button
+											className='btn btn-outline-danger'
+											onClick={() => handleLikeToggle(card._id)}
+										>
+											{isLiked ? "Unfavorite" : "Favorite"}
 										</button>
 										<hr />
 										<div className='d-flex justify-content-between align-items-center'>
@@ -111,7 +103,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 													}}
 													onClick={() =>
 														handleLikeToggle(card._id)
-													} 
+													}
 												>
 													<Like />
 												</button>

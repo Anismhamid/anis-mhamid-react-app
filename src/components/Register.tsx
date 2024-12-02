@@ -2,11 +2,16 @@ import {FunctionComponent} from "react";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {User} from "../interfaces/User";
+import {useNavigate} from "react-router-dom";
+import {pathes} from "../routes/Routes";
+import {registerNewUser} from "../services/userServices";
+import { successMSG } from "../assets/taosyify/Toastify";
 
 interface RegisterProps {}
 
 const Register: FunctionComponent<RegisterProps> = () => {
-	
+	const navigate = useNavigate();
+
 	const formik = useFormik<User>({
 		initialValues: {
 			_id: "",
@@ -61,7 +66,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 				imageUrl: yup
 					.string()
 					.min(14, "Image URL must be at least 14 characters long")
-					.url("Please provide a valid URL"),
+					.url("Please provide a valid URL").optional(),
 				alt: yup
 					.string()
 					.min(2, "Image alt text must be at least 2 characters long"),
@@ -74,28 +79,38 @@ const Register: FunctionComponent<RegisterProps> = () => {
 				houseNumber: yup.number().min(1).required("House number is required"),
 				zipCode: yup.number().min(2).required("Zip code is required"),
 			}),
-			isBusiness: yup
-				.boolean()
-				.required("Please select whether this is a business account"),
+			isBusiness: yup.boolean(),
 		}),
-		onSubmit: (values, {resetForm}) => {
-			console.log("Form submitted with values:", {...values});
-			alert("Form submitted");
-			resetForm();
+		onSubmit: (values) => {
+			console.log("Form data being submitted:", values);
+			registerNewUser(values)
+				.then((res) => {
+					console.log("Form submitted with values:", res.data);
+					successMSG("Form submitted");
+					navigate(pathes.cards);
+				})
+				.catch((err) => {
+					console.log(err);
+				});
 		},
 	});
+
+
+
+
 	return (
 		<main className='container'>
 			<h1 className='text-light my-5'>REGISTER</h1>
 			<form onSubmit={formik.handleSubmit}>
+
 				{/* First Name input */}
 				<div className='row'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='name.first'
-								className='form-control'
+								className='form-control bg-transparent text-light fw-bold'
 								id='name.first'
 								placeholder='Joe'
 								value={formik.values.name.first}
@@ -105,34 +120,39 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							{formik.touched.name?.first && formik.errors.name?.first && (
 								<p className='text-danger'>{formik.errors.name.first}</p>
 							)}
-							<label htmlFor='name.first'>First Name</label>
+							<label className=' text-light' htmlFor='name.first'>
+								First Name
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					{/* Middle Name input */}
+					<div className='col-md-6 col-sm-12'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='name.middle'
-								className='form-control'
+								className='form-control  bg-transparent text-light fw-bold'
 								id='name.middle'
 								placeholder='Middle Name'
 								value={formik.values.name.middle}
 								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
 							/>
-							<label htmlFor='name.middle'>Middle Name</label>
+							<label className=' text-light' htmlFor='name.middle'>
+								Middle Name
+							</label>
 						</div>
 					</div>
 				</div>
 
 				{/* Last Name and Phone */}
 				<div className='row mt-3'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='name.last'
-								className='form-control'
+								className=' form-control bg-transparent text-light fw-bold'
 								id='name.last'
 								placeholder='Doe'
 								value={formik.values.name.last}
@@ -142,16 +162,18 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							{formik.touched.name?.last && formik.errors.name?.last && (
 								<p className='text-danger'>{formik.errors.name.last}</p>
 							)}
-							<label htmlFor='name.last'>Last Name</label>
+							<label className=' text-light' htmlFor='name.last'>
+								Last Name
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								autoComplete='off'
 								type='tel'
 								name='phone'
-								className='form-control'
+								className='form-control  bg-transparent text-light fw-bold'
 								id='phone'
 								placeholder='Phone number'
 								value={formik.values.phone}
@@ -161,20 +183,22 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							{formik.touched.phone && formik.errors.phone && (
 								<p className='text-danger'>{formik.errors.phone}</p>
 							)}
-							<label htmlFor='phone'>Phone Number</label>
+							<label className=' text-light' htmlFor='phone'>
+								Phone Number
+							</label>
 						</div>
 					</div>
 				</div>
 
 				{/* Email and Password */}
 				<div className='row mt-3'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								autoComplete='off'
 								type='email'
 								name='email'
-								className='form-control'
+								className='form-control  bg-transparent text-light fw-bold'
 								id='email'
 								placeholder='Example@gmail.com'
 								value={formik.values.email}
@@ -184,15 +208,17 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							{formik.touched.email && formik.errors.email && (
 								<p className='text-danger'>{formik.errors.email}</p>
 							)}
-							<label htmlFor='email'>Email</label>
+							<label className=' text-light' htmlFor='email'>
+								Email
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='password'
 								name='password'
-								className='form-control'
+								className=' form-control bg-transparent text-light fw-bold'
 								id='password'
 								placeholder='Password'
 								value={formik.values.password}
@@ -202,69 +228,76 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							{formik.touched.password && formik.errors.password && (
 								<p className='text-danger'>{formik.errors.password}</p>
 							)}
-							<label htmlFor='password'>Password</label>
+							<label className=' text-light' htmlFor='password'>
+								Password
+							</label>
 						</div>
 					</div>
 				</div>
 
 				{/* Image URL and Alt Text */}
 				<div className='row mt-3'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='img.imageUrl'
-								className='form-control'
+								className='form-control bg-transparent text-light fw-bold'
 								id='img.imageUrl'
 								placeholder='Image URL'
 								value={formik.values.img?.imageUrl}
 								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
 							/>
-
-							<label htmlFor='img.imageUrl'>Image URL</label>
+							<label className='text-light' htmlFor='img.imageUrl'>
+								Image URL
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='img.alt'
-								className='form-control'
+								className='= form-control bg-transparent text-light fw-bold'
 								id='img.alt'
 								placeholder='Image Alt Text'
 								value={formik.values.img?.alt}
 								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
 							/>
-							<label htmlFor='img.alt'>Image Alt Text</label>
+							<label className=' text-light' htmlFor='img.alt'>
+								Image Alt Text
+							</label>
 						</div>
 					</div>
 				</div>
 
 				{/* Address fields */}
 				<div className='row mt-3'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='address.state'
-								className='form-control'
+								className='form-control  bg-transparent text-light fw-bold'
 								id='address.state'
 								placeholder='State'
 								value={formik.values.address.state}
 								onBlur={formik.handleBlur}
 								onChange={formik.handleChange}
 							/>
-							<label htmlFor='address.state'>State</label>
+							<label className=' text-light' htmlFor='address.state'>
+								State
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='address.country'
-								className='form-control'
+								className=' form-control bg-transparent text-light fw-bold'
 								id='address.country'
 								placeholder='address.Country'
 								value={formik.values.address.country}
@@ -277,19 +310,21 @@ const Register: FunctionComponent<RegisterProps> = () => {
 										{formik.errors.address.country}
 									</p>
 								)}
-							<label htmlFor='address.country'>Country</label>
+							<label className=' text-light' htmlFor='address.country'>
+								Country
+							</label>
 						</div>
 					</div>
 				</div>
 
 				{/* Continue Address (City, Street, House Number, Zip Code) */}
 				<div className='row mt-3'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='address.city'
-								className='form-control'
+								className='form-control  bg-transparent text-light fw-bold'
 								id='address.city'
 								placeholder='address.City'
 								value={formik.values.address.city}
@@ -302,15 +337,17 @@ const Register: FunctionComponent<RegisterProps> = () => {
 										{formik.errors.address.city}
 									</p>
 								)}
-							<label htmlFor='address.city'>City</label>
+							<label className=' text-light' htmlFor='address.city'>
+								City
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='text'
 								name='address.street'
-								className='form-control'
+								className=' form-control bg-transparent text-light fw-bold'
 								id='address.street'
 								placeholder='address.Street'
 								value={formik.values.address.street}
@@ -323,18 +360,20 @@ const Register: FunctionComponent<RegisterProps> = () => {
 										{formik.errors.address.street}
 									</p>
 								)}
-							<label htmlFor='address.street'>Street</label>
+							<label className=' text-light' htmlFor='address.street'>
+								Street
+							</label>
 						</div>
 					</div>
 				</div>
 
 				<div className='row mt-3'>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='number'
 								name='address.houseNumber'
-								className='form-control'
+								className='form-control - bg-transparent text-light fw-bold'
 								id='address.houseNumber'
 								placeholder='House Number'
 								value={formik.values.address.houseNumber}
@@ -347,15 +386,17 @@ const Register: FunctionComponent<RegisterProps> = () => {
 										{formik.errors.address.houseNumber}
 									</p>
 								)}
-							<label htmlFor='address.houseNumber'>House Number</label>
+							<label className=' fw-bold' htmlFor='address.houseNumber'>
+								House Number
+							</label>
 						</div>
 					</div>
-					<div className='col-6'>
+					<div className='col-md-6 col-sm-12 mt-2'>
 						<div className='form-floating'>
 							<input
 								type='number'
 								name='address.zipCode'
-								className='form-control'
+								className='- form-control bg-transparent text-light fw-bold'
 								id='address.zipCode'
 								placeholder='Zip Code'
 								value={formik.values.address.zipCode}
@@ -368,19 +409,21 @@ const Register: FunctionComponent<RegisterProps> = () => {
 										{formik.errors.address.zipCode}
 									</p>
 								)}
-							<label htmlFor='address.zipCode'>Zip Code</label>
+							<label htmlFor='address.zipCode' className=' fw-bold'>
+								Zip Code
+							</label>
 						</div>
 					</div>
 				</div>
 				<div className='row'>
 					{/* Business checkbox */}
-					{/* <div className='form-check mt-3 w-50 border pt-1'>
+					<div className='form-check mt-3 w-50 border pt-1'>
 						<input
 							name='isBusiness'
 							className='form-check-input'
 							type='checkbox'
 							id='isBusiness'
-							checked={formik.values.isBusiness}
+							checked={formik.values.isBusiness ? true : false}
 							onChange={formik.handleChange}
 						/>
 						<label
@@ -389,8 +432,9 @@ const Register: FunctionComponent<RegisterProps> = () => {
 						>
 							business account
 						</label>
-					</div>*/}
+					</div>
 				</div>
+
 				{/* Submit Button */}
 				<button type='submit' className='mt-5 w-100'>
 					REGISTER

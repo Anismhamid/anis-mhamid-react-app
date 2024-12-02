@@ -9,8 +9,8 @@ export interface User {
 	email: string;
 	password: string;
 	img?: {
-		imageUrl: string;
-		alt: string;
+		imageUrl?: string;
+		alt?: string;
 	};
 	address: {
 		state?: string;
@@ -21,4 +21,10 @@ export interface User {
 		zipCode: number;
 	};
 	isBusiness: boolean;
+	isAdmin?: boolean;
+}
+
+export interface UserLogin {
+	email: string;
+	password: string;
 }

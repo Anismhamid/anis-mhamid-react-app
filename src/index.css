@@ -55,3 +55,6 @@ button:focus,
 button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
+.table tbody tr:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}

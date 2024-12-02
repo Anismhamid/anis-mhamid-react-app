@@ -21,7 +21,7 @@ export interface Cards {
 		_id: string;
 	};
 	bizNumber: number;
-	likes: [];
+	likes: string[];
 	user_id: string;
 	createdAt: string;
 	__v: number;
