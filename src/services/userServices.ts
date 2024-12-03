@@ -39,5 +39,11 @@ export const getUserById = async (userId: User) => {
 
 // Register a new user
 export const registerNewUser = (user: User) => {
-	return axios.post(`${api}`, user);
+	const response = axios.request({
+		...getUsers,
+		headers: {"Content-Type": "application/json"},
+		method: "post",
+		data: user,
+	});
+	return response;
 };

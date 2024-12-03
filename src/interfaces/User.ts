@@ -1,5 +1,5 @@
 export interface User {
-	_id: string;
+	_id?: "";
 	name: {
 		first: string;
 		middle?: string;
@@ -8,7 +8,7 @@ export interface User {
 	phone: string;
 	email: string;
 	password: string;
-	img?: {
+	image?: {
 		imageUrl?: string;
 		alt?: string;
 	};
@@ -18,10 +18,9 @@ export interface User {
 		city: string;
 		street: string;
 		houseNumber: number;
-		zipCode: number;
+		zip: number;
 	};
 	isBusiness: boolean;
-	isAdmin?: boolean;
 }
 
 export interface UserLogin {

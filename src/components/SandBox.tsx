@@ -1,46 +1,76 @@
-import {FunctionComponent, useEffect, useState} from "react";
+import {FunctionComponent, MutableRefObject, useEffect, useRef, useState} from "react";
 import useToken from "../customHooks/useToken";
 import {getAllUsers} from "../services/userServices";
 import {User} from "../interfaces/User";
 import Loading from "../assets/loading/Loading";
 import {Link} from "react-router-dom";
 import {edit, trash} from "../fontAwesome/Icons";
+import {Pagination} from "react-bootstrap";
 
-interface SandBoxProps {}
-
-const SandBox: FunctionComponent<SandBoxProps> = () => {
-	const [isLoading, setISLoading] = useState<boolean>(true);
+const SandBox: FunctionComponent = () => {
+	const inputRef = useRef<HTMLInputElement | null>(null);
+	const [isLoading, setISLoading] = useState(true);
 	const [users, setUsers] = useState<User[]>([]);
 	const {afterDecode} = useToken();
+	const [currentPage, setCurrentPage] = useState(1);
+	const usersPerPage = 50;
+
+	useEffect(() => {
+		if (afterDecode?.isAdmin) {
+			getAllUsers()
+				.then((res) => {
+					setUsers(res);
+					setISLoading(false);
+				})
+				.catch(console.log);
+		}
+	}, [afterDecode]);
+
+	if (isLoading) return <Loading />;
+
+	// Pagination logic
+	const startIndex = (currentPage - 1) * usersPerPage;
+	const currentUsers = users.slice(startIndex, startIndex + usersPerPage);
 
 	const handleEdit = (userId: string) => {
 		console.log(`Editing user with id: ${userId}`);
 	};
 
 	const handleDelete = (userId: string) => {
-		console.log(`Deleting user with id: ${userId}`);
+		setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId));
 	};
 
-	useEffect(() => {
-		if (afterDecode && afterDecode._id && afterDecode.isAdmin === true) {
-			getAllUsers()
-				.then((res) => {
-					setUsers(res);
-					setISLoading(false);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
-		}
-	}, [afterDecode, handleDelete, handleEdit]);
-
-	if (isLoading) {
-		return <Loading />;
-	}
+	const handleSearch = (userId: string) => {
+		const seatchResult =users.find((user) => user._id === userId);
+		console.log(seatchResult);
+		
+	};
 
 	return (
 		<>
-			<h1 className='text-light'>SandBox</h1>
+			<div className=' d-flex justify-content-around'>
+				<h1 className='text-light'>SandBox</h1>
+				{/* <form
+					className='d-flex me-3 w-25'
+					onSubmit={(e) => {
+						e.preventDefault();
+					}}
+				> */}
+				<input
+					ref={inputRef}
+					id='search2'
+					name='search2'
+					className='form-control me-2 search-input'
+					type='search2'
+					placeholder='Search2'
+					aria-label='Search2'
+					onChange={()=>handleSearch("653a608d1c7cd80c1fd27532")}
+				/>
+				{/* <button className='btn btn-outline-light' type='submit'>
+						Search
+					</button>
+				</form> */}
+			</div>
 			<div className='table-responsive'>
 				<table className='table table-striped table-dark'>
 					<thead>
@@ -53,8 +83,8 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 						</tr>
 					</thead>
 					<tbody>
-						{users.length ? (
-							users.map((user) => (
+						{currentUsers.length ? (
+							currentUsers.map((user) => (
 								<tr key={user._id}>
 									<td>
 										{user.name.first} {user.name.last}
@@ -65,13 +95,10 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 											<img
 												className='img-fluid'
 												src={
-													user.img?.imageUrl ||
+													user.image?.imageUrl ||
 													"/avatar-design.png"
 												}
-												alt={
-													user.img?.alt ||
-													`${user.name.first}'s profile`
-												}
+												alt={`${user.name.first}'s profile`}
 												style={{
 													width: "50px",
 													height: "50px",
@@ -83,17 +110,14 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 									{afterDecode.isAdmin && (
 										<>
 											<td>
-												<button
-													className='btn text-warning'
-													onClick={() => handleEdit(user._id)}
-												>
+												<button className='btn text-warning'>
 													{edit}
 												</button>
 											</td>
 											<td>
 												<button
 													className='btn text-danger'
-													onClick={() => handleDelete(user._id)}
+													onClick={() => handleDelete}
 												>
 													{trash}
 												</button>
@@ -104,13 +128,28 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 							))
 						) : (
 							<tr>
-								<td colSpan={5} className='text-center'>
+								<td colSpan={12} className='text-center'>
 									No Data Available
 								</td>
 							</tr>
 						)}
 					</tbody>
 				</table>
+				<div className='container-sm'>
+					<Pagination className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'>
+						{[...Array(Math.ceil(users.length / usersPerPage))].map(
+							(_, i) => (
+								<Pagination.Item
+									key={i}
+									active={currentPage === i + 1}
+									onClick={() => setCurrentPage(i + 1)}
+								>
+									{i + 1}
+								</Pagination.Item>
+							),
+						)}
+					</Pagination>
+				</div>
 			</div>
 		</>
 	);

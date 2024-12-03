@@ -1,14 +1,14 @@
 import {FunctionComponent} from "react";
-import "./like.css";
+import styles from "./like.module.css";
 
 interface LikeProps {}
 
 const Like: FunctionComponent<LikeProps> = () => {
 	return (
 		<>
-			<label className='ui-like'>
+			<label className={styles.uiLike}>
 				<input type='checkbox' />
-				<div className='like'>
+				<div className={styles.like}>
 					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill=''>
 						<g strokeWidth='0' id='SVGRepo_bgCarrier'></g>
 						<g

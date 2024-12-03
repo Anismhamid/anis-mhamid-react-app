@@ -1,4 +1,4 @@
-.ui-like {
+.uiLike {
   --icon-size: 24px;
   --icon-secondary-color: rgb(172, 172, 172);
   --icon-hover-color: rgb(211, 205, 205);
@@ -8,14 +8,14 @@
   --icon-anmt-duration: 0.3s;
 }
 
-.ui-like input {
+.uiLike input {
   -webkit-appearance: none;
   -moz-appearance: none;
   appearance: none;
   display: none;
 }
 
-.ui-like .like {
+.uiLike .like {
   width: var(--icon-size);
   height: auto;
   fill: var(--icon-secondary-color);
@@ -75,11 +75,11 @@
 
 /* actions */
 
-.ui-like:hover .like {
+.uiLike:hover .like {
   fill: var(--icon-hover-color);
 }
 
-.ui-like input:checked + .like::after {
+.uiLike input:checked + .like::after {
   -webkit-animation: circles var(--icon-anmt-duration)
     cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   animation: circles var(--icon-anmt-duration)
@@ -88,7 +88,7 @@
   animation-delay: var(--icon-anmt-duration);
 }
 
-.ui-like input:checked + .like {
+.uiLike input:checked + .like {
   fill: var(--icon-primary-color);
   -webkit-animation: like var(--icon-anmt-duration) forwards;
   animation: like var(--icon-anmt-duration) forwards;
@@ -97,7 +97,7 @@
   transition-delay: 0.3s;
 }
 
-.ui-like input:checked + .like::before {
+.uiLike input:checked + .like::before {
   -webkit-animation: circle var(--icon-anmt-duration)
     cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
   animation: circle var(--icon-anmt-duration)

@@ -13,23 +13,29 @@ const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({onHide, show}
 		<>
 			<Modal
 				show={show}
-				size="lg"
+				size='lg'
 				onHide={() => onHide()}
 				backdrop='static'
 				keyboard={false}
+				data-bs-theme='dark'
 				centered
 			>
 				<Modal.Header closeButton>
-					<Modal.Title>ADD CARD</Modal.Title>
+					<Modal.Title className=' text-light display-6'>
+						Upload CARD
+					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<AddNewCardForm />
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant='secondary' onClick={() => onHide()}>
-						Close
+					<Button
+						variant='danger'
+						className='text-uppercase fw-bold'
+						onClick={() => onHide()}
+					>
+						Dismantle
 					</Button>
-					<Button variant='primary'>Understood</Button>
 				</Modal.Footer>
 			</Modal>
 		</>
