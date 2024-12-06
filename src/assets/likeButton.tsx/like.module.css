@@ -56,15 +56,13 @@
 	transform: translateY(40px);
 }
 
-.on:checked ~ .like .likeIcon {
-	fill: #fc4e4e;
-	animation: enlarge 0.2s ease-out 1;
-	transition: all 0.2s ease-out;
+.hiddenCheckbox:checked + label .likeIcon {
+  fill: red;
 }
 
-.on:checked ~ .likeCount.two {
-	transform: translateX(0);
-	color: #fcfcfc;
+.hiddenCheckbox:checked + label .likeText,
+.hiddenCheckbox:checked + label .likeCount {
+  color: red; 
 }
 
 .on:checked ~ .likeCount.one {

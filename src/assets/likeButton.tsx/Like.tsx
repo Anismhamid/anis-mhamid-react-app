@@ -1,4 +1,4 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, useState, useEffect} from "react";
 import styles from "./like.module.css";
 
 interface LikeProps {
@@ -14,18 +14,40 @@ const Like: FunctionComponent<LikeProps> = ({
 	likeColor,
 	onClick,
 }) => {
+	const [isLiked, setIsLiked] = useState<boolean>(false);
+
+	useEffect(() => {
+		const savedLikeStatus = localStorage.getItem(buttonId);
+		if (savedLikeStatus === "true") {
+			setIsLiked(true);
+		} else {
+			setIsLiked(false);
+		}
+	}, [buttonId]);
+
+	const handleLikeToggle = () => {
+		setIsLiked((prev) => {
+			const newStatus = !prev;
+			localStorage.setItem(buttonId, newStatus.toString());
+			return newStatus;
+		});
+		onClick();
+	};
+
 	return (
 		<div className={styles.likeButton}>
 			<input
-				onClick={onClick}
+				onClick={handleLikeToggle}
 				className={`${likeColor} ${styles.hiddenCheckbox}`}
 				id={buttonId}
 				type='checkbox'
+				checked={isLiked}
+				readOnly
 			/>
-			<label className={styles.like} htmlFor={buttonId}>
+			<label className={`${styles.like}`} htmlFor={buttonId}>
 				<svg
-					className={`${styles.likeIcon} ${likeColor} ${styles.one}`}
-					fillRule='nonzero'
+					className={`${styles.likeIcon} ${styles.one}`}
+					fill='currentColor'
 					viewBox='0 0 24 24'
 					xmlns='http://www.w3.org/2000/svg'
 				>
@@ -33,9 +55,9 @@ const Like: FunctionComponent<LikeProps> = ({
 				</svg>
 				<span className={styles.likeText}>Likes</span>
 			</label>
-			{/* <span className={`${styles.likeCount} ${styles.one}`}>{likesLength}</span> */}
+			<span className={`${styles.likeCount} ${styles.one}`}>{likesLength}</span>
 			<span className={` ${likeColor} ${styles.likeCount} ${styles.one}`}>
-				{likesLength | likesLength}
+				{likesLength}
 			</span>
 		</div>
 	);
