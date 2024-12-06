@@ -1,12 +1,14 @@
-import {FunctionComponent, useEffect} from "react";
+import {FunctionComponent, useEffect, useState} from "react";
 import {Link, NavLink} from "react-router-dom";
-import {pathes} from "../../routes/Routes";
-import {useUserContext} from "../../context/UserContext";
-import useToken from "../../customHooks/useToken";
+import {pathes} from "../routes/Routes";
+import {useUserContext} from "../context/UserContext";
+import useToken from "../customHooks/useToken";
 
 interface NavbarProps {}
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
+	const [loading, setLoading] = useState<boolean>(true);
+	
 	const {
 		setAuth,
 		isLogedIn,
@@ -16,14 +18,14 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
 		setIsBusiness,
 		isBusiness,
 	} = useUserContext();
-	const {afterDecode} = useToken();
+	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		if (afterDecode) {
-			setAuth(afterDecode);
+		if (decodedToken) {
+			setAuth(decodedToken);
 			setIsLogedIn(true);
-			setIsAdmin(afterDecode.isAdmin);
-			setIsBusiness(afterDecode.isBusiness);
+			setIsAdmin(decodedToken.isAdmin);
+			setIsBusiness(decodedToken.isBusiness);
 		} else {
 			setIsLogedIn(false);
 			setIsAdmin(false);
@@ -38,7 +40,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
 	};
 
 	return (
-		<header className='w-100 sticky-top navbar-container'>
+		<header className='w-100 sticky-top'>
 			<nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow-lg'>
 				<div className='container-fluid'>
 					<NavLink className='navbar-brand logo' to={pathes.cards}>

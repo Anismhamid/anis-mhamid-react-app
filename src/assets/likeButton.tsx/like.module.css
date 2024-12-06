@@ -1,201 +1,81 @@
-.uiLike {
-  --icon-size: 24px;
-  --icon-secondary-color: rgb(172, 172, 172);
-  --icon-hover-color: rgb(211, 205, 205);
-  --icon-primary-color: rgb(230, 26, 26);
-  --icon-circle-border: 1px solid var(--icon-primary-color);
-  --icon-circle-size: 35px;
-  --icon-anmt-duration: 0.3s;
+.hiddenCheckbox {
+	display: none;
 }
 
-.uiLike input {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: none;
+.likeButton {
+	position: relative;
+	cursor: pointer;
+	display: flex;
+	height: 48px;
+	width: 136px;
+	border-radius: 16px;
+	border: none;
+	background-color: #1d1d1d;
+	overflow: hidden;
+	box-shadow: inset -2px -2px 5px rgba(255, 255, 255, 0.2),
+		inset 2px 2px 5px rgba(175, 8, 8, 0.1), 4px 4px 10px rgba(0, 0, 0, 0.4),
+		-2px -2px 8px rgba(187, 17, 17, 0.1);
 }
 
-.uiLike .like {
-  width: var(--icon-size);
-  height: auto;
-  fill: var(--icon-secondary-color);
-  cursor: pointer;
-  -webkit-transition: 0.2s;
-  -o-transition: 0.2s;
-  transition: 0.2s;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  -webkit-transform-origin: top;
-  -ms-transform-origin: top;
-  transform-origin: top;
+.like {
+	width: 70%;
+	height: 100%;
+	display: flex;
+	cursor: pointer;
+	align-items: center;
+	justify-content: space-evenly;
 }
 
-.like::after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  -webkit-box-shadow: 0 30px 0 -4px var(--icon-primary-color),
-    30px 0 0 -4px var(--icon-primary-color),
-    0 -30px 0 -4px var(--icon-primary-color),
-    -30px 0 0 -4px var(--icon-primary-color),
-    -22px 22px 0 -4px var(--icon-primary-color),
-    -22px -22px 0 -4px var(--icon-primary-color),
-    22px -22px 0 -4px var(--icon-primary-color),
-    22px 22px 0 -4px var(--icon-primary-color);
-  box-shadow: 0 30px 0 -4px var(--icon-primary-color),
-    30px 0 0 -4px var(--icon-primary-color),
-    0 -30px 0 -4px var(--icon-primary-color),
-    -30px 0 0 -4px var(--icon-primary-color),
-    -22px 22px 0 -4px var(--icon-primary-color),
-    -22px -22px 0 -4px var(--icon-primary-color),
-    22px -22px 0 -4px var(--icon-primary-color),
-    22px 22px 0 -4px var(--icon-primary-color);
-  border-radius: 50%;
-  -webkit-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
+.likeIcon {
+	fill: #505050;
+	height: 28px;
+	width: 28px;
 }
 
-.like::before {
-  content: "";
-  position: absolute;
-  border-radius: 50%;
-  border: var(--icon-circle-border);
-  opacity: 0;
+.likeText {
+	color: #fcfcfc;
+	font-size: 16px;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* actions */
-
-.uiLike:hover .like {
-  fill: var(--icon-hover-color);
+.likeCount {
+	position: absolute;
+	right: 0;
+	width: 30%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	color: #717070;
+	font-size: 16px;
+	border-left: 2px solid #4e4e4e;
+	transition: all 0.5s ease-out;
 }
 
-.uiLike input:checked + .like::after {
-  -webkit-animation: circles var(--icon-anmt-duration)
-    cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  animation: circles var(--icon-anmt-duration)
-    cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  -webkit-animation-delay: var(--icon-anmt-duration);
-  animation-delay: var(--icon-anmt-duration);
+.likeCount.two {
+	transform: translateY(40px);
 }
 
-.uiLike input:checked + .like {
-  fill: var(--icon-primary-color);
-  -webkit-animation: like var(--icon-anmt-duration) forwards;
-  animation: like var(--icon-anmt-duration) forwards;
-  -webkit-transition-delay: 0.3s;
-  -o-transition-delay: 0.3s;
-  transition-delay: 0.3s;
+.on:checked ~ .like .likeIcon {
+	fill: #fc4e4e;
+	animation: enlarge 0.2s ease-out 1;
+	transition: all 0.2s ease-out;
 }
 
-.uiLike input:checked + .like::before {
-  -webkit-animation: circle var(--icon-anmt-duration)
-    cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  animation: circle var(--icon-anmt-duration)
-    cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-  -webkit-animation-delay: var(--icon-anmt-duration);
-  animation-delay: var(--icon-anmt-duration);
+.on:checked ~ .likeCount.two {
+	transform: translateX(0);
+	color: #fcfcfc;
 }
 
-@-webkit-keyframes like {
-  50% {
-    -webkit-transform: scaleY(0.6);
-    transform: scaleY(0.6);
-  }
-
-  100% {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-  }
+.on:checked ~ .likeCount.one {
+	transform: translateY(-40px);
 }
 
-@keyframes like {
-  50% {
-    -webkit-transform: scaleY(0.6);
-    transform: scaleY(0.6);
-  }
-
-  100% {
-    -webkit-transform: scaleY(1);
-    transform: scaleY(1);
-  }
-}
-
-@-webkit-keyframes circle {
-  from {
-    width: 0;
-    height: 0;
-    opacity: 0;
-  }
-
-  90% {
-    width: var(--icon-circle-size);
-    height: var(--icon-circle-size);
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes circle {
-  from {
-    width: 0;
-    height: 0;
-    opacity: 0;
-  }
-
-  90% {
-    width: var(--icon-circle-size);
-    height: var(--icon-circle-size);
-    opacity: 1;
-  }
-
-  to {
-    opacity: 0;
-  }
-}
-
-@-webkit-keyframes circles {
-  from {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-  }
-
-  40% {
-    opacity: 1;
-  }
-
-  to {
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-    opacity: 0;
-  }
-}
-
-@keyframes circles {
-  from {
-    -webkit-transform: scale(0);
-    transform: scale(0);
-  }
-
-  40% {
-    opacity: 1;
-  }
-
-  to {
-    -webkit-transform: scale(0.8);
-    transform: scale(0.8);
-    opacity: 0;
-  }
+@keyframes enlarge {
+	0% {
+		transform: scale(0.5);
+	}
+	100% {
+		transform: scale(1.2);
+	}
 }

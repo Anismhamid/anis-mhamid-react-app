@@ -1,7 +1,10 @@
 .loader {
 	width: 80px;
-	height: 50px;
+	height:100px;
 	position: relative;
+	top: 250px;
+	margin: auto;
+	
 }
 
 .loaderText {

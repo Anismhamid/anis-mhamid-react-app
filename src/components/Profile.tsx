@@ -2,17 +2,18 @@ import {FunctionComponent, useEffect, useState} from "react";
 import useToken from "../customHooks/useToken";
 import {getUserById} from "../services/userServices";
 import Loading from "../assets/loading/Loading";
+import {ex, ve} from "../fontAwesome/Icons";
 
 interface ProfileProps {}
 
 const Profile: FunctionComponent<ProfileProps> = () => {
 	const [user, setUser] = useState<any>({});
 	const [isLoadnig, setIsLoading] = useState<boolean>(true);
-	const {afterDecode} = useToken();
+	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		if (afterDecode && afterDecode._id) {
-			getUserById(afterDecode)
+		if (decodedToken && decodedToken._id) {
+			getUserById(decodedToken)
 				.then((res) => {
 					setIsLoading(false);
 					setUser(res);
@@ -22,12 +23,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					setIsLoading(false);
 				});
 		}
-	}, [afterDecode._id]);
+	}, [decodedToken._id]);
 
 	if (isLoadnig) {
 		return <Loading />;
 	}
-
 
 	return (
 		<div className='container my-5'>
@@ -52,34 +52,52 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						</div>
 					</div>
 
-					<table className='table table-bordered table-striped table-dark'>
+					<table
+						className='table table-bordered table-striped h5'
+						data-bs-theme='dark'
+					>
+						<thead>
+							<tr>
+								<th colSpan={4}>Phone</th>
+								<th colSpan={3}>Role</th>
+								<th colSpan={1}>Business account</th>
+								<th colSpan={4}>Last active</th>
+							</tr>
+						</thead>
 						<tbody>
 							<tr>
-								<th className='text-light'>Phone</th>
-								<td>{user.phone || "N/A"}</td>
-							</tr>
-							<tr>
-								<th className='text-light'>Role</th>
+								<td colSpan={4}>{user.phone || "N/A"}</td>
 								<td
+									colSpan={3}
 									className={
 										user.isAdmin
 											? "text-success fw-bold"
 											: "text-danger"
 									}
 								>
-									{user.isAdmin ? "Admin" : "No"}
+									{user.isAdmin ? "Admin" : "User"}
 								</td>
-							</tr>
-							<tr>
-								<th className='text-light'>Business</th>
+
 								<td
+									colSpan={1}
 									className={
 										user.isBusiness
 											? "text-success fw-bold"
 											: "text-danger"
 									}
 								>
-									{user.isBusiness ? "Yes" : "No"}
+									{user.isBusiness ? ve : ex}
+								</td>
+
+								<td
+									colSpan={4}
+									className={
+										user.isBusiness
+											? "text-success fw-bold"
+											: "text-danger"
+									}
+								>
+									{(new Date().getDate(), new Date().getFullYear())}
 								</td>
 							</tr>
 						</tbody>

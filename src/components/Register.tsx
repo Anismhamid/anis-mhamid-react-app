@@ -1,4 +1,4 @@
-import {ChangeEvent, FocusEvent, FunctionComponent} from "react";
+import {FunctionComponent} from "react";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {User} from "../interfaces/User";
@@ -84,16 +84,10 @@ const Register: FunctionComponent<RegisterProps> = () => {
 			isBusiness: yup.boolean(),
 		}),
 		onSubmit: (values) => {
-			registerNewUser(values)
+			registerNewUser({...values, isBusiness: formik.values.isBusiness})
 				.then((res) => {
-					// const jwt = require("jsonwebtoken");
-					// const payload = {res};
-					// const secretKey = "new Date().getTime()";
-					// const token = jwt.sign(payload, secretKey);
-
-					// console.log("JWT Token:", token);
-					document.cookie = `token=${res}; path=/; secure; HttpOnly; SameSite=Strict`;
-					successMSG("Form submitted");
+					navigate(pathes.login);
+					successMSG(`welcome${res.config.auth?.username}`);
 					navigate(pathes.cards);
 				})
 				.catch((err) => {

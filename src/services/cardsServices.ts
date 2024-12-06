@@ -1,7 +1,7 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {Cards} from "../interfaces/Cards";
 
-const api: string = import.meta.env.VITE_API_URL as string;
+const api: string = import.meta.env.VITE_API_URL;
 
 let getCards: AxiosRequestConfig = {
 	method: "get",
@@ -20,11 +20,11 @@ export const getAllCards = async (): Promise<Cards[]> => {
 	}
 };
 
-export const getCardById = async (userId: string): Promise<any> => {
+export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
 	try {
-		const response = await axios({
+		const response = await axios.request({
 			...getCards,
-			url: `${api}/cards?user_id=${userId}`,
+			url: `${api}/cards?likes=${userId}`,
 		});
 		return response.data;
 	} catch (error) {
@@ -33,39 +33,48 @@ export const getCardById = async (userId: string): Promise<any> => {
 	}
 };
 
-export const updateLikeStatus = async (cardId: string, userId: string): Promise<any> => {
-	try {
-		const response = await axios.post(`/${api}/cards/${cardId}/likes`, {userId});
 
-		return response.data;
+export const updateLikeStatus = async (cardId: string, userId: string): Promise<any> => {
+	const token = localStorage.getItem("token");
+	if (!token) {
+		throw new Error("No token found, please log in again");
+	}
+
+	try {
+		const payload = {
+			cardId,
+			userId,
+		};
+
+		const updatedCard = await axios.request({
+			method: "patch",
+			url: `${api}/cards/${payload.cardId}?likes=${userId}`,
+			headers: {
+				"x-auth-token": token,
+			},
+			data: payload,
+		});
+
+		// Return the updated card data from the response
+		return updatedCard.data;
 	} catch (error) {
 		console.error("Failed to update like status:", error);
 		throw error;
 	}
 };
 
-export const toggleLikeCard = async (cardId: string) => {
-	try {
-		const response = await fetch(`/api/cards/${cardId}/toggle-like`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		const updatedCard = await response.json();
-		return updatedCard; // Return the updated card with the new likes array
-	} catch (error) {
-		throw new Error("Failed to toggle like");
+
+export const getMyCards = async (userId: string) => {
+	let token = localStorage.getItem("token");
+	if (!token) {
+		throw new Error("User not authenticated");
 	}
-};
 
-
-export const getMyCards = async (token: string) => {
 	const response = await axios.request({
 		...getCards,
-		headers: {
-			"x-auth-token": token,
-		},
+		headers: {"x-auth-token": token},
+		url: `${api}/cards/my-cards?user_id=${userId}`,
 	});
-	return response.data
+
+	return response.data;
 };

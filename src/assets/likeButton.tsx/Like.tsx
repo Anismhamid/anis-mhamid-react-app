@@ -1,28 +1,43 @@
 import {FunctionComponent} from "react";
 import styles from "./like.module.css";
 
-interface LikeProps {}
+interface LikeProps {
+	buttonId: string;
+	likesLength: number;
+	likeColor: {[key: string]: string} | string;
+	onClick: () => void;
+}
 
-const Like: FunctionComponent<LikeProps> = () => {
+const Like: FunctionComponent<LikeProps> = ({
+	buttonId,
+	likesLength,
+	likeColor,
+	onClick,
+}) => {
 	return (
-		<>
-			<label className={styles.uiLike}>
-				<input type='checkbox' />
-				<div className={styles.like}>
-					<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill=''>
-						<g strokeWidth='0' id='SVGRepo_bgCarrier'></g>
-						<g
-							strokeLinejoin='round'
-							strokeLinecap='round'
-							id='SVGRepo_tracerCarrier'
-						></g>
-						<g id='SVGRepo_iconCarrier'>
-							<path d='M20.808,11.079C19.829,16.132,12,20.5,12,20.5s-7.829-4.368-8.808-9.421C2.227,6.1,5.066,3.5,8,3.5a4.444,4.444,0,0,1,4,2,4.444,4.444,0,0,1,4-2C18.934,3.5,21.773,6.1,20.808,11.079Z'></path>
-						</g>
-					</svg>
-				</div>
+		<div className={styles.likeButton}>
+			<input
+				onClick={onClick}
+				className={`${likeColor} ${styles.hiddenCheckbox}`}
+				id={buttonId}
+				type='checkbox'
+			/>
+			<label className={styles.like} htmlFor={buttonId}>
+				<svg
+					className={`${styles.likeIcon} ${likeColor} ${styles.one}`}
+					fillRule='nonzero'
+					viewBox='0 0 24 24'
+					xmlns='http://www.w3.org/2000/svg'
+				>
+					<path d='m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z'></path>
+				</svg>
+				<span className={styles.likeText}>Likes</span>
 			</label>
-		</>
+			{/* <span className={`${styles.likeCount} ${styles.one}`}>{likesLength}</span> */}
+			<span className={` ${likeColor} ${styles.likeCount} ${styles.one}`}>
+				{likesLength | likesLength}
+			</span>
+		</div>
 	);
 };
 

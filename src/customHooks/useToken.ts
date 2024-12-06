@@ -3,13 +3,13 @@ import {useEffect, useState} from "react";
 
 interface DecodedToken {
 	exp: number;
-	iat: number; 
+	iat: number;
 	[key: string]: any;
 }
 
 function useToken() {
 	const token = localStorage.getItem("token");
-	const [afterDecode, setAfterDecode] = useState<any>({});
+	const [decodedToken, setAfterDecode] = useState<any>({});
 
 	useEffect(() => {
 		const checkToken = () => {
@@ -17,9 +17,8 @@ function useToken() {
 				try {
 					const decoded: DecodedToken = jwtDecode(token);
 					const currentTime = Date.now() / 1000;
-
+					
 					if (decoded.exp < currentTime) {
-						console.log("Token has expired");
 						localStorage.removeItem("token");
 						setAfterDecode(null);
 					} else {
@@ -47,10 +46,7 @@ function useToken() {
 		};
 	}, [token]);
 
-
-
-
-	return {afterDecode};
+	return {decodedToken};
 }
 
 export default useToken;

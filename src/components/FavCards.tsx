@@ -1,45 +1,55 @@
 import {FunctionComponent, useEffect, useState} from "react";
 import Loading from "../assets/loading/Loading";
 import useToken from "../customHooks/useToken";
-import {getCardById, updateLikeStatus} from "../services/cardsServices"; // افترض أننا أضفنا هذه الدالة في الخدمات
+import {getLikedCardById, updateLikeStatus} from "../services/cardsServices";
 import {Cards} from "../interfaces/Cards";
 import Like from "../assets/likeButton.tsx/Like";
 
-interface MyCardsProps {}
+interface FavCardsProps {}
 
-const MyCards: FunctionComponent<MyCardsProps> = () => {
+const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const {afterDecode} = useToken();
+	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		if (!afterDecode._id) {
+		if (!decodedToken._id) {
 			setLoading(false);
 			return;
 		}
-		try {
-			getCardById(afterDecode._id).then((res) => {
-				setCards(res);
+		getLikedCardById(decodedToken._id)
+			.then((res) => {
+				const liked = res.filter((card) => card.likes.includes(decodedToken._id));
+				setCards(liked);
+				setLoading(false);
+			})
+			.catch(() => {
+				console.log("Failed to fetch cards.");
 				setLoading(false);
 			});
-		} catch (err) {
-			console.log("Failed to fetch cards.");
-			setLoading(false);
-		}
-	}, [afterDecode]);
+	}, [decodedToken,cards]);
 
 	const handleLikeToggle = (cardId: string) => {
 		const updatedCards = cards.map((card) => {
 			if (card._id === cardId) {
-				const isLiked = card.likes.includes(afterDecode._id);
-				console.log(isLiked,card._id);
+				const isLiked = card.likes.includes(decodedToken._id);
+				if (isLiked) {
+					// User is unliking the card
+					card.likes = card.likes.filter((id) => id !== decodedToken._id);
+				} else {
+					// User is liking the card
+					card.likes.push(decodedToken._id);
+				}
+
+				updateLikeStatus(cardId, decodedToken._id).catch((err) => {
+					console.log("Failed to update like status:", err);
+				});
 			}
 			return card;
 		});
 
+		// Update the state with the new list of cards
 		setCards(updatedCards);
-
-		updateLikeStatus(cardId, afterDecode._id);
 	};
 
 	if (loading) {
@@ -51,7 +61,8 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 			<h2 className='text-light'>My favorite Business Cards</h2>
 			<div className='row'>
 				{cards.map((card, index) => {
-					const isLiked = card.likes.includes(afterDecode._id);
+					const isLiked = card.likes.includes(decodedToken._id);
+					const likeColor = isLiked ? "text-danger" : "text-dark";
 
 					return (
 						<div key={index} className='col-12 col-md-6 col-xl-4 my-3'>
@@ -62,63 +73,44 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 									transition: "all 0.3s ease-in-out",
 								}}
 							>
-								<div className='card mb-3'>
-									<img
-										className='card-img-top'
-										src={card.image.url}
-										alt={card.image.alt}
-										style={{
-											objectFit: "cover",
-											height: "300px",
-											transition: "transform 0.3s ease",
-										}}
-										onMouseOver={(e) => {
-											e.currentTarget.style.transform =
-												"scale(1.1)";
-										}}
-										onMouseOut={(e) => {
-											e.currentTarget.style.transform = "scale(1)";
-										}}
-									/>
-									<div className='card-body'>
-										<p>user_id: {card.user_id}</p>
-										<p>_id: {card._id}</p>
-										<h5 className='card-title'>{card.title}</h5>
-										<p className='card-subtitle text-center mb-2 text-muted'>
-											{card.subtitle}
-										</p>
-										<hr />
-										<p className='card-text text-start lead fw-bold'>
-											phone: {card.phone}
-										</p>
-										<p className='card-text text-start lead fw-bold'>
-											City: {card.address.city}
-										</p>
-										<button className='btn btn-outline-danger'>
-											{card.likes ? "Unfavorite" : "Favorite"}
-										</button>
-										<hr />
-										<div className='d-flex justify-content-between align-items-center'>
-											<div className='likes-container d-flex align-items-center'>
-												<button
-													className={`btn fw-bold ${
-														isLiked
-															? "text-danger"
-															: "text-light"
-													}`}
-													style={{
-														transition: "color 0.3s ease",
-													}}
-													onClick={() =>
-														handleLikeToggle(card._id)
-													} 
-												>
-													<Like />
-												</button>
-												<span className='mx-2 lead'>
-													{card.likes.length}
-												</span>
-											</div>
+								<img
+									className='card-img-top'
+									src={card.image.url}
+									alt={card.image.alt}
+									style={{
+										objectFit: "cover",
+										height: "300px",
+										transition: "transform 0.3s ease",
+									}}
+									onMouseOver={(e) => {
+										e.currentTarget.style.transform = "scale(1.1)";
+									}}
+									onMouseOut={(e) => {
+										e.currentTarget.style.transform = "scale(1)";
+									}}
+								/>
+								<div className='card-body'>
+									<p>user_id: {card.user_id}</p>
+									<p>_id: {card._id}</p>
+									<h5 className='card-title'>{card.title}</h5>
+									<p className='card-subtitle text-center mb-2 text-muted'>
+										{card.subtitle}
+									</p>
+									<hr />
+									<p className='card-text text-start lead fw-bold'>
+										phone: {card.phone}
+									</p>
+									<p className='card-text text-start lead fw-bold'>
+										City: {card.address.city}
+									</p>
+									<div className='d-flex justify-content-between align-items-center'>
+										<div className='likes-container d-flex align-items-center'>
+											<Like
+												onClick={() => handleLikeToggle(card._id)}
+												buttonId={`${index}`}
+												likesLength={card.likes.length}
+												likeColor={likeColor}
+											/>
 										</div>
 									</div>
 								</div>
@@ -131,4 +123,4 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 	);
 };
 
-export default MyCards;
+export default FavCards;

@@ -13,36 +13,40 @@ import Loading from "../assets/loading/Loading";
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
-	const {setAuth, setIsAdmin, setIsLogedIn} = useUserContext();
+	const {auth,setAuth, setIsAdmin,setIsBusiness, setIsLogedIn} = useUserContext();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
-	const {afterDecode} = useToken();
+	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		if (afterDecode && localStorage.token) {
+		if (decodedToken && localStorage.token) {
 			setIsLogedIn(true);
 			navigate(pathes.cards);
 		} else {
 			setIsLogedIn(false);
+			return;
 		}
-	}, [afterDecode]);
+	}, [decodedToken]);
 
 	useEffect(() => {
 		try {
-			getUserById(afterDecode._id)
-				.then(() => {
-					setAuth(afterDecode);
-					setIsAdmin(afterDecode.isAdmin);
-					setIsLogedIn(true);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
+			if (decodedToken && decodedToken._id)
+				getUserById(decodedToken._id)
+					.then(() => {
+						setAuth(decodedToken);
+						setIsAdmin(decodedToken.isAdmin);
+						setIsBusiness(auth?.isBusiness as boolean)
+						setIsLogedIn(true);
+					})
+					.catch((err) => {
+						wellcomeMSG(err);
+						return;
+					});
 		} catch (err) {
-			errorMSG("Failed to fetch user afterDecode");
+			errorMSG("Failed to find user");
 			console.error(err);
 		}
-	}, [navigate]);
+	}, []);
 
 	const validationSchema = yup.object({
 		email: yup
@@ -66,8 +70,6 @@ const Login: FunctionComponent<LoginProps> = () => {
 				.then((res) => {
 					setLoading(false);
 					localStorage.setItem("token", res.data);
-					document.cookie = `token=${res.data}; path=/; secure; HttpOnly; SameSite=Strict`;
-
 					navigate(pathes.cards);
 					wellcomeMSG("Welcome Back! 🦄");
 				})
