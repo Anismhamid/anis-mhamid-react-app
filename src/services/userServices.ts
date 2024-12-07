@@ -54,10 +54,14 @@ export const registerNewUser = (user: User) => {
 
 // Delete specific user by ID
 export const deleteUserById = async (userId: string) => {
-	const response = await axios.request({
-		...getUsers,
-		url: `${api}/${userId}`,
-		method: "delete",
-	});
-	return response.data;
+	try {
+		const response = await axios.request({
+			...getUsers,
+			url: `${api}/${userId}`,
+			method: "delete",
+		});
+		return response.data;
+	} catch (error) {
+		console.log(error);
+	}
 };

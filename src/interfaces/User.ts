@@ -9,8 +9,8 @@ export interface User {
 	phone: string;
 	email: string;
 	password: string;
-	image?: {
-		imageUrl?: string;
+	image: {
+		url?: string;
 		alt?: string;
 	};
 	address: {

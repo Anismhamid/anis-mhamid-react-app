@@ -1,77 +1,112 @@
-import {FunctionComponent, useEffect, useRef, useState} from "react";
+import {FunctionComponent, useEffect, useMemo, useRef, useState} from "react";
 import useToken from "../customHooks/useToken";
 import {deleteUserById, getAllUsers} from "../services/userServices";
 import {User} from "../interfaces/User";
 import Loading from "../assets/loading/Loading";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {edit, trash} from "../fontAwesome/Icons";
 import {Pagination} from "react-bootstrap";
+import DeleteUserModal from "../assets/modals/users/DeleteUserModal";
+import {pathes} from "../routes/Routes";
+import {useUserContext} from "../context/UserContext";
+import {wellcomeMSG, errorMSG} from "../assets/taosyify/Toastify";
 
 const SandBox: FunctionComponent = () => {
 	const usersPerPage = 50;
 	const {decodedToken} = useToken();
+	const {isAdmin} = useUserContext();
 	const [users, setUsers] = useState<User[]>([]);
 	const [isLoading, setISLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
 	const inputRef = useRef<HTMLInputElement | null>(null);
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [userSearch, setUserSearch] = useState<User[] | null>(null);
+	const [searchTerm, setSearchTerm] = useState("");
+	const navigate = useNavigate();
 
-	// Pagination logic based on search or full user list
+	const onHide = () => setShowDeleteModal(false);
+	const onShow = () => setShowDeleteModal(true);
+
+	// Pagination logic
 	const startIndex = (currentPage - 1) * usersPerPage;
 	const usersToDisplay = userSearch || users;
 	const currentUsers = usersToDisplay.slice(startIndex, startIndex + usersPerPage);
 
+	// Fetch users on admin access
 	useEffect(() => {
-		if (decodedToken?.isAdmin) {
+		if (isAdmin) {
 			getAllUsers()
 				.then((res) => {
 					setUsers(res);
 					setISLoading(false);
 				})
-				.catch(console.log);
+				.catch((err) => {
+					console.log(err);
+					errorMSG("Error fetching users.");
+				});
+		} else {
+			navigate(pathes.cards); // redirect if the user is not admin
 		}
-	}, [decodedToken]);
+	}, [isAdmin]);
 
-	if (isLoading) return <Loading />;
-
+	// Handle Edit
 	const handleEdit = (userId: string) => {
 		console.log(`Editing user with id: ${userId}`);
 	};
 
+	// Handle Delete
 	const handleDelete = (userId: string) => {
-		deleteUserById(userId).then(() =>
-			setUsers((prevUsers) => prevUsers.filter((user) => user._id !== userId)),
-		);
-	};
-
-	const handleSearch = (name: string) => {
-		const trimmedName = name.trim().toLowerCase();
-
-		if (trimmedName === "") {
-			setUserSearch(null); // Clear the user list if no search query
-		} else {
-			const searchResult = users.filter((user) => {
-				const firstName = user.name.first.toLowerCase();
-				const lastName = user.name.last.toLowerCase();
-				const phone = user.phone.toLowerCase();
-
-				return (
-					firstName.includes(trimmedName) ||
-					lastName.includes(trimmedName) ||
-					phone.includes(trimmedName)
-				);
-			});
-
-			setUserSearch(searchResult.length > 0 ? searchResult : null);
+		try {
+			deleteUserById(userId)
+				.then(() => {
+					setUsers((prevUsers) =>
+						prevUsers.filter((user) => user._id !== userId),
+					);
+					wellcomeMSG("User deleted successfully.");
+				})
+				.catch((err) => {
+					console.log(err);
+					errorMSG("Error deleting user.");
+				});
+		} catch (error) {
+			console.log(error);
+			errorMSG("Failed to delete user.");
 		}
 	};
 
-	const handlePageChange = (pageNumber: number) => {
-		setCurrentPage(pageNumber);
-		window.scrollTo(0, 0);
+	// Filtered users based on search term
+	const filteredUsers = useMemo(() => {
+		const trimmedName = searchTerm.trim().toLowerCase();
+		if (trimmedName === "") return null; // Don't display anything if search is empty
+
+		return users.filter((user) => {
+			const firstName = user.name.first.toLowerCase();
+			const lastName = user.name.last.toLowerCase();
+			const phone = user.phone.toLowerCase();
+
+			return (
+				firstName.includes(trimmedName) ||
+				lastName.includes(trimmedName) ||
+				phone.includes(trimmedName)
+			);
+		});
+	}, [searchTerm, users]);
+
+
+	// Handle Search input change
+	const handleSearch = (name: string) => {
+		setSearchTerm(name); // Update the search term
 	};
 
-	const totalUsersToDisplay = usersToDisplay.length;
+	// Update the userSearch whenever filteredUsers change
+	useEffect(() => {
+		setUserSearch(filteredUsers);
+	}, [filteredUsers]);
+
+	// Loading state
+	if (isLoading) {
+		return <Loading />;
+	}
 
 	return (
 		<>
@@ -98,28 +133,83 @@ const SandBox: FunctionComponent = () => {
 				</div>
 			</div>
 
-			{/* Display the user result or all users */}
+			{/* Pagination */}
+			<div className='container-sm'>
+				<Pagination
+					className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'
+					data-bs-theme='dark'
+				>
+					{[...Array(Math.ceil(usersToDisplay.length / usersPerPage))].map(
+						(_, i) => (
+							<Pagination.Item
+								key={i}
+								active={currentPage === i + 1}
+								onClick={() => {
+									setCurrentPage(i + 1);
+								}}
+							>
+								{i + 1}
+							</Pagination.Item>
+						),
+					)}
+				</Pagination>
+			</div>
+
+			{/* Displaying the user result or all users */}
 			{userSearch && userSearch.length > 0 ? (
-				<div className='user-found card text-bg-light min-vh-100'>
+				<div className='user-found card bg-dark min-vh-100'>
 					<h3>User Found:</h3>
 					{userSearch.map((user) => (
-						<div className='card' key={user._id}>
-							<p>
-								<strong>Name:</strong> {user.name.first} {user.name.last}
-							</p>
-							<p>
-								<strong>Email:</strong> {user.email}
-							</p>
-							<img
-								className='img-fluid'
-								src={user.image?.imageUrl || "/avatar-design.png"}
-								alt={user.name.first}
-								style={{
-									width: "100px",
-									height: "100px",
-									borderRadius: "50%",
-								}}
-							/>
+						<div
+							className='card text-light fw-bold'
+							data-bs-theme='dark'
+							key={user._id}
+						>
+							<div className='card-body'>
+								<p>
+									<strong>Name:</strong> {user.name.first}{" "}
+									{user.name.last}
+								</p>
+								<p>
+									<strong>Email:</strong> {user.email}
+								</p>
+								<img
+									className='img-fluid'
+									src={user.image.url || "/avatar-design.png"}
+									alt={user.name.first}
+									style={{
+										width: "100px",
+										height: "100px",
+										borderRadius: "50%",
+									}}
+								/>
+							</div>
+
+							{decodedToken?.isAdmin && (
+								<>
+									<div className='d-flex text-end justify-content-end my-3'>
+										<button
+											className='text-warning w-25 mx-5'
+											onClick={() => handleEdit(user._id as string)}
+										>
+											{edit}
+										</button>
+										<DeleteUserModal
+											show={showDeleteModal}
+											onHide={onHide}
+											onDelete={() =>
+												handleDelete(user._id as string)
+											}
+										/>
+										<button
+											className='text-danger w-25'
+											onClick={onShow}
+										>
+											{trash}
+										</button>
+									</div>
+								</>
+							)}
 						</div>
 					))}
 				</div>
@@ -145,8 +235,7 @@ const SandBox: FunctionComponent = () => {
 											<img
 												className='img-fluid'
 												src={
-													user.image?.imageUrl ||
-													"/avatar-design.png"
+													user.image.url || "/avatar-design.png"
 												}
 												alt={`${user.image?.alt}'s profile`}
 												style={{
@@ -157,7 +246,7 @@ const SandBox: FunctionComponent = () => {
 											/>
 										</Link>
 									</td>
-									{decodedToken.isAdmin && (
+									{decodedToken?.isAdmin && (
 										<>
 											<td colSpan={1}>
 												<button
@@ -172,9 +261,7 @@ const SandBox: FunctionComponent = () => {
 											<td colSpan={1}>
 												<button
 													className='text-danger'
-													onClick={() =>
-														handleDelete(user._id as string)
-													}
+													onClick={onShow}
 												>
 													{trash}
 												</button>
@@ -200,7 +287,6 @@ const SandBox: FunctionComponent = () => {
 									active={currentPage === i + 1}
 									onClick={() => {
 										setCurrentPage(i + 1);
-										handlePageChange(i + 1);
 									}}
 								>
 									{i + 1}

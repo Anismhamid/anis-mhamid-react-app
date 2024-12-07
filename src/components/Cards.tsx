@@ -1,11 +1,10 @@
-import {FunctionComponent, useCallback, useEffect, useState} from "react";
+import {FunctionComponent, useEffect, useState} from "react";
 import {getAllCards, updateLikeStatus} from "../services/cardsServices";
 import {Cards} from "../interfaces/Cards";
 import Loading from "../assets/loading/Loading";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../customHooks/useToken";
 import {errorMSG} from "../assets/taosyify/Toastify";
-import AddNewCardModal from "../assets/modals/cards/AddNewCardModal";
 import Like from "../assets/likeButton.tsx/Like";
 
 interface HomeProps {}
@@ -14,29 +13,28 @@ const Home: FunctionComponent<HomeProps> = () => {
 	const {decodedToken} = useToken();
 	const {isAdmin, isLogedIn} = useUserContext();
 	const [cards, setCards] = useState<Cards[]>([]);
-	const [showAddModal, setShowAddModal] = useState(false);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [likeColors, setLikeColors] = useState<{[key: string]: string}>({});
 
-	const onHide = useCallback<() => void>((): void => setShowAddModal(false), []);
-	const onShow = useCallback<() => void>((): void => setShowAddModal(true), []);
-
 	useEffect(() => {
-		getAllCards()
-			.then((res) => {
-				if (res) {
-					setCards(res);
-				} else {
-					errorMSG("No cards data to show");
-				}
-			})
-			.catch((err) => {
-				errorMSG("Failed to load cards. Please try again later.");
-				console.log("Error fetching cards:", err);
-			})
-			.finally(() => {
-				setLoading(false);
-			});
+		try {
+			getAllCards()
+				.then((res: Cards[]) => {
+					if (res) {
+						setCards(res);
+					} else {
+						errorMSG("No cards to show");
+					}
+				})
+				.catch(() => {
+					errorMSG("Failed to load cards. Please try again later.");
+				})
+				.finally(() => {
+					setLoading(false);
+				});
+		} catch (error) {
+			console.log(error);
+		}
 	}, [isLogedIn, decodedToken, isAdmin]);
 
 	const handleLikeToggle = (cardId: string) => {
@@ -54,13 +52,13 @@ const Home: FunctionComponent<HomeProps> = () => {
 					card.likes.push(decodedToken._id);
 				}
 
-				// Update the color of the like button based on the action
+				// Update the color of the like button on action
 				setLikeColors((prevColors) => ({
 					...prevColors,
 					[card._id]: isLiked ? "text-dark" : "text-danger",
 				}));
 
-				// Update the backend with the like status
+				// Update like status
 				updateLikeStatus(cardId, decodedToken._id).catch((err) => {
 					console.log("Failed to update like status:", err);
 				});
@@ -78,17 +76,12 @@ const Home: FunctionComponent<HomeProps> = () => {
 	return (
 		<div className='container py-5'>
 			<h1 className='text-center text-light mt-5'>Cards</h1>
-			<hr className='border-light' />
-			<div className='w-100'>
-				<button className='w-100 bg-opacity-50' onClick={() => onShow()}>
-					Add Card
-				</button>
-			</div>
+
 			<div className='row'>
 				{cards.length > 0 ? (
 					cards.map((card) => {
-						// Get the like color for each card from the state
-						const likeColor = likeColors[card._id] || "text-light"; // Default like color is dark
+						// Get the like color from the state
+						const likeColor = likeColors[card._id] || ""; // Default like color is dark
 
 						return (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
@@ -130,7 +123,6 @@ const Home: FunctionComponent<HomeProps> = () => {
 											<h5>Address:</h5>
 											<p>{card.address.city}</p>
 										</div>
-
 										{isLogedIn && decodedToken && (
 											<div>
 												<hr />
@@ -169,7 +161,6 @@ const Home: FunctionComponent<HomeProps> = () => {
 					<p className='text-center text-light'>No cards available</p>
 				)}
 			</div>
-			<AddNewCardModal show={showAddModal} onHide={onHide} />
 		</div>
 	);
 };

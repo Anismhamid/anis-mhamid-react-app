@@ -1,23 +1,28 @@
-import {FunctionComponent, useState, useEffect, useCallback, useRef} from "react";
+import {FunctionComponent, useState, useEffect, useCallback} from "react";
 import {getMyCards, updateLikeStatus} from "../services/cardsServices";
 import {Cards} from "../interfaces/Cards";
 import Like from "../assets/likeButton.tsx/Like";
 import Loading from "../assets/loading/Loading";
 import useToken from "../customHooks/useToken";
+import AddNewCardModal from "../assets/modals/cards/AddNewCardModal";
 
 interface MyCardsProps {}
 
 const MyCards: FunctionComponent<MyCardsProps> = () => {
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [likeColor, setLikeColor] = useState<string>("text-dark");
+	const [likeColor] = useState<string>("");
 	const {decodedToken} = useToken();
+	const [showAddModal, setShowAddModal] = useState(false);
 
-	// Fetching the user's cards
+	const onHide = useCallback<() => void>((): void => setShowAddModal(false), []);
+	const onShow = useCallback<() => void>((): void => setShowAddModal(true), []);
+
+	// Fetching the users cards
 	useEffect(() => {
 		if (!decodedToken || !decodedToken._id) return;
 		getMyCards(decodedToken._id)
-			.then((res) => {
+			.then((res:Cards[]) => {
 				setCards(res);
 				setLoading(false);
 			})
@@ -49,6 +54,12 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 	return (
 		<div className='container py-5'>
 			<h2 className='text-light'>My Cards</h2>
+			<hr className='border-light' />
+			<div className='w-100'>
+				<button className='w-100 bg-opacity-50' onClick={() => onShow()}>
+					Add Card
+				</button>
+			</div>
 			<div className='row'>
 				{cards.length > 0 ? (
 					cards.map((card) => {
@@ -108,6 +119,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 					<p>No Data</p>
 				)}
 			</div>
+			<AddNewCardModal show={showAddModal} onHide={onHide} />
 		</div>
 	);
 };

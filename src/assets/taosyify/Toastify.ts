@@ -1,21 +1,28 @@
-import {Bounce, toast} from "react-toastify";
+import { toast} from "react-toastify";
 
 export function successMSG(msg: string): void {
 	toast.success(msg, {
-		position: "top-center",
-		autoClose: 3000,
+		position: "top-right",
+		autoClose: 5000,
+		hideProgressBar: false,
+		closeOnClick: true,
 		pauseOnHover: true,
-		hideProgressBar: true,
-		theme: "dark",
+		draggable: true,
+		progress: undefined,
+		theme: "light",
 	});
 }
+
 export function errorMSG(msg: string): void {
 	toast.error(msg, {
-		position: "top-center",
-		autoClose: 3000,
-		pauseOnHover: true,
+		position: "top-right",
+		autoClose: 5000,
 		hideProgressBar: false,
-		theme: "dark",
+		closeOnClick: true,
+		pauseOnHover: true,
+		draggable: true,
+		progress: undefined,
+		theme: "light",
 	});
 }
 export function wellcomeMSG(msg: string): void {
@@ -28,6 +35,5 @@ export function wellcomeMSG(msg: string): void {
 		draggable: true,
 		progress: undefined,
 		theme: "light",
-		transition: Bounce,
 	});
 }

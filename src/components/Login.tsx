@@ -9,11 +9,12 @@ import {UserLogin} from "../interfaces/User";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../customHooks/useToken";
 import Loading from "../assets/loading/Loading";
+import { jwtDecode } from "jwt-decode";
 
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
-	const {auth,setAuth, setIsAdmin,setIsBusiness, setIsLogedIn} = useUserContext();
+	const {isAdmin,auth,setAuth, setIsAdmin,setIsBusiness, setIsLogedIn} = useUserContext();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const {decodedToken} = useToken();
@@ -33,7 +34,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 			if (decodedToken && decodedToken._id)
 				getUserById(decodedToken._id)
 					.then(() => {
-						setAuth(decodedToken);
+						setAuth({...decodedToken,isAdmin:isAdmin});
 						setIsAdmin(decodedToken.isAdmin);
 						setIsBusiness(auth?.isBusiness as boolean)
 						setIsLogedIn(true);
@@ -71,7 +72,9 @@ const Login: FunctionComponent<LoginProps> = () => {
 					setLoading(false);
 					localStorage.setItem("token", res.data);
 					navigate(pathes.cards);
-					wellcomeMSG("Welcome Back! 🦄");
+					const deco = jwtDecode(res.data)
+					wellcomeMSG(`Welcome Back! 🦄 ${deco.nbf
+					}`);
 				})
 				.catch((err) => {
 					setLoading(false);

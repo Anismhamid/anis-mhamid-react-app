@@ -5,7 +5,7 @@ import {User} from "../interfaces/User";
 import {useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {registerNewUser} from "../services/userServices";
-import {successMSG} from "../assets/taosyify/Toastify";
+import {errorMSG, successMSG} from "../assets/taosyify/Toastify";
 import CardsInput from "../assets/modals/cards/CardsInput";
 
 interface RegisterProps {}
@@ -24,7 +24,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 			email: "",
 			password: "",
 			image: {
-				imageUrl: "",
+				url: "",
 				alt: "",
 			},
 			address: {
@@ -63,7 +63,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 				.min(7, "Password must be at least 7 characters long")
 				.max(20, "Password must be at most 20 characters long"),
 			image: yup.object({
-				imageUrl: yup
+				url: yup
 					.string()
 					.min(14, "Image URL must be at least 14 characters long")
 					.url("Please provide a valid URL")
@@ -83,16 +83,20 @@ const Register: FunctionComponent<RegisterProps> = () => {
 			}),
 			isBusiness: yup.boolean(),
 		}),
-		onSubmit: (values) => {
-			registerNewUser({...values, isBusiness: formik.values.isBusiness})
-				.then((res) => {
-					navigate(pathes.login);
-					successMSG(`welcome${res.config.auth?.username}`);
-					navigate(pathes.cards);
-				})
-				.catch((err) => {
-					console.log(err);
-				});
+		onSubmit: (values: User) => {
+			try {
+				registerNewUser(values)
+					.then(() => {
+						navigate(pathes.login);
+						successMSG(`welcome Back`);
+						navigate(pathes.cards);
+					})
+					.catch((err) => {
+						errorMSG(err);
+					});
+			} catch (error) {
+				errorMSG(`This user already have registered`);
+			}
 		},
 	});
 
@@ -196,14 +200,13 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							<input
 								type={"text"}
 								id={"image"}
-								name={"image"}
-								accept='image/*'
-								value={formik.values.image?.imageUrl}
+								name={"image.url"}
+								value={formik.values.image.url}
 								placeholder={"Image URL"}
 								className={`form-control`}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
-								aria-label={"imageUrl"}
+								aria-label={"url"}
 							/>
 							<label
 								htmlFor={"image"}
@@ -220,7 +223,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 								type={"text"}
 								id={"image.alt"}
 								name={"image.alt"}
-								value={formik.values.image?.alt}
+								value={formik.values.image.alt}
 								placeholder={"Image URL"}
 								className={`form-control`}
 								onChange={formik.handleChange}
@@ -337,7 +340,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 				<button
 					type='submit'
 					className='btn btn-primary w-100 py-2 mt-3'
-					// disabled={!formik.dirty || !formik.isValid}
+					disabled={!formik.dirty || !formik.isValid}
 				>
 					REGISTER
 				</button>
