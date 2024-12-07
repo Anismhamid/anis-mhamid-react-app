@@ -13,34 +13,9 @@ type UserInputFormikPropsType = {
 };
 
 // initional values for adding a new card
-export const newCardInitionalVal = {
-	_id: "",
-	title: "",
-	subtitle: "",
-	description: "",
-	phone: "",
-	email: "",
-	web: "",
-	image: {
-		url: "",
-		alt: "",
-		_id: "",
-	},
-	address: {
-		state: "",
-		country: "",
-		city: "",
-		street: "",
-		houseNumber: 0,
-		zip: 0,
-		_id: "",
-	},
-	bizNumber: 0,
-	likes: [],
-	user_id: "",
-	createdAt: 0,
-	__v: 0,
-};
+// export const newCardInitionalVal = {
+	
+// };
 
 const CardsInput: FunctionComponent<UserInputFormikPropsType> = (props) => {
 	return (

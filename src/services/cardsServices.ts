@@ -20,7 +20,7 @@ export const getAllCards = async (): Promise<Cards[]> => {
 	}
 };
 
-export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
+export const getLikedCardById = async (userId: string): Promise<any> => {
 	try {
 		const response = await axios.request({
 			...getCards,
@@ -33,20 +33,19 @@ export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
 	}
 };
 
-
 export const updateLikeStatus = async (cardId: string, userId: string): Promise<any> => {
-	const token = localStorage.getItem("token");
+	let token = localStorage.getItem("token");
 	if (!token) {
 		throw new Error("No token found, please log in again");
 	}
 
-	try {
-		const payload = {
-			cardId,
-			userId,
-		};
+	const payload = {
+		cardId,
+		userId,
+	};
 
-		const updatedCard = await axios.request({
+	try {
+		const updatedCard: Cards[] = await axios.request({
 			method: "patch",
 			url: `${api}/cards/${payload.cardId}?likes=${userId}`,
 			headers: {
@@ -56,13 +55,12 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 		});
 
 		// Return the updated card data from the response
-		return updatedCard.data;
+		return updatedCard;
 	} catch (error) {
 		console.error("Failed to update like status:", error);
 		throw error;
 	}
 };
-
 
 export const getMyCards = async (userId: string) => {
 	let token = localStorage.getItem("token");
@@ -77,4 +75,15 @@ export const getMyCards = async (userId: string) => {
 	});
 
 	return response.data;
+};
+
+export const createNewCard = async (card: Cards) => {
+	let token = localStorage.getItem("token");
+	let response: Cards = await axios.request({
+		...getCards,
+		method: "post",
+		headers: {"x-auth-token": token},
+		data: card,
+	});
+	return response;
 };

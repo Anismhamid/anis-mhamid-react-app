@@ -5,16 +5,16 @@ import Loading from "../assets/loading/Loading";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../customHooks/useToken";
 import {errorMSG} from "../assets/taosyify/Toastify";
-import Like from "../assets/likeButton.tsx/Like";
+import {heart} from "../fontAwesome/Icons";
 
 interface HomeProps {}
 
 const Home: FunctionComponent<HomeProps> = () => {
 	const {decodedToken} = useToken();
 	const {isAdmin, isLogedIn} = useUserContext();
-	const [cards, setCards] = useState<Cards[]>([]);
+	const [cards, setCards] = useState<any>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [likeColors, setLikeColors] = useState<{[key: string]: string}>({});
+	const [likeColors, setLikeColors] = useState<{[cardId: string]: string}>({});
 
 	useEffect(() => {
 		try {
@@ -40,13 +40,14 @@ const Home: FunctionComponent<HomeProps> = () => {
 	const handleLikeToggle = (cardId: string) => {
 		if (!decodedToken || !decodedToken._id) return;
 
-		const updatedCards = cards.map((card) => {
+		const updatedCards = cards.map((card:any) => {
 			if (card._id === cardId) {
 				const isLiked = card.likes.includes(decodedToken._id);
+				console.log(isLiked);
 
 				if (isLiked) {
 					// Remove like
-					card.likes = card.likes.filter((id) => id !== decodedToken._id);
+					card.likes = card.likes.filter((id:string) => id !== decodedToken._id);
 				} else {
 					// Add like
 					card.likes.push(decodedToken._id);
@@ -55,7 +56,7 @@ const Home: FunctionComponent<HomeProps> = () => {
 				// Update the color of the like button on action
 				setLikeColors((prevColors) => ({
 					...prevColors,
-					[card._id]: isLiked ? "text-dark" : "text-danger",
+					[card._id as string]: isLiked ? "text-light" : "text-danger",
 				}));
 
 				// Update like status
@@ -79,9 +80,9 @@ const Home: FunctionComponent<HomeProps> = () => {
 
 			<div className='row'>
 				{cards.length > 0 ? (
-					cards.map((card) => {
+					cards.map((card:any) => {
 						// Get the like color from the state
-						const likeColor = likeColors[card._id] || ""; // Default like color is dark
+						const likeColor = likeColors[card._id as string] || ""; // Default like color is dark
 
 						return (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
@@ -128,16 +129,21 @@ const Home: FunctionComponent<HomeProps> = () => {
 												<hr />
 												<div className='d-flex justify-content-between align-items-center'>
 													<div className='likes-container d-flex align-items-center'>
-														<Like
+														<p
 															onClick={() =>
-																handleLikeToggle(card._id)
+																handleLikeToggle(
+																	card._id as string,
+																)
 															}
-															likeColor={likeColor}
-															buttonId={card._id}
-															likesLength={
-																card.likes.length
-															}
-														/>
+															className={`${likeColor} fs-1`}
+														>
+															{heart}
+														</p>
+														<p
+															className={`${likeColor} mx-3`}
+														>
+															{card.likes.length}
+														</p>
 													</div>
 												</div>
 												{isAdmin && (

@@ -1,13 +1,35 @@
-import {useFormik} from "formik";
+import {FormikValues, useFormik} from "formik";
 import {FunctionComponent} from "react";
 import * as yup from "yup";
-import CardsInput, {newCardInitionalVal} from "./CardsInput";
+import CardsInput from "./CardsInput";
+import {Cards} from "../../../interfaces/Cards";
+import {createNewCard} from "../../../services/cardsServices";
+import {successMSG} from "../../taosyify/Toastify";
 
 interface AddNewCardFormProps {}
 
 const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
-	const formik = useFormik({
-		initialValues: newCardInitionalVal,
+	const formik:FormikValues = useFormik<Cards>({
+		initialValues: {
+			title: "",
+			subtitle: "",
+			description: "",
+			phone: "",
+			email: "",
+			web: "",
+			image: {
+				url: "",
+				alt: "",
+			},
+			address: {
+				state: "",
+				country: "",
+				city: "",
+				street: "",
+				houseNumber: 0,
+				zip: 0,
+			},
+		},
 		validationSchema: yup.object({
 			title: yup.string().min(2).max(256).required(),
 			subtitle: yup.string().min(2).max(256).required(),
@@ -33,14 +55,20 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
 				zip: yup.number(),
 			}),
 		}),
-		onSubmit: (values) => {
-			console.log(values);
+		onSubmit: (values: Cards) => {
+			createNewCard(values).then((res) => {
+				successMSG(`${values.title} card is created successfuly`);
+				console.log(res);
+			});
 		},
 	});
 
 	return (
 		<div className='container mt-5'>
-			<form onSubmit={formik.handleSubmit} className='fw-bold card p-4 shadow-lg rounded-3'>
+			<form
+				onSubmit={formik.handleSubmit}
+				className='fw-bold card p-4 shadow-lg rounded-3'
+			>
 				{/* Title and Subtitle */}
 				<div className='row'>
 					<div className='col-6'>

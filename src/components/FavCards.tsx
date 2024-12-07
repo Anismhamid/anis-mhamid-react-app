@@ -2,13 +2,12 @@ import {FunctionComponent, useEffect, useState} from "react";
 import Loading from "../assets/loading/Loading";
 import useToken from "../customHooks/useToken";
 import {getLikedCardById, updateLikeStatus} from "../services/cardsServices";
-import {Cards} from "../interfaces/Cards";
-import Like from "../assets/likeButton.tsx/Like";
+import { heart } from "../fontAwesome/Icons";
 
 interface FavCardsProps {}
 
 const FavCards: FunctionComponent<FavCardsProps> = () => {
-	const [cards, setCards] = useState<Cards[]>([]);
+	const [cards, setCards] = useState<any>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
 
@@ -19,7 +18,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 		}
 		getLikedCardById(decodedToken._id)
 			.then((res) => {
-				const liked = res.filter((card) => card.likes.includes(decodedToken._id));
+				const liked = res.filter((card:any) => card.likes.includes(decodedToken._id));
 				setCards(liked);
 				setLoading(false);
 			})
@@ -30,12 +29,12 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	}, [decodedToken,cards]);
 
 	const handleLikeToggle = (cardId: string) => {
-		const updatedCards = cards.map((card) => {
+		const updatedCards = cards.map((card:any) => {
 			if (card._id === cardId) {
-				const isLiked = card.likes.includes(decodedToken._id);
+				const isLiked:any = card.likes.includes(decodedToken._id);
 				if (isLiked) {
 					// User is unliking the card
-					card.likes = card.likes.filter((id) => id !== decodedToken._id);
+					card.likes = card.likes.filter((id:string) => id !== decodedToken._id);
 				} else {
 					// User is liking the card
 					card.likes.push(decodedToken._id);
@@ -60,7 +59,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 		<div className='container py-5'>
 			<h2 className='text-light'>My favorite Business Cards</h2>
 			<div className='row'>
-				{cards.map((card, index) => {
+				{cards.map((card:any, index:number) => {
 					const isLiked = card.likes.includes(decodedToken._id);
 					const likeColor = isLiked ? "text-danger" : "text-dark";
 
@@ -90,8 +89,6 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 									}}
 								/>
 								<div className='card-body'>
-									<p>user_id: {card.user_id}</p>
-									<p>_id: {card._id}</p>
 									<h5 className='card-title'>{card.title}</h5>
 									<p className='card-subtitle text-center mb-2 text-muted'>
 										{card.subtitle}
@@ -105,12 +102,15 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 									</p>
 									<div className='d-flex justify-content-between align-items-center'>
 										<div className='likes-container d-flex align-items-center'>
-											<Like
-												onClick={() => handleLikeToggle(card._id)}
-												buttonId={`${index}`}
-												likesLength={card.likes.length}
-												likeColor={likeColor}
-											/>
+											<p
+												onClick={() => handleLikeToggle(card._id as string)}
+												className={`${likeColor} fs-1`}
+											>
+												{heart}
+											</p>
+											<p className={`${likeColor} mx-3`}>
+												{card.likes.length}
+											</p>
 										</div>
 									</div>
 								</div>
