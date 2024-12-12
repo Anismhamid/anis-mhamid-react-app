@@ -18,4 +18,9 @@ export interface Cards {
 		houseNumber: number;
 		zip?: number;
 	};
+	bizNumber?: number;
+	likes?: string[];
+	user_id?: string;
+	createdAt?: string;
+	__v?: number;
 }

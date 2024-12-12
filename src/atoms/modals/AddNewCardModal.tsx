@@ -19,6 +19,7 @@ const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({onHide, show}
 				keyboard={false}
 				data-bs-theme='dark'
 				centered
+				scrollable
 			>
 				<Modal.Header closeButton>
 					<Modal.Title className=' text-light display-6'>

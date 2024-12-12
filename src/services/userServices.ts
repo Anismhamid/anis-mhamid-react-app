@@ -1,5 +1,6 @@
 import axios from "axios";
 import {User, UserLogin} from "../interfaces/User";
+import {infoMSG} from "../atoms/taosyify/Toastify";
 const api: string = `${import.meta.env.VITE_API_URL}/users`;
 
 const token = {
@@ -21,20 +22,22 @@ export async function loginIn(login: UserLogin): Promise<any> {
 }
 
 // Fetch all users
-export async function getAllUsers(): Promise<any> {
+export async function getAllUsers() {
 	try {
-		const response = await axios(getUsers);
+		const response = await axios.request({
+			...getUsers
+		});
+
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching all users:", error);
-		throw error;
+		console.log(error);
 	}
 }
 
 // Get specific user by ID
-export const getUserById = async (userId: User) => {
+export const getUserById = async (userId: string) => {
 	try {
-		const response = await axios.request({...getUsers, url: `${api}/${userId._id}`});
+		const response = await axios.request({...getUsers, url: `${api}/${userId}`});
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -60,6 +63,44 @@ export const deleteUserById = async (userId: string) => {
 			url: `${api}/${userId}`,
 			method: "delete",
 		});
+		return response.data;
+	} catch (error) {
+		console.log(error);
+	}
+};
+
+export const patchUserBusiness = async (
+	cardId: string,
+	data: {isBusiness: boolean},
+	user: {isBusiness: boolean},
+) => {
+	let token = localStorage.getItem("token");
+	try {
+		const response = await axios.patch(`${api}/${cardId}`, data, {
+			headers: {"x-auth-token": token},
+		});
+		infoMSG(
+			`administration has been changed for ${response.data.email} to ${
+				user.isBusiness ? "Client account" : "Business account"
+			}`,
+		);
+		return response.data;
+	} catch (error) {
+		console.error("Failed to update user:", error);
+		return null;
+	}
+};
+
+// Put specific user by ID
+export const putUserData = async (userId: string, data: User) => {
+	try {
+		const response = await axios.request({
+			...getUsers,
+			url: `${api}/${userId}`,
+			method: "put",
+			data: data,
+		});
+
 		return response.data;
 	} catch (error) {
 		console.log(error);

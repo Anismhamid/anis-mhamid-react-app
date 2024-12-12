@@ -16,6 +16,7 @@ function App() {
 				{routes.favCards}
 				{routes.myCards}
 				{routes.sandBox}
+				{routes.userDetails}
 				{routes.profile}
 			</Routes>
 		</Router>

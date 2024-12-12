@@ -7,8 +7,8 @@ export interface User {
 		last: string;
 	};
 	phone: string;
-	email: string;
-	password: string;
+	email?: string;
+	password?: string;
 	image: {
 		url?: string;
 		alt?: string;
@@ -21,7 +21,7 @@ export interface User {
 		houseNumber: number;
 		zip: number;
 	};
-	isBusiness: boolean;
+	isBusiness?: boolean;
 }
 
 export interface UserLogin {

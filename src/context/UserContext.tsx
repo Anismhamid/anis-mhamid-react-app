@@ -1,10 +1,4 @@
-import {
-	createContext,
-	useContext,
-	useState,
-	ReactNode,
-	FunctionComponent,
-} from "react";
+import {createContext, useContext, useState, ReactNode, FunctionComponent} from "react";
 import {User} from "../interfaces/User";
 
 interface UserContextType {

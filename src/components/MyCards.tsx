@@ -1,16 +1,16 @@
 import {FunctionComponent, useState, useEffect, useCallback} from "react";
 import {getMyCards, updateLikeStatus} from "../services/cardsServices";
-// import {Cards} from "../interfaces/Cards";
-import Loading from "../assets/loading/Loading";
-import useToken from "../customHooks/useToken";
-import AddNewCardModal from "../assets/modals/cards/AddNewCardModal";
 import {heart} from "../fontAwesome/Icons";
+import useToken from "../hooks/useToken";
+import Loading from "./Loading";
+import AddNewCardModal from "../atoms/modals/AddNewCardModal";
+import {Cards} from "../interfaces/Cards";
 
 interface MyCardsProps {}
 
 const MyCards: FunctionComponent<MyCardsProps> = () => {
 	const {decodedToken} = useToken();
-	const [cards, setCards] = useState<any>([]);
+	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [showAddModal, setShowAddModal] = useState(false);
 	const [likeColors, setLikeColors] = useState<{[cardId: string]: string}>({});
@@ -18,15 +18,14 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 	const onHide = useCallback<() => void>((): void => setShowAddModal(false), []);
 	const onShow = useCallback<() => void>((): void => setShowAddModal(true), []);
 
-	// Fetching the users cards
 	useEffect(() => {
 		if (!decodedToken || !decodedToken._id) return;
 		getMyCards(decodedToken._id)
-			.then((res: any) => {
+			.then((res: Cards[]) => {
 				setCards(
-					res.map((card: any) => ({
+					res.map((card: Cards) => ({
 						...card,
-						likes: card.likes || [], // Ensures likes is always an array
+						likes: card.likes || [],
 					})),
 				);
 				setLoading(false);
@@ -35,7 +34,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				console.error(err);
 				setLoading(false);
 			});
-	}, [decodedToken]);
+	}, [decodedToken, cards.length, setCards]);
 
 	const handleLikeToggle = (cardId: string) => {
 		if (!decodedToken || !decodedToken._id) return;
@@ -43,33 +42,25 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 		const updatedCards = cards.map((card: any) => {
 			if (card._id === cardId) {
 				const isLiked = card.likes.includes(decodedToken._id);
-				console.log(isLiked);
+				const updatedLikes = isLiked
+					? card.likes.filter((id: string) => id !== decodedToken._id)
+					: [...card.likes, decodedToken._id];
 
-				if (isLiked) {
-					// Remove like
-					card.likes = card.likes.filter(
-						(id: string) => id !== decodedToken._id,
-					);
-				} else {
-					// Add like
-					card.likes.push(decodedToken._id);
-				}
-
-				// Update the color of the like button on action
 				setLikeColors((prevColors) => ({
 					...prevColors,
 					[card._id]: isLiked ? "text-light" : "text-danger",
 				}));
 
-				// Update like status
-				updateLikeStatus(cardId, decodedToken._id).catch((err) => {
-					console.log("Failed to update like status:", err);
-				});
+				return {...card, likes: updatedLikes};
 			}
 			return card;
 		});
 
 		setCards(updatedCards);
+
+		updateLikeStatus(cardId, decodedToken._id).catch((err) => {
+			console.log("Failed to update like status:", err);
+		});
 	};
 
 	if (loading) return <Loading />;

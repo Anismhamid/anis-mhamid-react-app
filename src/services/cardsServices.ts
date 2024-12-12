@@ -3,7 +3,7 @@ import {Cards} from "../interfaces/Cards";
 
 const api: string = import.meta.env.VITE_API_URL;
 
-let getCards: AxiosRequestConfig = {
+const getCards: AxiosRequestConfig = {
 	method: "get",
 	maxBodyLength: Infinity,
 	url: `${api}/cards`,
@@ -34,7 +34,7 @@ export const getLikedCardById = async (userId: string): Promise<any> => {
 };
 
 export const updateLikeStatus = async (cardId: string, userId: string): Promise<any> => {
-	let token = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("token");
 	if (!token) {
 		throw new Error("No token found, please log in again");
 	}
@@ -63,7 +63,7 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 };
 
 export const getMyCards = async (userId: string) => {
-	let token = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("token");
 	if (!token) {
 		throw new Error("User not authenticated");
 	}
@@ -78,7 +78,7 @@ export const getMyCards = async (userId: string) => {
 };
 
 export const createNewCard = async (card: Cards) => {
-	let token = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("token");
 	let response: Cards = await axios.request({
 		...getCards,
 		method: "post",
@@ -86,4 +86,34 @@ export const createNewCard = async (card: Cards) => {
 		data: card,
 	});
 	return response;
+};
+
+export const putCard = async (cardId: string, newCard: Cards) => {
+	let token: string | null = localStorage.getItem("token");
+	try {
+		const response = await axios.request({
+			...getCards,
+			url: `${api}/${cardId}`,
+			headers: {"x-auth-token": token},
+			data: newCard,
+		});
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw new Error();
+	}
+};
+
+export const getCardById = async (cardId: string) => {
+	try {
+		const response = await axios.request({
+			...getCards,
+			url: `${api}/${cardId}`,
+			headers: {},
+		});
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw new Error();
+	}
 };

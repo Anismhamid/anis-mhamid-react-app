@@ -1,13 +1,12 @@
-import {FunctionComponent, useEffect, useState} from "react";
+import {FunctionComponent, useEffect} from "react";
 import {Link, NavLink} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
-import useToken from "../customHooks/useToken";
+import useToken from "../hooks/useToken";
 
 interface NavbarProps {}
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
-	const [loading, setLoading] = useState<boolean>(true);
 	
 	const {
 		setAuth,
@@ -37,6 +36,7 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
 		setIsAdmin(false);
 		setIsLogedIn(false);
 		localStorage.removeItem("token");
+		localStorage.removeItem("userId");
 	};
 
 	return (

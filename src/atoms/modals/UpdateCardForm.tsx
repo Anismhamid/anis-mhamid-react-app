@@ -1,33 +1,45 @@
 import {FormikValues, useFormik} from "formik";
-import {FunctionComponent} from "react";
+import {FunctionComponent, useEffect, useState} from "react";
 import * as yup from "yup";
 import CardsInput from "./CardsInput";
-import {Cards} from "../../../interfaces/Cards";
-import {createNewCard} from "../../../services/cardsServices";
-import {successMSG} from "../../taosyify/Toastify";
+import {Cards} from "../../interfaces/Cards";
+import {getCardById, putCard} from "../../services/cardsServices";
+import {successMSG} from "../taosyify/Toastify";
+import initialValues from "./cardsInitionalValues";
+import {useParams} from "react-router-dom";
 
-interface AddNewCardFormProps {}
+interface UpdateCardFormProps {}
 
-const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
-	const formik:FormikValues = useFormik<Cards>({
+const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = () => {
+	const [card, setCard] = useState<Cards>(initialValues);
+	const {cardId} = useParams<{cardId: string}>();
+
+	useEffect(() => {
+		getCardById(cardId as string).then((res) => {
+			setCard(res);
+		});
+	}, [cardId]);
+
+	const formik: FormikValues = useFormik<Cards>({
+		enableReinitialize: true,
 		initialValues: {
-			title: "",
-			subtitle: "",
-			description: "",
-			phone: "",
-			email: "",
-			web: "",
+			title: card.title,
+			subtitle: card.subtitle,
+			description: card.description,
+			phone: card.phone,
+			email: card.email,
+			web: card.web,
 			image: {
-				url: "",
-				alt: "",
+				url: card.image.url,
+				alt: card.image.alt,
 			},
 			address: {
-				state: "",
-				country: "",
-				city: "",
-				street: "",
-				houseNumber: 0,
-				zip: 0,
+				state: card.address.state,
+				country: card.address.country,
+				city: card.address.city,
+				street: card.address.street,
+				houseNumber: card.address.houseNumber,
+				zip: card.address.zip,
 			},
 		},
 		validationSchema: yup.object({
@@ -56,7 +68,7 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
 			}),
 		}),
 		onSubmit: (values: Cards) => {
-			createNewCard(values).then((res) => {
+			putCard(cardId as string, values).then((res) => {
 				successMSG(`${values.title} card is created successfuly`);
 				console.log(res);
 			});
@@ -271,4 +283,4 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
 	);
 };
 
-export default AddNewCardForm;
+export default UpdateCardForm;

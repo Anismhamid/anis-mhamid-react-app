@@ -1,5 +1,5 @@
 import {FunctionComponent} from "react";
-import styless from "./loading.module.css";
+import styless from "../loading.module.css";
 
 interface LoadingProps {}
 

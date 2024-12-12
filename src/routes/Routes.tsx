@@ -7,6 +7,7 @@ import Profile from "../components/Profile";
 import Cards from "../components/Cards";
 import SandBox from "../components/SandBox";
 import MyCards from "../components/MyCards";
+import UserDetails from "../components/EditUser";
 
 export const routes = {
 	cards: <Route path='/' element={<Cards />} />,
@@ -17,6 +18,7 @@ export const routes = {
 	sandBox: <Route path='/sandBox' element={<SandBox />} />,
 	myCards: <Route path='/myCards' element={<MyCards />} />,
 	profile: <Route path='/profile' element={<Profile />} />,
+	userDetails: <Route path='/userDetails/:userId' element={<UserDetails />} />,
 };
 
 export const pathes = {
@@ -28,4 +30,5 @@ export const pathes = {
 	sandBox: "/sandBox",
 	myCards: "/myCards",
 	profile: "/profile",
+	userDetails: "/userDetails/:userId",
 };

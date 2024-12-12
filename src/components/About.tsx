@@ -33,13 +33,13 @@ const About: FunctionComponent<AboutProps> = () => {
 					<li className='list-group-item'>
 						Customizable templates for your business card design.
 					</li>
-					<li className='list-group-item my-3 p-4 mx-3'>
+					<li className='list-group-item my-3 p-4'>
 						Instant sharing via QR code or direct link.
 					</li>
 					<li className='list-group-item'>
 						Secure cloud storage for easy access and updates.
 					</li>
-					<li className='list-group-item my-3 p-4 mx-5'>
+					<li className='list-group-item my-3 p-4'>
 						Integration with social media profiles and websites.
 					</li>
 					<li className='list-group-item'>

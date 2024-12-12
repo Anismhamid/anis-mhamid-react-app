@@ -9,6 +9,7 @@ interface DecodedToken {
 
 function useToken() {
 	const token = localStorage.getItem("token");
+	const userId = localStorage.getItem("userId");
 	const [decodedToken, setAfterDecode] = useState<any>({});
 
 	useEffect(() => {
@@ -16,7 +17,7 @@ function useToken() {
 			if (token) {
 				try {
 					const decoded: DecodedToken = jwtDecode(token);
-					const currentTime = Date.now() / 1000;
+					const currentTime = Date.now() / 5000;
 					
 					if (decoded.exp < currentTime) {
 						localStorage.removeItem("token");
@@ -28,7 +29,10 @@ function useToken() {
 					console.log("Invalid token:", error);
 					localStorage.removeItem("token");
 					setAfterDecode(null);
+					
 				}
+			}else if(userId){
+				setAfterDecode(userId)
 			} else {
 				setAfterDecode(null);
 			}

@@ -1,20 +1,21 @@
 import {FunctionComponent, useState, useEffect} from "react";
 import {useNavigate} from "react-router-dom";
 import {getUserById, loginIn} from "../services/userServices";
-import {wellcomeMSG, errorMSG} from "../assets/taosyify/Toastify";
 import {pathes} from "../routes/Routes";
 import * as yup from "yup";
 import {FormikValues, useFormik} from "formik";
 import {UserLogin} from "../interfaces/User";
 import {useUserContext} from "../context/UserContext";
-import useToken from "../customHooks/useToken";
-import Loading from "../assets/loading/Loading";
-import { jwtDecode } from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
+import useToken from "../hooks/useToken";
+import {errorMSG, wellcomeMSG} from "../atoms/taosyify/Toastify";
+import Loading from "./Loading";
 
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
-	const {isAdmin,auth,setAuth, setIsAdmin,setIsBusiness, setIsLogedIn} = useUserContext();
+	const {isAdmin, auth, setAuth, setIsAdmin, setIsBusiness, setIsLogedIn} =
+		useUserContext();
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const {decodedToken} = useToken();
@@ -34,9 +35,9 @@ const Login: FunctionComponent<LoginProps> = () => {
 			if (decodedToken && decodedToken._id)
 				getUserById(decodedToken._id)
 					.then(() => {
-						setAuth({...decodedToken,isAdmin:isAdmin});
+						setAuth({...decodedToken, isAdmin: isAdmin});
 						setIsAdmin(decodedToken.isAdmin);
-						setIsBusiness(auth?.isBusiness as boolean)
+						setIsBusiness(auth?.isBusiness as boolean);
 						setIsLogedIn(true);
 					})
 					.catch((err) => {
@@ -72,9 +73,8 @@ const Login: FunctionComponent<LoginProps> = () => {
 					setLoading(false);
 					localStorage.setItem("token", res.data);
 					navigate(pathes.cards);
-					const deco = jwtDecode(res.data)
-					wellcomeMSG(`Welcome Back! 🦄 ${deco.nbf
-					}`);
+					const deco = jwtDecode(res.data);
+					wellcomeMSG(`Welcome Back! 🦄 ${deco.nbf}`);
 				})
 				.catch((err) => {
 					setLoading(false);

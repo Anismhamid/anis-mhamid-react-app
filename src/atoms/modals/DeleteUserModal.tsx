@@ -1,14 +1,20 @@
 import {FunctionComponent} from "react";
 import {Button, Modal} from "react-bootstrap";
-import {errorCircle} from "../../../fontAwesome/Icons";
+import {errorCircle} from "../../fontAwesome/Icons";
 
 interface DeleteUserModalProps {
 	show: boolean;
 	onHide: Function;
-	onDelete: Function; 
+	onDelete: Function;
+	refresh: Function;
 }
 
-const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({onHide, show,onDelete}) => {
+const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({
+	onHide,
+	show,
+	onDelete,
+	refresh,
+}) => {
 	return (
 		<>
 			<Modal show={show} onHide={() => onHide()} backdrop='static' keyboard={false}>
@@ -22,7 +28,13 @@ const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({onHide, show,
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<Button variant='danger' onClick={() => onDelete()}>
+					<Button
+						variant='danger'
+						onClick={() => {
+							onDelete();
+							refresh();
+						}}
+					>
 						DELETE USER
 					</Button>
 					<Button variant='secondary' onClick={() => onHide()}>

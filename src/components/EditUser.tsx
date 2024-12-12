@@ -1,44 +1,50 @@
-import {FunctionComponent} from "react";
-import {useFormik} from "formik";
-import * as yup from "yup";
+import {useState, useEffect, FunctionComponent} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {putUserData, getUserById} from "../services/userServices";
+import Loading from "./Loading";
+import {errorMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
-import {useNavigate} from "react-router-dom";
-import {pathes} from "../routes/Routes";
-import {registerNewUser} from "../services/userServices";
-import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
+import * as yup from "yup";
+import {useFormik} from "formik";
 import CardsInput from "../atoms/modals/CardsInput";
 
-interface RegisterProps {}
+interface EditUserProps {}
 
-const Register: FunctionComponent<RegisterProps> = () => {
+const EditUser: FunctionComponent<EditUserProps> = () => {
+	const [isLoading, setIsLoading] = useState(true);
+	const {userId} = useParams<string>();
 	const navigate = useNavigate();
+	const [user, setUser] = useState<User>({
+		name: {first: "", middle: "", last: ""},
+		phone: "",
+		email: "",
+		password: "",
+		address: {state: "", city: "", country: "", street: "", houseNumber: 0, zip: 0},
+		image: {url: "", alt: ""},
+		isBusiness: false,
+	});
 
-	const formik = useFormik<User>({
+	const formik = useFormik({
+		enableReinitialize: true,
 		initialValues: {
 			name: {
-				first: "",
-				middle: "",
-				last: "",
+				first: user.name.first,
+				middle: user.name.middle,
+				last: user.name.last,
 			},
-			phone: "",
-			email: "",
-			password: "",
-			image: {
-				url: "",
-				alt: "",
-			},
+			phone: user.phone,
+			image: {url: user.image.url, alt: user.image.alt},
 			address: {
-				state: "",
-				country: "",
-				city: "",
-				street: "",
-				houseNumber: 0,
-				zip: 0,
+				state: user.address.state,
+				country: user.address.country,
+				city: user.address.city,
+				street: user.address.street,
+				houseNumber: user.address.houseNumber,
+				zip: user.address.zip,
 			},
-			isBusiness: false,
 		},
 		validationSchema: yup.object({
-			name: yup.object({
+				name: yup.object({
 				first: yup.string().required().min(2).max(256),
 				middle: yup.string().min(2).max(256).optional(),
 				last: yup.string().required().min(2).max(256),
@@ -52,16 +58,6 @@ const Register: FunctionComponent<RegisterProps> = () => {
 					/^(\(\d{3}\)\s?|\d{3}[-.\s]?)\d{3}[-.\s]?\d{4}$/,
 					"Invalid phone number format. Example: (123) 456-7890 or 123-456-7890",
 				),
-			email: yup
-				.string()
-				.required("Email is required")
-				.email("Invalid email format")
-				.min(5, "Email must be at least 5 characters long"),
-			password: yup
-				.string()
-				.required("Password is required")
-				.min(7, "Password must be at least 7 characters long")
-				.max(20, "Password must be at most 20 characters long"),
 			image: yup.object({
 				url: yup
 					.string()
@@ -81,34 +77,69 @@ const Register: FunctionComponent<RegisterProps> = () => {
 				houseNumber: yup.number().min(1).required("House number is required"),
 				zip: yup.number().min(2).required("Zip code is required"),
 			}),
-			isBusiness: yup.boolean(),
 		}),
 		onSubmit: (values: User) => {
-			try {
-				registerNewUser(values)
-					.then(() => {
-						navigate(pathes.login);
-						successMSG(
-							`Please Login`,
-						);
-					})
-					.catch((err) => {
-						errorMSG(`Registration failed: ${err.message || err}`);
-					});
-			} catch (error) {
-				errorMSG(`This user already have registered`);
-			}
+			putUserData(user._id as string, values).then((res)=>{
+				console.log(res);
+				
+			});
 		},
 	});
 
-	return (
-		<main className='container my-5'>
-			<h1 className='text-center text-light mb-5'>REGISTER</h1>
+	useEffect(() => {
+		if (!userId) return;
 
-			<form
-				onSubmit={formik.handleSubmit}
-				className='shadow-lg p-4 rounded-3 bg-white'
-			>
+		setIsLoading(true);
+		getUserById(userId)
+			.then((data) => {
+				setUser(data);
+				setIsLoading(false);
+			})
+			.catch((err) => {
+				console.log(err);
+				setIsLoading(false);
+				errorMSG("Error fetching user details");
+			});
+	}, [userId]);
+
+	if (isLoading) return <Loading />;
+
+	return (
+		<div className=" container mb-5">
+			<div className='text-end'>
+				<button className=" m-2" onClick={()=>navigate(-1)}>back</button>
+			</div>
+			<div className='row my-5 fw-bold lead'>
+				<div className='col-12'>
+					<p className='text-light fs-1 lead'>
+						{user.isBusiness ? "admin" : "Client"}
+					</p>
+				</div>
+				<div className='col-12'>
+					<img
+						src={user.image.url}
+						alt={user.image.alt}
+						className=' img-fluid rounded-5 my-4'
+						style={{maxWidth:"20rem"}}
+					/>
+				</div>
+				<div className='col-12'>
+					<p className=' text-light lead '>
+						{user.name.first} {user.name.last}
+					</p>
+				</div>
+				<div className='col-12'>
+					<p className=' text-light-emphasis'>{user.email}</p>
+				</div>
+				<div className='col-12'>
+					<p className=' text-light lead'>
+						{user.address.country} , {user.address.city}
+					</p>
+				</div>
+			</div>
+			<hr className=' border-light' />
+			<h6 className=' text-light lead'>Edit User</h6>
+			<form onSubmit={formik.handleSubmit} className='shadow-lg p-4 rounded-3'>
 				{/* First and Middle Name */}
 				<div className='row mb-3'>
 					<div className='col-md-6 col-sm-12'>
@@ -160,34 +191,6 @@ const Register: FunctionComponent<RegisterProps> = () => {
 							error={formik.errors.phone}
 							touched={formik.touched.phone}
 							placeholder={"Phone"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-				{/* Email and Password */}
-				<div className='row mb-3'>
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"email"}
-							type={"email"}
-							value={formik.values.email}
-							error={formik.errors.email}
-							touched={formik.touched.email}
-							placeholder={"Email"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"password"}
-							type={"password"}
-							value={formik.values.password}
-							error={formik.errors.password}
-							touched={formik.touched.password}
-							placeholder={"Password"}
 							onChange={formik.handleChange}
 							onBlur={formik.handleBlur}
 						/>
@@ -322,32 +325,17 @@ const Register: FunctionComponent<RegisterProps> = () => {
 						/>
 					</div>
 				</div>
-				{/* Business Account Checkbox */}
-				<div className='text-start my-3  w-50'>
-					<hr />
-					<input
-						type='checkbox'
-						name='isBusiness'
-						className='form-check-input'
-						id='isBusiness'
-						checked={formik.values.isBusiness ? true : false}
-						onChange={formik.handleChange}
-					/>
-					<label className='form-check-label fw-bold mx-2' htmlFor='isBusiness'>
-						Business Account
-					</label>
-				</div>
 				{/* Submit Button */}
 				<button
 					type='submit'
 					className='btn btn-primary w-100 py-2 mt-3'
 					disabled={!formik.dirty || !formik.isValid}
 				>
-					REGISTER
+					Update
 				</button>
 			</form>
-		</main>
+		</div>
 	);
 };
 
-export default Register;
+export default EditUser;

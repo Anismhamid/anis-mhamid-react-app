@@ -1,50 +1,107 @@
-# React + TypeScript + Vite
+# bCards - React App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+bCards is a digital business card management platform built with **React** and **Vite**. It supports multiple user types with different access levels, including unregistered users, registered users, business accounts, and administrators. The platform allows users to manage their digital business cards through CRUD operations: **Create**, **Read**, **Update**, and **Delete**.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   [Overview](#overview)
+-   [User Roles and Permissions](#user-roles-and-permissions)
+-   [Technologies Used](#technologies-used)
+-   [Installation](#installation)
+-   [Running the Project](#running-the-project)
+-   [Project Structure](#project-structure)
+-   [CRUD Operations](#crud-operations)
+-   [Contribution](#contribution)
+-   [License](#license)
 
-## Expanding the ESLint configuration
+## Overview
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+bCards allows users to manage their digital business cards, edit profiles, and access different features depending on their roles. The app supports the following user roles:
 
-- Configure the top-level `parserOptions` property like this:
+-   **Unregistered User**: A user who is not registered or logged in.
+-   **Registered User**: A user who is registered and logged in but does not have a business account.
+-   **Registered Business User**: A user who is registered and logged in with a business account.
+-   **Admin User**: A user with administrator privileges who can manage other users and access higher-level functionality.
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+The application supports **CRUD** operations, allowing users to:
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+-   **Create** new business cards.
+-   **Read** and view existing business cards.
+-   **Update** business card information.
+-   **Delete** business cards when needed.
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+## User Roles and Permissions
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### 1. **Unregistered User**
+
+-   **Permissions**:
+    -   Can view public pages such as the home page and the About page.
+    -   Cannot access any user or company-specific pages.
+    -   Must register or log in for additional access.
+
+### 2. **Registered User**
+
+-   **Permissions**:
+    -   Can log in and access their profile.
+    -   Can manage their digital business cards (CRUD operations).
+    -   Cannot access business-specific features.
+    -   Cannot access admin pages or manage other users.
+
+### 3. **Registered Business User**
+
+-   **Permissions**:
+    -   Can log in and access their business profile.
+    -   Can create, update, and manage business-related digital cards (CRUD operations).
+    -   Can view business card analytics and manage customer interactions (if implemented).
+    -   Cannot access admin pages or manage other users.
+
+### 4. **Admin User**
+
+-   **Permissions**:
+    -   Has full access to all user and business data.
+    -   Can manage and delete any user, business account, or card (CRUD operations).
+    -   Can access and modify all business profiles and users.
+    -   Can view analytics, audit logs, and perform administrative tasks.
+    -   Can access protected admin paths and perform higher-level administration tasks.
+
+## Technologies Used
+- **React**: JavaScript library for building the user interface.
+- **Vite**: Next-generation build tool for faster development and production builds.
+- **React Router**: For routing and navigating between pages.
+- **Formik**: For handling forms with validation.
+- **Yup**: For form validation schemas.
+- **Axios**: For making HTTP requests.
+- **JWT (JSON Web Tokens)**: For secure user authentication.
+- **React Context API**: For managing global user state (authentication and roles).
+- **Toastify**: To display notifications such as success and error messages.
+- **Bootstrap**: For responsive UI components.
+- **React-Bootstrap**: A React component library for Bootstrap, providing Bootstrap components as React components.
+- **React FontAwesome**: To include and use FontAwesome icons in the React app.
+
+## Project Structure
+
+-   **/src**
+    -   **/components** # React components (e.g., Navbar, Profile, Cards)
+    -   **/context** # React Context for global state (e.g., user authentication)
+    -   **/hooks** # Custom hooks (e.g., useUserData, useToken)
+    -   **/interfaces** # TypeScript interfaces for data types (e.g., User, Card)
+    -   **/services** # API services (e.g., userServices, cardsServices)
+    -   **/atoms** # Reusable UI elements like modals and input components
+    -   **/styles** # Global and component-specific CSS files
+    -   **/routes** # Route definitions for navigation
+    -   **main.tsx** # Main App component
+    -   **main.tsx** # React entry point
+
+## Installation
+
+To run the project locally, follow these steps:
+
+1. **Clone the repository**:
+    ```bash
+    git clone https://github.com/Anismhamid/anis-mhamid-react-app.git
+    ```
+
+Navigate to the project directory:
+
+bash
+Copy code

@@ -1,36 +1,45 @@
-import {FunctionComponent, useEffect, useMemo, useRef, useState} from "react";
-import useToken from "../customHooks/useToken";
+import {FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
 import {deleteUserById, getAllUsers} from "../services/userServices";
 import {User} from "../interfaces/User";
-import Loading from "../assets/loading/Loading";
 import {Link, useNavigate} from "react-router-dom";
 import {edit, trash} from "../fontAwesome/Icons";
 import {Pagination} from "react-bootstrap";
-import DeleteUserModal from "../assets/modals/users/DeleteUserModal";
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
-import {wellcomeMSG, errorMSG} from "../assets/taosyify/Toastify";
+import useToken from "../hooks/useToken";
+import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
+import Loading from "./Loading";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 
 const SandBox: FunctionComponent = () => {
 	const usersPerPage = 50;
+	const navigate = useNavigate();
 	const {decodedToken} = useToken();
 	const {isAdmin} = useUserContext();
 	const [users, setUsers] = useState<User[]>([]);
+	const [searchTerm, setSearchTerm] = useState("");
 	const [isLoading, setISLoading] = useState(true);
 	const [currentPage, setCurrentPage] = useState(1);
-	const inputRef = useRef<HTMLInputElement | null>(null);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [userSearch, setUserSearch] = useState<User[] | null>(null);
-	const [searchTerm, setSearchTerm] = useState("");
-	const navigate = useNavigate();
-
+	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+	const [render, setRender] = useState<boolean>(false);
 	const onHide = () => setShowDeleteModal(false);
 	const onShow = () => setShowDeleteModal(true);
 
 	// Pagination logic
 	const startIndex = (currentPage - 1) * usersPerPage;
-	const usersToDisplay = userSearch || users;
-	const currentUsers = usersToDisplay.slice(startIndex, startIndex + usersPerPage);
+
+	const usersToDisplay = useMemo(() => {
+		if (userSearch) {
+			return userSearch;
+		}
+		return users;
+	}, [userSearch, users]);
+
+	const currentUsers = useMemo(() => {
+		return usersToDisplay.slice(startIndex, startIndex + usersPerPage);
+	}, [usersToDisplay, startIndex]);
 
 	// Fetch users on admin access
 	useEffect(() => {
@@ -38,31 +47,37 @@ const SandBox: FunctionComponent = () => {
 			getAllUsers()
 				.then((res) => {
 					setUsers(res);
+					console.log(res);
+
 					setISLoading(false);
 				})
 				.catch((err) => {
 					console.log(err);
 					errorMSG("Error fetching users.");
+					setISLoading(false);
 				});
 		} else {
-			navigate(pathes.cards); // redirect if the user is not admin
+			errorMSG("Can't find this page");
+			navigate(pathes.cards);
 		}
-	}, [isAdmin]);
+	}, [render, isAdmin]);
+
+	const refresh = () => setRender(!render);
 
 	// Handle Edit
-	const handleEdit = (userId: string) => {
-		console.log(`Editing user with id: ${userId}`);
-	};
+	const handleEdit = useCallback((userId: string) => {
+		setSelectedUserId(userId);
+	}, []);
 
 	// Handle Delete
 	const handleDelete = (userId: string) => {
 		try {
 			deleteUserById(userId)
 				.then(() => {
-					setUsers((prevUsers) =>
+					setUsers((prevUsers: User[]) =>
 						prevUsers.filter((user) => user._id !== userId),
 					);
-					wellcomeMSG("User deleted successfully.");
+					infoMSG("User deleted successfully.");
 				})
 				.catch((err) => {
 					console.log(err);
@@ -74,53 +89,38 @@ const SandBox: FunctionComponent = () => {
 		}
 	};
 
-	// Filtered users based on search term
+	// Handle search
+	const handleSearch = useCallback((name: string) => {
+		setSearchTerm(name);
+		setCurrentPage(1);
+	}, []);
+
 	const filteredUsers = useMemo(() => {
-		const trimmedName = searchTerm.trim().toLowerCase();
-		if (trimmedName === "") return null; // Don't display anything if search is empty
+		const query = searchTerm.trim().toLowerCase();
+		if (!query) return null;
 
 		return users.filter((user) => {
-			const firstName = user.name.first.toLowerCase();
-			const lastName = user.name.last.toLowerCase();
+			const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
 			const phone = user.phone.toLowerCase();
-
+			const email = user.email?.toLowerCase();
 			return (
-				firstName.includes(trimmedName) ||
-				lastName.includes(trimmedName) ||
-				phone.includes(trimmedName)
+				fullName.includes(query) ||
+				phone.includes(query) ||
+				email?.includes(query)
 			);
 		});
-	}, [searchTerm, users]);
-
-
-	// Handle Search input change
-	const handleSearch = (name: string) => {
-		setSearchTerm(name); // Update the search term
-	};
-
-	// Update the userSearch whenever filteredUsers change
-	useEffect(() => {
-		setUserSearch(filteredUsers);
-	}, [filteredUsers]);
+	}, [searchTerm]);
 
 	// Loading state
-	if (isLoading) {
-		return <Loading />;
-	}
+	if (isLoading) return <Loading />;
 
 	return (
 		<>
 			<div className='d-flex justify-content-around'>
 				<h2 className='text-light'>SandBox</h2>
 				<div className='mt-3 mb-3'>
-					<form
-						className='d-flex me-3'
-						onSubmit={(e) => {
-							e.preventDefault();
-						}}
-					>
+					<form className='d-flex me-3' onSubmit={(e) => e.preventDefault()}>
 						<input
-							ref={inputRef}
 							id='search2'
 							name='search2'
 							className='form-control me-2 search-input'
@@ -129,30 +129,15 @@ const SandBox: FunctionComponent = () => {
 							aria-label='Search'
 							onChange={(e) => handleSearch(e.target.value)}
 						/>
+						<button
+							type='submit'
+							onClick={() => setUserSearch(filteredUsers)}
+							className='btn btn-primary'
+						>
+							Search
+						</button>
 					</form>
 				</div>
-			</div>
-
-			{/* Pagination */}
-			<div className='container-sm'>
-				<Pagination
-					className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'
-					data-bs-theme='dark'
-				>
-					{[...Array(Math.ceil(usersToDisplay.length / usersPerPage))].map(
-						(_, i) => (
-							<Pagination.Item
-								key={i}
-								active={currentPage === i + 1}
-								onClick={() => {
-									setCurrentPage(i + 1);
-								}}
-							>
-								{i + 1}
-							</Pagination.Item>
-						),
-					)}
-				</Pagination>
 			</div>
 
 			{/* Displaying the user result or all users */}
@@ -167,34 +152,40 @@ const SandBox: FunctionComponent = () => {
 						>
 							<div className='card-body'>
 								<p>
-									<strong>Name:</strong> {user.name.first}{" "}
-									{user.name.last}
+									<strong>Name:</strong> {user.name.first}
 								</p>
 								<p>
 									<strong>Email:</strong> {user.email}
 								</p>
-								<img
-									className='img-fluid'
-									src={user.image.url || "/avatar-design.png"}
-									alt={user.name.first}
-									style={{
-										width: "100px",
-										height: "100px",
-										borderRadius: "50%",
-									}}
-								/>
+								<Link to={`/userDetails/${user._id}`}>
+									<img
+										className='img-fluid'
+										src={user.image.url || "/avatar-design.png"}
+										alt={user.name.first}
+										style={{
+											width: "100px",
+											height: "100px",
+											borderRadius: "50%",
+										}}
+									/>
+								</Link>
 							</div>
 
-							{decodedToken?.isAdmin && (
+							{isAdmin === true && (
 								<>
 									<div className='d-flex text-end justify-content-end my-3'>
-										<button
-											className='text-warning w-25 mx-5'
-											onClick={() => handleEdit(user._id as string)}
-										>
-											{edit}
-										</button>
+										<Link to={`/userDetails/${user._id}`}>
+											<button
+												className='text-warning mx-5'
+												onClick={() =>
+													handleEdit(user._id as string)
+												}
+											>
+												{edit}
+											</button>
+										</Link>
 										<DeleteUserModal
+											refresh={refresh}
 											show={showDeleteModal}
 											onHide={onHide}
 											onDelete={() =>
@@ -202,7 +193,7 @@ const SandBox: FunctionComponent = () => {
 											}
 										/>
 										<button
-											className='text-danger w-25'
+											className='text-danger'
 											onClick={onShow}
 										>
 											{trash}
@@ -213,7 +204,7 @@ const SandBox: FunctionComponent = () => {
 						</div>
 					))}
 				</div>
-			) : usersToDisplay.length ? (
+			) : (
 				<div className='table-responsive'>
 					<table className='table table-striped table-dark'>
 						<thead>
@@ -225,7 +216,7 @@ const SandBox: FunctionComponent = () => {
 							</tr>
 						</thead>
 						<tbody>
-							{currentUsers.map((user) => (
+							{currentUsers.map((user: User) => (
 								<tr key={user._id}>
 									<td colSpan={2}>
 										{user.name.first} {user.name.last}
@@ -249,18 +240,23 @@ const SandBox: FunctionComponent = () => {
 									{decodedToken?.isAdmin && (
 										<>
 											<td colSpan={1}>
-												<button
-													className='text-warning'
-													onClick={() =>
-														handleEdit(user._id as string)
-													}
-												>
-													{edit}
-												</button>
+												<Link to={`/userDetails/${user._id}`}>
+													<button className='text-warning '>
+														{edit}
+													</button>
+												</Link>
 											</td>
 											<td colSpan={1}>
+												<DeleteUserModal
+													refresh={refresh}
+													show={showDeleteModal}
+													onHide={onHide}
+													onDelete={() =>
+														handleDelete(user._id as string)
+													}
+												/>
 												<button
-													className='text-danger'
+													className='text-danger '
 													onClick={onShow}
 												>
 													{trash}
@@ -295,8 +291,6 @@ const SandBox: FunctionComponent = () => {
 						</Pagination>
 					</div>
 				</div>
-			) : (
-				<p>No users found</p>
 			)}
 		</>
 	);

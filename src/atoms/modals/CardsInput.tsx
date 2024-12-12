@@ -1,7 +1,7 @@
 import {FunctionComponent} from "react";
 
 // props type for formik validation
-type UserInputFormikPropsType = {
+interface UserInputFormikPropsType {
 	name: string;
 	type: string;
 	value: string | number | undefined;
@@ -11,11 +11,6 @@ type UserInputFormikPropsType = {
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 	onBlur: (e: React.FocusEvent<HTMLInputElement, Element>) => void;
 };
-
-// initional values for adding a new card
-// export const newCardInitionalVal = {
-	
-// };
 
 const CardsInput: FunctionComponent<UserInputFormikPropsType> = (props) => {
 	return (
