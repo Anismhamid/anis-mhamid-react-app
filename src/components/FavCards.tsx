@@ -114,19 +114,23 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 													card.likes?.includes(decodedToken._id)
 														? "text-danger"
 														: "text-light"
-												} fs-1`}
+												} fs-4`}
 											>
 												{heart}
 											</p>
-											<p
-												className={`${
-													card.likes?.includes(decodedToken._id)
-														? "text-danger"
-														: "text-light"
-												} mx-2 fs-4`}
-											>
-												{card.likes?.length}
-											</p>
+											<sub>
+												<p
+													className={`${
+														card.likes?.includes(
+															decodedToken?._id,
+														)
+															? "text-danger"
+															: "text-light"
+													} mx-1 fs-5`}
+												>
+													{card.likes?.length}
+												</p>
+											</sub>
 										</div>
 									</div>
 								</div>

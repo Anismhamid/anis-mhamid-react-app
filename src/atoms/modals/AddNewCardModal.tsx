@@ -23,7 +23,7 @@ const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({onHide, show}
 			>
 				<Modal.Header closeButton>
 					<Modal.Title className=' text-light display-6'>
-						Upload CARD
+						Add CARD
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
@@ -35,7 +35,7 @@ const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({onHide, show}
 						className='text-uppercase fw-bold'
 						onClick={() => onHide()}
 					>
-						Dismantle
+						Cancel
 					</Button>
 				</Modal.Footer>
 			</Modal>

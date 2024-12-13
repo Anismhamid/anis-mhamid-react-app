@@ -1,25 +1,34 @@
-import {FunctionComponent, useCallback, useState} from "react";
-import {updateLikeStatus} from "../services/cardsServices";
+import {FunctionComponent, useCallback, useEffect, useState} from "react";
+import {deleteCardById, updateLikeStatus} from "../services/cardsServices";
 import {useUserContext} from "../context/UserContext";
 import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import useCards from "../hooks/useCards";
 import UpdateCardModal from "../atoms/modals/UpdateCardModal";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
+import {Cards} from "../interfaces/Cards";
 
-interface CardsProps {}
+interface CardsHomeProps {}
 
-const Cards: FunctionComponent<CardsProps> = () => {
+const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {decodedToken} = useToken();
 	const {isAdmin, isLogedIn} = useUserContext();
-	const {cards, setCards, error} = useCards();
+	const {allCards, setCards, error} = useCards();
 	const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-	const onHide = useCallback<() => void>((): void => setOpenUpdateModal(false), []);
-	const onShow = useCallback<() => void>((): void => setOpenUpdateModal(true), []);
+	const onHide = useCallback(() => setOpenUpdateModal(false), []);
+	const onShow = useCallback(() => setOpenUpdateModal(true), []);
+	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
+	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
+
+	useEffect(() => {
+		setCards((prev) => prev);
+	}, [setShowDeleteModal]);
 
 	const handleLikeToggle = (cardId: string) => {
-		const updatedCards = cards.map((card: any) => {
+		const updatedCards = allCards.map((card: any) => {
 			if (card._id === cardId) {
 				const isLiked = card.likes.includes(decodedToken?._id);
 
@@ -44,11 +53,22 @@ const Cards: FunctionComponent<CardsProps> = () => {
 		setCards(updatedCards);
 	};
 
-	if (error) {
-		return <p className='lead alert alert-danger text-center'>{error}</p>;
-	}
+const handleDeleteCard = (cardId: string) => {
+	deleteCardById(cardId)
+		.then(() => {
+			console.log(cardId);
+		})
+		.catch((err) => {
+			console.log(err);
+		});
+};
 
-	if (!cards.length) {
+
+	const refresh = () => {
+		setShowDeleteModal(false);
+	};
+
+	if (!allCards.length) {
 		return <Loading />;
 	}
 
@@ -56,7 +76,7 @@ const Cards: FunctionComponent<CardsProps> = () => {
 		<div className='container py-5 lead'>
 			<h1 className='text-center text-light mt-5'>Cards</h1>
 			<div className='row'>
-				{cards.map((card) => (
+				{allCards.map((card: Cards) => (
 					<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
 						<div
 							className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'
@@ -88,6 +108,7 @@ const Cards: FunctionComponent<CardsProps> = () => {
 								</h6>
 								<hr />
 								<div className='card-text'>
+									<h6>{card._id}</h6>
 									<h5>Phone:</h5>
 									<p>{card.phone}</p>
 									<h5>Address:</h5>
@@ -113,26 +134,56 @@ const Cards: FunctionComponent<CardsProps> = () => {
 														)
 															? "text-danger"
 															: "text-light"
-													} fs-2`}
+													} fs-4`}
 												>
 													{heart}
 												</p>
-												<p className='mx-2 '>
-													{card.likes?.length}
-												</p>
+												<sub>
+													<p
+														className={`${
+															card.likes?.includes(
+																decodedToken?._id,
+															)
+																? "text-danger"
+																: "text-light"
+														} mx-1 fs-5`}
+													>
+														{card.likes?.length}
+													</p>
+												</sub>
 											</div>
 										</div>
 										{isAdmin && (
-											<div
-												onClick={onShow}
-												className='mt-3 d-flex justify-content-around'
-											>
-												<button className='btn btn-warning btn-sm'>
+											<div className='mt-3 d-flex justify-content-around'>
+												<button
+													onClick={onShow}
+													className='btn btn-warning btn-sm'
+												>
 													Edit
 												</button>
-												<button className='btn btn-danger btn-sm'>
+												<DeleteUserModal
+													show={showDeleteModal}
+													onHide={onHideDeleteCardModal}
+													onDelete={() =>
+														handleDeleteCard(
+															card._id as string,
+														)
+													}
+													refresh={() => refresh()}
+												/>
+												<button
+													onClick={() => {
+														onShowDeleteCardModal();
+													}}
+													className='btn btn-danger btn-sm'
+												>
 													Delete
 												</button>
+												{error && (
+													<div className='alert alert-danger'>
+														{error}
+													</div>
+												)}
 											</div>
 										)}
 									</>
@@ -147,4 +198,4 @@ const Cards: FunctionComponent<CardsProps> = () => {
 	);
 };
 
-export default Cards;
+export default CardsHome;

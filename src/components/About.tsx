@@ -4,6 +4,7 @@ interface AboutProps {}
 
 const About: FunctionComponent<AboutProps> = () => {
 	return (
+
 		<div className='container py-5'>
 			<header className='text-center mb-4'>
 				<h1 className='display-4 text-primary'>About bCards</h1>

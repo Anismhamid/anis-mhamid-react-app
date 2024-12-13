@@ -21,7 +21,7 @@ const CardsInput: FunctionComponent<UserInputFormikPropsType> = (props) => {
 				name={props.name}
 				value={props.value}
 				placeholder={props.placeholder}
-				className={`form-control ${
+				className={`form-control w-100 ${
 					props.touched && props.error ? "is-invalid" : ""
 				}`}
 				onChange={props.onChange}

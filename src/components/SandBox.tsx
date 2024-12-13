@@ -47,8 +47,6 @@ const SandBox: FunctionComponent = () => {
 			getAllUsers()
 				.then((res) => {
 					setUsers(res);
-					console.log(res);
-
 					setISLoading(false);
 				})
 				.catch((err) => {

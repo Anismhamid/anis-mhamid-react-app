@@ -17,14 +17,20 @@ const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({
 }) => {
 	return (
 		<>
-			<Modal show={show} onHide={() => onHide()} backdrop='static' keyboard={false}>
+			<Modal
+				show={show} 
+				onHide={() => onHide()}
+				backdrop='static'
+				keyboard={false}
+				centered
+			>
 				<Modal.Header closeButton>
 					<Modal.Title>Delete User</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<div className='h5 text-danger fw-bold'>
-						<p className=' fs-1'>{errorCircle} WARNING!</p>
-						warning you sure want to delet this user?
+						<p className=' fs-1'>{errorCircle}</p>
+						warning you sure want to delet this ?
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
@@ -35,7 +41,7 @@ const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({
 							refresh();
 						}}
 					>
-						DELETE USER
+						DELETE
 					</Button>
 					<Button variant='secondary' onClick={() => onHide()}>
 						Close

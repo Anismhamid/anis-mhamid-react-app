@@ -3,7 +3,7 @@ import {getAllCards} from "../services/cardsServices";
 import {Cards} from "../interfaces/Cards";
 
 const useCards = () => {
-	const [cards, setCards] = useState<Cards[]>([]);
+	const [allCards, setCards] = useState<Cards[]>([]);
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
@@ -26,7 +26,7 @@ const useCards = () => {
 			})
 	}, []); 
 
-	return {cards, setCards, error};
+	return {allCards, setCards, error};
 };
 
 export default useCards;

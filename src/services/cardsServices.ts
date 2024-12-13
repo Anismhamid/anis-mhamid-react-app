@@ -20,7 +20,7 @@ export const getAllCards = async (): Promise<Cards[]> => {
 	}
 };
 
-export const getLikedCardById = async (userId: string): Promise<any> => {
+export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
 	try {
 		const response = await axios.request({
 			...getCards,
@@ -35,9 +35,7 @@ export const getLikedCardById = async (userId: string): Promise<any> => {
 
 export const updateLikeStatus = async (cardId: string, userId: string): Promise<any> => {
 	let token: string | null = localStorage.getItem("token");
-	if (!token) {
-		throw new Error("No token found, please log in again");
-	}
+	if (!token) return;
 
 	const payload = {
 		cardId,
@@ -53,43 +51,50 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 			},
 			data: payload,
 		});
-
-		// Return the updated card data from the response
 		return updatedCard;
 	} catch (error) {
 		console.error("Failed to update like status:", error);
-		throw error;
+		throw new Error();
 	}
 };
 
 export const getMyCards = async (userId: string) => {
 	let token: string | null = localStorage.getItem("token");
-	if (!token) {
-		throw new Error("User not authenticated");
+	if (!token) return;
+	try {
+		const response = await axios.request({
+			...getCards,
+			headers: {"x-auth-token": token},
+			url: `${api}/cards/my-cards?user_id=${userId}`,
+		});
+
+		return response.data;
+	} catch (error) {
+		console.log(error);
+		throw new Error();
 	}
-
-	const response = await axios.request({
-		...getCards,
-		headers: {"x-auth-token": token},
-		url: `${api}/cards/my-cards?user_id=${userId}`,
-	});
-
-	return response.data;
 };
 
 export const createNewCard = async (card: Cards) => {
 	let token: string | null = localStorage.getItem("token");
-	let response: Cards = await axios.request({
-		...getCards,
-		method: "post",
-		headers: {"x-auth-token": token},
-		data: card,
-	});
-	return response;
+	if (!token) return;
+	try {
+		let response: Cards = await axios.request({
+			...getCards,
+			method: "post",
+			headers: {"x-auth-token": token},
+			data: card,
+		});
+		return response;
+	} catch (error) {
+		console.log(error);
+		throw new Error();
+	}
 };
 
 export const putCard = async (cardId: string, newCard: Cards) => {
 	let token: string | null = localStorage.getItem("token");
+	if (!token) return;
 	try {
 		const response = await axios.request({
 			...getCards,
@@ -105,6 +110,8 @@ export const putCard = async (cardId: string, newCard: Cards) => {
 };
 
 export const getCardById = async (cardId: string) => {
+	let token: string | null = localStorage.getItem("token");
+	if (!token) return;
 	try {
 		const response = await axios.request({
 			...getCards,
@@ -115,5 +122,35 @@ export const getCardById = async (cardId: string) => {
 	} catch (error) {
 		console.log(error);
 		throw new Error();
+	}
+};
+
+export const deleteCardById = async (cardId: string) => {
+	let token: string | null = localStorage.getItem("token");
+
+	if (!token) {
+		console.error("Token is missing or invalid.");
+		return;
+	}
+
+	const data = {
+		bizNumber: 6943518,
+	};
+
+	try {
+		const response = await axios.request({
+			method: "delete",
+			url: `${api}/${cardId}`,
+			headers: {
+				"x-auth-token": token,
+				"Content-Type": "application/json",
+			},
+			data: data,
+		});
+
+		return response.data;
+	} catch (error) {
+		console.error("Request failed:", error);
+		console.log(cardId);
 	}
 };

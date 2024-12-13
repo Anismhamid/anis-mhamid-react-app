@@ -44,7 +44,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 			},
 		},
 		validationSchema: yup.object({
-				name: yup.object({
+			name: yup.object({
 				first: yup.string().required().min(2).max(256),
 				middle: yup.string().min(2).max(256).optional(),
 				last: yup.string().required().min(2).max(256),
@@ -79,9 +79,8 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 			}),
 		}),
 		onSubmit: (values: User) => {
-			putUserData(user._id as string, values).then((res)=>{
-				console.log(res);
-				
+			putUserData(user._id as string, values).then((res) => {
+				setUser((prev) => res);
 			});
 		},
 	});
@@ -96,19 +95,17 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				setIsLoading(false);
 			})
 			.catch((err) => {
+				setUser((prev) => prev);
 				console.log(err);
 				setIsLoading(false);
 				errorMSG("Error fetching user details");
 			});
-	}, [userId]);
+	}, [userId, setUser]);
 
 	if (isLoading) return <Loading />;
 
 	return (
-		<div className=" container mb-5">
-			<div className='text-end'>
-				<button className=" m-2" onClick={()=>navigate(-1)}>back</button>
-			</div>
+		<div className='container mb-5'>
 			<div className='row my-5 fw-bold lead'>
 				<div className='col-12'>
 					<p className='text-light fs-1 lead'>
@@ -120,8 +117,13 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 						src={user.image.url}
 						alt={user.image.alt}
 						className=' img-fluid rounded-5 my-4'
-						style={{maxWidth:"20rem"}}
+						style={{maxWidth: "20rem"}}
 					/>
+				</div>
+				<div className='col-12'>
+					<button className=' m-2' onClick={() => navigate(-1)}>
+						back
+					</button>
 				</div>
 				<div className='col-12'>
 					<p className=' text-light lead '>
@@ -139,7 +141,11 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 			</div>
 			<hr className=' border-light' />
 			<h6 className=' text-light lead'>Edit User</h6>
-			<form onSubmit={formik.handleSubmit} className='shadow-lg p-4 rounded-3'>
+			<form
+				onSubmit={formik.handleSubmit}
+				className=' border shadow-lg p-4 rounded-3'
+				data-bs-theme='dark'
+			>
 				{/* First and Middle Name */}
 				<div className='row mb-3'>
 					<div className='col-md-6 col-sm-12'>
@@ -328,7 +334,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				{/* Submit Button */}
 				<button
 					type='submit'
-					className='btn btn-primary w-100 py-2 mt-3'
+					className='btn btn-success w-100 py-2 mt-3'
 					disabled={!formik.dirty || !formik.isValid}
 				>
 					Update

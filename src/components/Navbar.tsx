@@ -1,13 +1,15 @@
 import {FunctionComponent, useEffect} from "react";
-import {Link, NavLink} from "react-router-dom";
+import {Link, NavLink, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
+import { fathMe } from "../fontAwesome/Icons";
 
 interface NavbarProps {}
 
 const Navbar: FunctionComponent<NavbarProps> = () => {
 	
+	const navigate = useNavigate()
 	const {
 		setAuth,
 		isLogedIn,
@@ -29,20 +31,25 @@ const Navbar: FunctionComponent<NavbarProps> = () => {
 			setIsLogedIn(false);
 			setIsAdmin(false);
 		}
-	}, [useToken, setAuth, isLogedIn, isAdmin, isBusiness]);
+	}, [decodedToken, setAuth, setIsLogedIn, setIsAdmin, setIsBusiness]);
 
 	const handleLogout = () => {
 		setAuth(null);
 		setIsAdmin(false);
+		setIsBusiness(false);
 		setIsLogedIn(false);
 		localStorage.removeItem("token");
-		localStorage.removeItem("userId");
+		navigate(pathes.cards);
 	};
 
 	return (
 		<header className='w-100 sticky-top'>
 			<nav className='navbar navbar-expand-lg navbar-dark bg-dark shadow-lg'>
 				<div className='container-fluid'>
+					<button id='toggle-theme'>
+						{fathMe}
+					</button>
+
 					<NavLink className='navbar-brand logo' to={pathes.cards}>
 						<img className='img-fluid w-75' src='/bCards.png' alt='bCards' />
 					</NavLink>

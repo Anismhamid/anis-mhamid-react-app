@@ -1,10 +1,11 @@
 import {FunctionComponent, useState, useEffect, useCallback} from "react";
-import {getMyCards, updateLikeStatus} from "../services/cardsServices";
-import {heart} from "../fontAwesome/Icons";
+import {deleteCardById, getMyCards, updateLikeStatus} from "../services/cardsServices";
+import {heart, trash} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import AddNewCardModal from "../atoms/modals/AddNewCardModal";
 import {Cards} from "../interfaces/Cards";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 
 interface MyCardsProps {}
 
@@ -13,10 +14,18 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [showAddModal, setShowAddModal] = useState(false);
-	const [likeColors, setLikeColors] = useState<{[cardId: string]: string}>({});
+	const [showDeleteModal, setShowDeleteModal] = useState(false);
 
 	const onHide = useCallback<() => void>((): void => setShowAddModal(false), []);
 	const onShow = useCallback<() => void>((): void => setShowAddModal(true), []);
+	const onHideDeleteModal = useCallback<() => void>(
+		(): void => setShowDeleteModal(false),
+		[],
+	);
+	const onShowDeleteModal = useCallback<() => void>(
+		(): void => setShowDeleteModal(true),
+		[],
+	);
 
 	useEffect(() => {
 		if (!decodedToken || !decodedToken._id) return;
@@ -34,7 +43,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				console.error(err);
 				setLoading(false);
 			});
-	}, [decodedToken, cards.length, setCards]);
+	}, [decodedToken, cards.length, setCards, onHideDeleteModal]);
 
 	const handleLikeToggle = (cardId: string) => {
 		if (!decodedToken || !decodedToken._id) return;
@@ -45,11 +54,6 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				const updatedLikes = isLiked
 					? card.likes.filter((id: string) => id !== decodedToken._id)
 					: [...card.likes, decodedToken._id];
-
-				setLikeColors((prevColors) => ({
-					...prevColors,
-					[card._id]: isLiked ? "text-light" : "text-danger",
-				}));
 
 				return {...card, likes: updatedLikes};
 			}
@@ -63,11 +67,25 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 		});
 	};
 
+	const refresh = () => {
+		onHideDeleteModal();
+	};
+
+	const handleDeleteCard = (cardId: string) => {
+		deleteCardById(cardId)
+			.then(() => {
+				console.log(cardId);
+			})
+			.catch((err) => {
+				console.log(err);
+			});
+	};
+
 	if (loading) return <Loading />;
 
 	return (
 		<div className='container py-5'>
-			<h2 className='text-light'>My Cards</h2>
+			<h2 className='lead display-5'>My Cards</h2>
 			<hr className='border-light' />
 			<div className='w-100'>
 				<button className='w-100 bg-opacity-50' onClick={() => onShow()}>
@@ -76,7 +94,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 			</div>
 			<div className='row'>
 				{cards.length > 0 ? (
-					cards.map((card: any, index: number) => {
+					cards.map((card: Cards, index: number) => {
 						return (
 							<div key={index} className='col-12 col-md-6 col-xl-4 my-3'>
 								<div className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'>
@@ -98,43 +116,79 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 										}
 									/>
 									<div className='card-body'>
-										<p>card: {card.likes.length}</p>
-										<p>User ID: {card.user_id}</p>
-										<p>ID: {card._id}</p>
 										<h5 className='card-title'>{card.title}</h5>
-										<p className='card-subtitle text-center mb-2 text-muted'>
+										<p className='card-subtitle text-center mb-2 text-light-emphasis'>
 											{card.subtitle}
 										</p>
 										<hr />
 										<p className='card-text text-start lead fw-bold'>
 											Phone: {card.phone}
 										</p>
-										<p className='card-text text-start lead fw-bold'>
-											City: {card.address.city}
+										<div className=' text-start lead fw-bold'>
+											address
+											<hr className=' w-25' />
+											<span className='card-text text-start lead'>
+												{card.address.state}
+											</span>
+											,
+											<span className='mx-2 card-text text-start lead'>
+												{card.address.city}
+											</span>
+											<p className='card-text text-start lead'>
+												{card.address.street},
+												<span className='mx-2 card-text text-start lead'>
+													{card.address.houseNumber}
+												</span>
+											</p>
+										</div>
+										<hr />
+										<p className='card-subtitle text-center mb-2 text-light lead'>
+											{card.description}
 										</p>
 										<hr />
 										<div className='d-flex justify-content-between align-items-center'>
 											<div className='likes-container d-flex align-items-center'>
 												<p
 													onClick={() =>
-														handleLikeToggle(card._id)
+														handleLikeToggle(
+															card._id as string,
+														)
 													}
 													className={`${
-														likeColors[card._id] ||
-														"text-light"
-													} fs-1`} // Use the color from state
+														card.likes?.includes(
+															decodedToken?._id,
+														)
+															? "text-danger"
+															: "text-light"
+													} fs-4`}
 												>
 													{heart}
 												</p>
-												<p
-													className={`${
-														likeColors[card._id] ||
-														"text-light"
-													} mx-3`}
-												>
-													{card.likes.length}
-												</p>
+												<sub>
+													<p
+														className={`${
+															card.likes?.includes(
+																decodedToken?._id,
+															)
+																? "text-danger"
+																: "text-light"
+														} mx-1 fs-5`}
+													>
+														{card.likes?.length}
+													</p>
+												</sub>
 											</div>
+											<DeleteUserModal
+												show={showDeleteModal}
+												onHide={onHideDeleteModal}
+												onDelete={() =>
+													handleDeleteCard(card._id as string)
+												}
+												refresh={() => refresh()}
+											/>
+											<button onClick={onShowDeleteModal}>
+												{trash}
+											</button>
 										</div>
 									</div>
 								</div>

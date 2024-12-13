@@ -6,6 +6,7 @@ import {createNewCard} from "../../services/cardsServices";
 import {successMSG} from "../taosyify/Toastify";
 import cardsInitionalValues from "./cardsInitionalValues";
 import CardsInput from "./CardsInput";
+import { plus } from "../../fontAwesome/Icons";
 
 interface AddNewCardFormProps {}
 
@@ -145,10 +146,9 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
 							onBlur={formik.handleBlur}
 						/>
 					</div>
-					____
-					<div className='col-3'>
+					<div className='col-4'>
 						<CardsInput
-							placeholder='alt'
+							placeholder='img name'
 							name='image.alt'
 							type='text'
 							value={formik.values.image.alt}
@@ -245,7 +245,7 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
 						type='submit'
 						className='btn btn-success w-100 py-2 fw-bold shadow-lg'
 					>
-						Submit
+						{plus}
 					</button>
 				</div>
 			</form>
