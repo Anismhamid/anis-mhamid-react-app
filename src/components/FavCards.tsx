@@ -1,9 +1,10 @@
 import {FunctionComponent, useEffect, useState} from "react";
 import {getLikedCardById, updateLikeStatus} from "../services/cardsServices";
-import {heart} from "../fontAwesome/Icons";
+import {heart, leftArrow, leftRight} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import {Cards} from "../interfaces/Cards";
+import {useNavigate} from "react-router-dom";
 
 interface FavCardsProps {}
 
@@ -11,25 +12,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
-
-	useEffect(() => {
-		if (!decodedToken._id) {
-			setLoading(false);
-			return;
-		}
-		getLikedCardById(decodedToken._id)
-			.then((res) => {
-				const liked = res.filter((card: any) =>
-					card.likes.includes(decodedToken._id),
-				);
-				setCards(liked);
-				setLoading(false);
-			})
-			.catch(() => {
-				console.log("Failed to fetch cards.");
-				setLoading(false);
-			});
-	}, [decodedToken]);
+	const navigate = useNavigate();
 
 	const handleLikeToggle = (cardId: string) => {
 		const updatedCards = cards.map((card: any) => {
@@ -56,90 +39,128 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 		setCards(updatedCards);
 	};
 
+	useEffect(() => {
+		if (!decodedToken._id) {
+			setLoading(false);
+			return;
+		}
+		getLikedCardById(decodedToken._id)
+			.then((res) => {
+				const liked = res.filter((card: any) =>
+					card.likes.includes(decodedToken._id),
+				);
+				setCards(liked);
+				setLoading(false);
+			})
+			.catch(() => {
+				console.log("Failed to fetch cards.");
+				setLoading(false);
+			});
+	}, [decodedToken, handleLikeToggle]);
+
 	if (loading) {
 		return <Loading />;
 	}
 
 	return (
-		<div className='container py-5'>
-			<h2 className='text-light'>My favorite Business Cards</h2>
-			<div className='row'>
-				{cards.map((card: Cards) => {
-				
-
-					return (
-						<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
-							<div
-								className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'
-								style={{
-									maxWidth: "26rem",
-									transition: "all 0.3s ease-in-out",
-								}}
-							>
-								<img
-									className='card-img-top'
-									src={card.image.url}
-									alt={card.image.alt}
+		<>
+			<div className=' d-flex justify-content-around'>
+				<button
+					className=' bg-transparent border-0 bg-dark'
+					onClick={() => navigate(-1)}
+				>
+					<span className=' m-5 fs-2'>{leftArrow}</span>
+				</button>
+				<button
+					className=' bg-transparent border-0 bg-dark'
+					onClick={() => navigate(-1)}
+				>
+					<span className=' m-5 fs-2'>{leftRight}</span>
+				</button>
+			</div>
+			<div className='container py-5'>
+				<h2 className='text-light'>My favorite Business Cards</h2>
+				<div className='row'>
+					{cards.map((card: Cards) => {
+						return (
+							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
+								<div
+									className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'
 									style={{
-										objectFit: "cover",
-										height: "300px",
-										transition: "transform 0.3s ease",
+										maxWidth: "26rem",
+										transition: "all 0.3s ease-in-out",
 									}}
-									onMouseOver={(e) => {
-										e.currentTarget.style.transform = "scale(1.1)";
-									}}
-									onMouseOut={(e) => {
-										e.currentTarget.style.transform = "scale(1)";
-									}}
-								/>
-								<div className='card-body'>
-									<h5 className='card-title'>{card.title}</h5>
-									<p className='card-subtitle text-center mb-2 text-muted'>
-										{card.subtitle}
-									</p>
-									<hr />
-									<p className='card-text text-start lead fw-bold'>
-										phone: {card.phone}
-									</p>
-									<p className='card-text text-start lead fw-bold'>
-										City: {card.address.city}
-									</p>
-									<div className='d-flex justify-content-between align-items-center'>
-										<div className='likes-container d-flex align-items-center'>
-											<p
-												onClick={() =>
-													handleLikeToggle(card._id as string)
-												}
-												className={`${
-													card.likes?.includes(decodedToken._id)
-														? "text-danger"
-														: "text-light"
-												} fs-4`}
-											>
-												{heart}
-											</p>
-											<sub>
+								>
+									<img
+										className='card-img-top'
+										src={card.image.url}
+										alt={card.image.alt}
+										style={{
+											objectFit: "cover",
+											height: "300px",
+											transition: "transform 0.3s ease",
+										}}
+										onMouseOver={(e) => {
+											e.currentTarget.style.transform =
+												"scale(1.1)";
+										}}
+										onMouseOut={(e) => {
+											e.currentTarget.style.transform = "scale(1)";
+										}}
+									/>
+									<div className='card-body'>
+										<h5 className='card-title'>{card.title}</h5>
+										<p className='card-subtitle text-center mb-2 text-muted'>
+											{card.subtitle}
+										</p>
+										<hr />
+										<p className='card-text text-start lead fw-bold'>
+											phone: {card.phone}
+										</p>
+										<p className='card-text text-start lead fw-bold'>
+											City: {card.address.city}
+										</p>
+										<div className='d-flex justify-content-between align-items-center'>
+											<div className='likes-container d-flex align-items-center'>
 												<p
+													onClick={() =>
+														handleLikeToggle(
+															card._id as string,
+														)
+													}
 													className={`${
 														card.likes?.includes(
-															decodedToken?._id,
+															decodedToken._id,
 														)
 															? "text-danger"
 															: "text-light"
-													} mx-1 fs-5`}
+													} fs-4`}
 												>
-													{card.likes?.length}
+													{heart}
 												</p>
-											</sub>
+												<sub>
+													<p
+														className={`${
+															card.likes?.includes(
+																decodedToken?._id,
+															)
+																? "text-danger"
+																: "text-light"
+														} mx-1 fs-5`}
+													>
+														{card.likes?.length}
+													</p>
+												</sub>
+											</div>
 										</div>
 									</div>
 								</div>
 							</div>
-						</div>
-					);
-				})}
+						);
+					})}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

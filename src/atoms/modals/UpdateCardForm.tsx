@@ -69,8 +69,7 @@ const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = () => {
 		}),
 		onSubmit: (values: Cards) => {
 			putCard(cardId as string, values).then((res) => {
-				successMSG(`${values.title} card is created successfuly`);
-				console.log(res);
+				successMSG(`${res.title} card is Updated successfuly`);
 			});
 		},
 	});

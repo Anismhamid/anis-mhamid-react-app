@@ -1,31 +1,16 @@
 @import "../node_modules/bootstrap//dist/css/bootstrap.min.css";
 
-:root {
-	--light-background: #efedea;
-	--dark-background: #1b1d20;
-	--light-text: #1b1d20;
-	--dark-text: #efefec;
-}
-
-body {
-	background-color: var(--light-background);
-	color: var(--light-text);
-	min-width: 320px;
-	min-height: 100vh;
-	text-align: center;
-}
-
-@media (prefers-color-scheme: dark) {
-	body {
-		background-color: var(--dark-background);
-		color: var(--dark-text);
-	}
+.modal {
+	transition: opacity 0.3s ease-in-out;
 }
 
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+}
+main{
+	min-height: 90vh;
 }
 
 .login {
@@ -65,6 +50,7 @@ button {
 
 button:hover {
 	border-color: #646cff;
+	color: rgb(49, 49, 49);
 }
 
 button:focus,
@@ -74,4 +60,11 @@ button:focus-visible {
 
 .table tbody tr:hover {
 	background-color: rgba(0, 123, 255, 0.1);
+}
+
+
+.nav-link:hover,
+.log-rig:hover {
+	color: #3e87b8 !important;
+	font-weight: bold !important;
 }

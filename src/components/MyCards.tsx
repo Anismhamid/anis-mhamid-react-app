@@ -13,19 +13,18 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 	const {decodedToken} = useToken();
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
-	const [showAddModal, setShowAddModal] = useState(false);
-	const [showDeleteModal, setShowDeleteModal] = useState(false);
+	const [showAddModal, setShowAddModal] = useState<boolean>(false);
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 
-	const onHide = useCallback<() => void>((): void => setShowAddModal(false), []);
-	const onShow = useCallback<() => void>((): void => setShowAddModal(true), []);
-	const onHideDeleteModal = useCallback<() => void>(
-		(): void => setShowDeleteModal(false),
-		[],
-	);
-	const onShowDeleteModal = useCallback<() => void>(
-		(): void => setShowDeleteModal(true),
-		[],
-	);
+	const onHide = useCallback<Function>(() => setShowAddModal(false), []);
+	const onShow = useCallback<Function>(() => setShowAddModal(true), []);
+	const onHideDeleteModal = useCallback<Function>(() => setShowDeleteModal(false), []);
+	const onShowDeleteModal = useCallback<Function>(() => setShowDeleteModal(true), []);
+
+	const refresh = () => {
+		onHideDeleteModal();
+		onHide();
+	};
 
 	useEffect(() => {
 		if (!decodedToken || !decodedToken._id) return;
@@ -43,7 +42,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				console.error(err);
 				setLoading(false);
 			});
-	}, [decodedToken, cards.length, setCards, onHideDeleteModal]);
+	}, [decodedToken, cards.length, setCards, refresh]);
 
 	const handleLikeToggle = (cardId: string) => {
 		if (!decodedToken || !decodedToken._id) return;
@@ -65,10 +64,6 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 		updateLikeStatus(cardId, decodedToken._id).catch((err) => {
 			console.log("Failed to update like status:", err);
 		});
-	};
-
-	const refresh = () => {
-		onHideDeleteModal();
 	};
 
 	const handleDeleteCard = (cardId: string) => {
@@ -186,7 +181,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 												}
 												refresh={() => refresh()}
 											/>
-											<button onClick={onShowDeleteModal}>
+											<button onClick={() => onShowDeleteModal()}>
 												{trash}
 											</button>
 										</div>
@@ -199,7 +194,11 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 					<p>No Data</p>
 				)}
 			</div>
-			<AddNewCardModal show={showAddModal} onHide={onHide} />
+			<AddNewCardModal
+				refresh={() => refresh()}
+				show={showAddModal}
+				onHide={onHide}
+			/>
 		</div>
 	);
 };

@@ -1,4 +1,4 @@
-import {FunctionComponent, useState, useEffect} from "react";
+import {FunctionComponent, useState, useEffect, ReactComponentElement} from "react";
 import {useNavigate} from "react-router-dom";
 import {getUserById, loginIn} from "../services/userServices";
 import {pathes} from "../routes/Routes";
@@ -17,7 +17,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 	const {isAdmin, auth, setAuth, setIsAdmin, setIsBusiness, setIsLogedIn} =
 		useUserContext();
 	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState<boolean>(false);
 	const {decodedToken} = useToken();
 
 	useEffect(() => {

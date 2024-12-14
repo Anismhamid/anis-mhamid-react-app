@@ -1,16 +1,17 @@
-import {FunctionComponent, useCallback, useEffect, useState} from "react";
+import {FunctionComponent, useCallback, useContext, useEffect, useState} from "react";
 import {deleteUserById, getUserById, patchUserBusiness} from "../services/userServices";
 
-import {edit, trash} from "../fontAwesome/Icons";
+import {edit, leftArrow, leftRight, trash} from "../fontAwesome/Icons";
 
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import useToken from "../hooks/useToken";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import Loading from "./Loading";
 import {successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
+import {SiteTheme} from "../App";
 
 interface ProfileProps {}
 
@@ -21,7 +22,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	const {decodedToken} = useToken();
 	const {setIsLogedIn, isBusiness, setIsBusiness} = useUserContext();
 	const navigate = useNavigate();
-
+	const theme = useContext(SiteTheme);
 	const [showDleteModal, setShowDeleteModal] = useState(false);
 
 	const onHide = useCallback<() => void>((): void => setShowDeleteModal(false), []);
@@ -44,7 +45,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 				});
 		} else {
 		}
-	}, [decodedToken._id]);
+	}, [decodedToken._id, render]);
 
 	const handleDelete: Function = (userId: string) => {
 		try {
@@ -80,111 +81,131 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	}
 
 	return (
-		<div className='container my-5'>
-			<h1 className='text-center mb-4 text-light'>User Profile</h1>
-			<div className='card shadow-lg rounded-4' data-bs-theme='dark'>
-				<div className='card-body'>
-					<div className='d-flex align-items-center mb-4'>
-						<div className='me-4'>
-							<img
-								src={user.image.url}
-								alt='Profile image'
-								className=' shadow rounded rounded-5 border p-1 border-dark-subtle shadow-sm'
-								width='150'
-								height='150'
-							/>
+		<main style={{backgroundColor: theme.background, color: theme.color}}>
+			<div className={` d-flex justify-content-around`}>
+				<button
+					style={{backgroundColor: theme.background, color: theme.color}}
+					className='bg-transparent border-0'
+					onClick={() => navigate(-1)}
+				>
+					<span className=' m-5 fs-2'>{leftArrow}</span>
+				</button>
+				<button
+					style={{backgroundColor: theme.background, color: theme.color}}
+					className={"bg-transparent border-0 bg-dark"}
+					onClick={() => navigate(-1)}
+				>
+					<span className=' m-5 fs-2'>{leftRight}</span>
+				</button>
+			</div>
+			<div className='container-sm my-5'>
+				<h1 className='text-center mb-4 text-light'>User Profile</h1>
+				<div className='card shadow-lg rounded-4' data-bs-theme='dark'>
+					<div className='card-body'>
+						<div className='d-flex align-items-center mb-4'>
+							<div className='me-4'>
+								<Link to={`/userDetails/${user._id}`}>
+									<img
+										src={user.image.url}
+										alt='Profile image'
+										className=' shadow rounded rounded-5 border p-1 border-dark-subtle shadow-sm'
+										width='150'
+										height='150'
+									/>
+								</Link>
+							</div>
+							<div className='borer'>
+								<h2 className='card-title mb-2 text-muted '>
+									<strong>{user && user.name.first} </strong>
+									{user && user.name.last}
+								</h2>
+								<hr />
+								<p className='text-muted mb-0'>{user.email}</p>
+							</div>
 						</div>
-						<div className='borer'>
-							<h2 className='card-title mb-2 text-muted '>
-								<strong>{user && user.name.first} </strong>
-								{user && user.name.last}
-							</h2>
-							<hr />
-							<p className='text-muted mb-0'>{user.email}</p>
+						<div className='row  py-2 lead border'>
+							<div className='col-5'>
+								<h5 className=' '>Phone</h5>
+							</div>
+							<div className='col-5'>{user.phone}</div>
 						</div>
-					</div>
-					<div className='row  py-2 lead border'>
-						<div className='col-5'>
-							<h5 className=' '>Phone</h5>
-						</div>
-						<div className='col-5'>{user.phone}</div>
-					</div>
-					<div className='row py-2'>
-						<div className='col-5'>
-							<h5>User Role</h5>
-						</div>
-						<div className='col-5'>
-							<p
-								className={
-									user.isAdmin
-										? "text-success fw-bold"
-										: "text-info fw-bold"
-								}
-							>
-								{user.isAdmin ? "Administrator" : "Client"}
-							</p>
-						</div>
-					</div>
-					<div className='row  border'>
-						<div className='col-5'>
-							<h5>Business account</h5>
-						</div>
-						<div className='col-2 border'>
-							<p
-								className={
-									user.isBusiness === true
-										? "text-success fw-bold"
-										: "text-danger fw-bold"
-								}
-							>
-								{user.isBusiness === true ? "Yes" : "No"}
-							</p>
-						</div>
-						<div className='col-5'>
-							<div className='form-check form-switch'>
-								<input
-									className='form-check-input form-check'
-									type='checkbox'
-									role='switch'
-									id='flexSwitchCheckChecked'
-									checked={user.isBusiness ? true : false}
-									onChange={() => handleSwitchChange()}
-								/>
-								<label
-									className='form-check-label  fw-bold'
-									htmlFor='flexSwitchCheckChecked'
+						<div className='row py-2'>
+							<div className='col-5'>
+								<h5>User Role</h5>
+							</div>
+							<div className='col-5'>
+								<p
+									className={
+										user.isAdmin
+											? "text-success fw-bold"
+											: "text-info fw-bold"
+									}
 								>
-									{user.isBusiness
-										? "Turn Off Business Priority"
-										: "Turn On Business Priority"}
-								</label>
+									{user.isAdmin ? "Administrator" : "Client"}
+								</p>
+							</div>
+						</div>
+						<div className='row  border'>
+							<div className='col-5'>
+								<h5>Business account</h5>
+							</div>
+							<div className='col-2 border'>
+								<p
+									className={
+										user.isBusiness === true
+											? "text-success fw-bold"
+											: "text-danger fw-bold"
+									}
+								>
+									{user.isBusiness === true ? "Yes" : "No"}
+								</p>
+							</div>
+							<div className='col-5'>
+								<div className='form-check form-switch'>
+									<input
+										className='form-check-input form-check'
+										type='checkbox'
+										role='switch'
+										id='flexSwitchCheckChecked'
+										checked={user.isBusiness ? true : false}
+										onChange={() => handleSwitchChange()}
+									/>
+									<label
+										className='form-check-label  fw-bold'
+										htmlFor='flexSwitchCheckChecked'
+									>
+										{user.isBusiness
+											? "Turn Off Business Priority"
+											: "Turn On Business Priority"}
+									</label>
+								</div>
+							</div>
+						</div>
+						<div className='row mt-3 p-3 m-auto'>
+							<div className='col-6'>
+								<Link
+									className=' text-warning mb-2'
+									to={`/userDetails/${user._id}`}
+								>
+									Edit {edit}
+								</Link>
+							</div>
+							<div className='col-6'>
+								<Link to={""} className='text-danger' onClick={onShow}>
+									Drop {trash}
+								</Link>
 							</div>
 						</div>
 					</div>
-					<div className='row mt-3 p-3 m-auto'>
-						<div className='col-6'>
-							<button className=' text-warning mb-2' onClick={() => {}}>
-								Edit {edit}
-							</button>
-						</div>
-						<div className='col-6'>
-							<button
-								className='text-danger'
-								onClick={onShow}
-							>
-								Drop {trash}
-							</button>
-						</div>
-					</div>
 				</div>
+				<DeleteUserModal
+					show={showDleteModal}
+					onHide={() => onHide()}
+					onDelete={() => handleDelete(user._id)}
+					render={() => refresh()}
+				/>
 			</div>
-			<DeleteUserModal
-				show={showDleteModal}
-				onHide={() => onHide()}
-				onDelete={() => handleDelete(user._id)}
-				refresh={refresh}
-			/>
-		</div>
+		</main>
 	);
 };
 

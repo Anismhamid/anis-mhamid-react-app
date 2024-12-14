@@ -8,8 +8,8 @@ import {UserProvider} from "./context/UserContext.tsx";
 
 createRoot(document.getElementById("root")!).render(
 	<StrictMode>
-		<UserProvider>
-			<App />
-		</UserProvider>
-	</StrictMode>
+			<UserProvider>
+				<App />
+			</UserProvider>
+	</StrictMode>,
 );

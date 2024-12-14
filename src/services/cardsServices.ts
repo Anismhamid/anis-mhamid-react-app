@@ -113,11 +113,9 @@ export const getCardById = async (cardId: string) => {
 	let token: string | null = localStorage.getItem("token");
 	if (!token) return;
 	try {
-		const response = await axios.request({
-			...getCards,
-			url: `${api}/${cardId}`,
+		const response = await axios.get(`${api}/cards/${cardId}`,{
 			headers: {},
-		});
+		})
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -126,31 +124,33 @@ export const getCardById = async (cardId: string) => {
 };
 
 export const deleteCardById = async (cardId: string) => {
-	let token: string | null = localStorage.getItem("token");
+	const token: string | null = localStorage.getItem("token");
 
 	if (!token) {
 		console.error("Token is missing or invalid.");
 		return;
 	}
 
-	const data = {
-		bizNumber: 6943518,
-	};
+	if (!cardId) {
+		console.error("Card ID is missing or invalid.");
+		return;
+	}
 
 	try {
-		const response = await axios.request({
-			method: "delete",
-			url: `${api}/${cardId}`,
+		const response = await axios.delete(`${api}/cards/${cardId}`, {
 			headers: {
 				"x-auth-token": token,
 				"Content-Type": "application/json",
 			},
-			data: data,
 		});
 
 		return response.data;
 	} catch (error) {
-		console.error("Request failed:", error);
-		console.log(cardId);
+		if (axios.isAxiosError(error)) {
+			console.error("Axios error:", error.response?.data || error.message);
+		} else {
+			console.error("Unexpected error:", error);
+		}
 	}
 };
+

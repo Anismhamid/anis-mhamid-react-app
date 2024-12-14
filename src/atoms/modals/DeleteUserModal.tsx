@@ -6,19 +6,19 @@ interface DeleteUserModalProps {
 	show: boolean;
 	onHide: Function;
 	onDelete: Function;
-	refresh: Function;
+	render: Function;
 }
 
 const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({
 	onHide,
 	show,
 	onDelete,
-	refresh,
+	render,
 }) => {
 	return (
 		<>
 			<Modal
-				show={show} 
+				show={show}
 				onHide={() => onHide()}
 				backdrop='static'
 				keyboard={false}
@@ -38,7 +38,7 @@ const DeleteUserModal: FunctionComponent<DeleteUserModalProps> = ({
 						variant='danger'
 						onClick={() => {
 							onDelete();
-							refresh();
+							render()
 						}}
 					>
 						DELETE

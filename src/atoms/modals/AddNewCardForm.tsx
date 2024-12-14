@@ -8,9 +8,11 @@ import cardsInitionalValues from "./cardsInitionalValues";
 import CardsInput from "./CardsInput";
 import { plus } from "../../fontAwesome/Icons";
 
-interface AddNewCardFormProps {}
+interface AddNewCardFormProps {
+	refresh:Function
+}
 
-const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
+const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 	const formik: FormikValues = useFormik<Cards>({
 		initialValues: cardsInitionalValues,
 		validationSchema: yup.object({
@@ -39,9 +41,9 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = () => {
 			}),
 		}),
 		onSubmit: (values: Cards) => {
-			createNewCard(values).then((res) => {
+			createNewCard(values).then(() => {
 				successMSG(`${values.title} card is created successfuly`);
-				console.log(res);
+				refresh();
 			});
 		},
 	});

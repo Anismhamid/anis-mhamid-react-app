@@ -22,7 +22,7 @@ const SandBox: FunctionComponent = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [showDeleteModal, setShowDeleteModal] = useState(false);
 	const [userSearch, setUserSearch] = useState<User[] | null>(null);
-	const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+	const [selectedUserId, setSelectedUserId] = useState<string>("");
 	const [render, setRender] = useState<boolean>(false);
 	const onHide = () => setShowDeleteModal(false);
 	const onShow = () => setShowDeleteModal(true);
@@ -64,7 +64,7 @@ const SandBox: FunctionComponent = () => {
 
 	// Handle Edit
 	const handleEdit = useCallback((userId: string) => {
-		setSelectedUserId(userId);
+		if (selectedUserId || !selectedUserId) setSelectedUserId(userId);
 	}, []);
 
 	// Handle Delete
@@ -183,17 +183,14 @@ const SandBox: FunctionComponent = () => {
 											</button>
 										</Link>
 										<DeleteUserModal
-											refresh={refresh}
+											render={() => refresh()}
 											show={showDeleteModal}
 											onHide={onHide}
 											onDelete={() =>
 												handleDelete(user._id as string)
 											}
 										/>
-										<button
-											className='text-danger'
-											onClick={onShow}
-										>
+										<button className='text-danger' onClick={onShow}>
 											{trash}
 										</button>
 									</div>
@@ -246,7 +243,7 @@ const SandBox: FunctionComponent = () => {
 											</td>
 											<td colSpan={1}>
 												<DeleteUserModal
-													refresh={refresh}
+													render={() => refresh()}
 													show={showDeleteModal}
 													onHide={onHide}
 													onDelete={() =>

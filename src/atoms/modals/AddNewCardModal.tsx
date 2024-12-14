@@ -6,12 +6,18 @@ import AddNewCardForm from "./AddNewCardForm";
 interface AddNewCardModalProps {
 	show: boolean;
 	onHide: Function;
+	refresh: Function;
 }
 
-const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({onHide, show}) => {
+const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({
+	onHide,
+	show,
+	refresh,
+}) => {
 	return (
 		<>
 			<Modal
+				className='modal'
 				show={show}
 				size='lg'
 				onHide={() => onHide()}
@@ -22,12 +28,10 @@ const AddNewCardModal: FunctionComponent<AddNewCardModalProps> = ({onHide, show}
 				scrollable
 			>
 				<Modal.Header closeButton>
-					<Modal.Title className=' text-light display-6'>
-						Add CARD
-					</Modal.Title>
+					<Modal.Title className=' text-light display-6'>Add CARD</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<AddNewCardForm />
+					<AddNewCardForm refresh={() => refresh()} />
 				</Modal.Body>
 				<Modal.Footer>
 					<Button

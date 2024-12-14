@@ -89,7 +89,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 					.then(() => {
 						navigate(pathes.login);
 						successMSG(
-							`Please Login`,
+							`Please Login to get in Bcards`,
 						);
 					})
 					.catch((err) => {
