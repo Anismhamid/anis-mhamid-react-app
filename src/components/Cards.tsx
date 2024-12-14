@@ -15,7 +15,7 @@ import UpdateCardModal from "../atoms/modals/UpdateCardModal";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {Cards} from "../interfaces/Cards";
 import {Button} from "react-bootstrap";
-import {SiteTheme} from "../App";
+import { SiteTheme } from "../theme/theme";
 interface CardsHomeProps {}
 
 const CardsHome: FunctionComponent<CardsHomeProps> = () => {
@@ -25,11 +25,11 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-	const theme = useContext(SiteTheme);
 	const onHide = useCallback(() => setOpenUpdateModal(false), []);
 	const onShow = useCallback(() => setOpenUpdateModal(true), []);
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
+	const theme = useContext(SiteTheme);
 
 	const handleLikeToggle = (cardId: string) => {
 		const updatedCards = allCards.map((card: any) => {
@@ -77,10 +77,10 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 					{allCards.map((card: Cards) => (
 						<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
 							<div
-								className='card w-100 h-100 border-0 shadow-lg rounded-lg overflow-hidden'
+								className='card2 card w-100 h-100 border-1 border-info shadow-lg rounded-lg overflow-hidden'
 								style={{
-									maxWidth: "26rem",
-									transition: "all 0.3s ease-in-out",
+									backgroundColor: theme.background,
+									color: theme.color,
 								}}
 							>
 								<img
@@ -88,27 +88,18 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 									src={card.image.url}
 									alt={card.image.alt}
 									style={{
-										objectFit: "cover",
 										height: "200px",
-										transition: "transform 0.3s ease",
-									}}
-									onMouseOver={(e) => {
-										e.currentTarget.style.transform = "scale(1.1)";
-									}}
-									onMouseOut={(e) => {
-										e.currentTarget.style.transform = "scale(1)";
 									}}
 								/>
 								<div className='card-body'>
 									<h5 className='card-title text-center'>
 										{card.title}
 									</h5>
-									<h6 className='card-subtitle text-center mb-2 text-muted'>
+									<h6 className='card-subtitle text-center mb-2 text-secondary'>
 										{card.subtitle}
 									</h6>
 									<hr />
 									<div className='card-text'>
-										<h6>{card._id}</h6>
 										<h5>Phone:</h5>
 										<p>{card.phone}</p>
 										<h5>Address:</h5>
@@ -123,6 +114,11 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 											<div className='d-flex justify-content-between align-items-center'>
 												<div className='likes-container d-flex align-items-center'>
 													<p
+														style={{
+															backgroundColor:
+																theme.background,
+															color: theme.color,
+														}}
 														onClick={() =>
 															handleLikeToggle(
 																card._id as string,
@@ -133,19 +129,22 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 																decodedToken?._id,
 															)
 																? "text-danger"
-																: "text-light"
-														} fs-4`}
+																: ""
+														} fs-4 rounded-5`}
 													>
 														{heart}
 													</p>
 													<sub>
 														<p
+															style={{
+																backgroundColor:
+																	theme.background,
+																color: theme.color,
+															}}
 															className={`${
 																card.likes?.includes(
 																	decodedToken?._id,
-																)
-																	? "text-danger"
-																	: "text-light"
+																) && "text-danger"
 															} mx-1 fs-5`}
 														>
 															{card.likes?.length}
@@ -162,7 +161,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 														Edit
 													</button>
 
-													<Button
+													<button
 														onClick={() => {
 															onShowDeleteCardModal();
 															setCardToDelete(
@@ -172,7 +171,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 														className='btn btn-danger btn-sm'
 													>
 														Delete
-													</Button>
+													</button>
 													{error && (
 														<div className='alert alert-danger'>
 															{error}

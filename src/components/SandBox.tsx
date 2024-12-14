@@ -1,15 +1,23 @@
-import {FunctionComponent, useCallback, useEffect, useMemo, useState} from "react";
+import {
+	FunctionComponent,
+	useCallback,
+	useContext,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import {deleteUserById, getAllUsers} from "../services/userServices";
 import {User} from "../interfaces/User";
 import {Link, useNavigate} from "react-router-dom";
-import {edit, trash} from "../fontAwesome/Icons";
+import {edit, leftArrow, leftRight, trash} from "../fontAwesome/Icons";
 import {Pagination} from "react-bootstrap";
-import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
+import {SiteTheme} from "../theme/theme";
+import BackBsotton from "../atoms/BackButtons";
 
 const SandBox: FunctionComponent = () => {
 	const usersPerPage = 50;
@@ -26,6 +34,7 @@ const SandBox: FunctionComponent = () => {
 	const [render, setRender] = useState<boolean>(false);
 	const onHide = () => setShowDeleteModal(false);
 	const onShow = () => setShowDeleteModal(true);
+	const theme = useContext(SiteTheme);
 
 	// Pagination logic
 	const startIndex = (currentPage - 1) * usersPerPage;
@@ -43,7 +52,7 @@ const SandBox: FunctionComponent = () => {
 
 	// Fetch users on admin access
 	useEffect(() => {
-		if (isAdmin) {
+		if (isAdmin === true) {
 			getAllUsers()
 				.then((res) => {
 					setUsers(res);
@@ -54,10 +63,7 @@ const SandBox: FunctionComponent = () => {
 					errorMSG("Error fetching users.");
 					setISLoading(false);
 				});
-		} else {
-			errorMSG("Can't find this page");
-			navigate(pathes.cards);
-		}
+		} else return;
 	}, [render, isAdmin]);
 
 	const refresh = () => setRender(!render);
@@ -113,18 +119,19 @@ const SandBox: FunctionComponent = () => {
 	if (isLoading) return <Loading />;
 
 	return (
-		<>
+		<main style={{backgroundColor: theme.background, color: theme.color}}>
+			<BackBsotton />
 			<div className='d-flex justify-content-around'>
-				<h2 className='text-light'>SandBox</h2>
+				<h2>SandBox</h2>
 				<div className='mt-3 mb-3'>
 					<form className='d-flex me-3' onSubmit={(e) => e.preventDefault()}>
 						<input
-							id='search2'
-							name='search2'
+							id='search-user'
+							name='search-user'
 							className='form-control me-2 search-input'
 							type='search'
-							placeholder='Search'
-							aria-label='Search'
+							placeholder='name/email/Phone'
+							aria-label='search-user'
 							onChange={(e) => handleSearch(e.target.value)}
 						/>
 						<button
@@ -140,12 +147,18 @@ const SandBox: FunctionComponent = () => {
 
 			{/* Displaying the user result or all users */}
 			{userSearch && userSearch.length > 0 ? (
-				<div className='user-found card bg-dark min-vh-100'>
-					<h3>User Found:</h3>
+				<div
+					style={{backgroundColor: theme.background, color: theme.color}}
+					className='user-found card my-3 min-vh-100'
+				>
+					<h3>Users Found</h3>
 					{userSearch.map((user) => (
 						<div
-							className='card text-light fw-bold'
-							data-bs-theme='dark'
+							style={{
+								backgroundColor: theme.background,
+								color: theme.color,
+							}}
+							className='card  fw-bold'
 							key={user._id}
 						>
 							<div className='card-body'>
@@ -169,7 +182,7 @@ const SandBox: FunctionComponent = () => {
 								</Link>
 							</div>
 
-							{isAdmin === true && (
+							{isLoading && isAdmin === true && (
 								<>
 									<div className='d-flex text-end justify-content-end my-3'>
 										<Link to={`/userDetails/${user._id}`}>
@@ -201,11 +214,14 @@ const SandBox: FunctionComponent = () => {
 				</div>
 			) : (
 				<div className='table-responsive'>
-					<table className='table table-striped table-dark'>
+					<table
+						style={{backgroundColor: theme.background, color: theme.color}}
+						className='table table-striped'
+					>
 						<thead>
 							<tr>
-								<th colSpan={2}>Full Name</th>
 								<th colSpan={8}>Image</th>
+								<th colSpan={2}>Full Name</th>
 								<th colSpan={1}>Edit</th>
 								<th colSpan={1}>Delete</th>
 							</tr>
@@ -213,24 +229,23 @@ const SandBox: FunctionComponent = () => {
 						<tbody>
 							{currentUsers.map((user: User) => (
 								<tr key={user._id}>
-									<td colSpan={2}>
-										{user.name.first} {user.name.last}
-									</td>
 									<td colSpan={8}>
 										<Link to={`/userDetails/${user._id}`}>
 											<img
-												className='img-fluid'
+												className='img-fluid mx-5 rounded-5'
 												src={
 													user.image.url || "/avatar-design.png"
 												}
 												alt={`${user.image?.alt}'s profile`}
 												style={{
-													width: "50px",
-													height: "50px",
-													borderRadius: "50%",
+													width: "160px",
+													height: "120px",
 												}}
 											/>
 										</Link>
+									</td>
+									<td colSpan={2}>
+										{user.name.first} {user.name.last}
 									</td>
 									{decodedToken?.isAdmin && (
 										<>
@@ -287,7 +302,7 @@ const SandBox: FunctionComponent = () => {
 					</div>
 				</div>
 			)}
-		</>
+		</main>
 	);
 };
 

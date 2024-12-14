@@ -11,7 +11,8 @@ import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import Loading from "./Loading";
 import {successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
-import {SiteTheme} from "../App";
+import {SiteTheme} from "../theme/theme";
+import BackBsotton from "../atoms/BackButtons";
 
 interface ProfileProps {}
 
@@ -82,24 +83,9 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<div className={` d-flex justify-content-around`}>
-				<button
-					style={{backgroundColor: theme.background, color: theme.color}}
-					className='bg-transparent border-0'
-					onClick={() => navigate(-1)}
-				>
-					<span className=' m-5 fs-2'>{leftArrow}</span>
-				</button>
-				<button
-					style={{backgroundColor: theme.background, color: theme.color}}
-					className={"bg-transparent border-0 bg-dark"}
-					onClick={() => navigate(-1)}
-				>
-					<span className=' m-5 fs-2'>{leftRight}</span>
-				</button>
-			</div>
-			<div className='container-sm my-5'>
-				<h1 className='text-center mb-4 text-light'>User Profile</h1>
+			<BackBsotton />
+			<div className='container m-auto my-5'>
+				<h1 className='text-center mb-4'>User Profile</h1>
 				<div className='card shadow-lg rounded-4' data-bs-theme='dark'>
 					<div className='card-body'>
 						<div className='d-flex align-items-center mb-4'>

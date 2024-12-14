@@ -1,10 +1,12 @@
-import {FunctionComponent, useEffect, useState} from "react";
+import {FunctionComponent, useContext, useEffect, useState} from "react";
 import {getLikedCardById, updateLikeStatus} from "../services/cardsServices";
 import {heart, leftArrow, leftRight} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import {Cards} from "../interfaces/Cards";
 import {useNavigate} from "react-router-dom";
+import { SiteTheme } from "../theme/theme";
+import BackBsotton from "../atoms/BackButtons";
 
 interface FavCardsProps {}
 
@@ -13,7 +15,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
 	const navigate = useNavigate();
-
+	const theme = useContext(SiteTheme);
 	const handleLikeToggle = (cardId: string) => {
 		const updatedCards = cards.map((card: any) => {
 			if (card._id === cardId) {
@@ -63,33 +65,25 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	}
 
 	return (
-		<>
-			<div className=' d-flex justify-content-around'>
-				<button
-					className=' bg-transparent border-0 bg-dark'
-					onClick={() => navigate(-1)}
-				>
-					<span className=' m-5 fs-2'>{leftArrow}</span>
-				</button>
-				<button
-					className=' bg-transparent border-0 bg-dark'
-					onClick={() => navigate(-1)}
-				>
-					<span className=' m-5 fs-2'>{leftRight}</span>
-				</button>
-			</div>
+		<main
+			style={{
+				backgroundColor: theme.background,
+				color: theme.color,
+			}}
+		>
+			<BackBsotton />
 			<div className='container py-5'>
-				<h2 className='text-light'>My favorite Business Cards</h2>
+				<h2>My favorite Business Cards</h2>
 				<div className='row'>
 					{cards.map((card: Cards) => {
 						return (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
 								<div
-									className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'
 									style={{
-										maxWidth: "26rem",
-										transition: "all 0.3s ease-in-out",
+										backgroundColor: theme.background,
+										color: theme.color,
 									}}
+									className='card w-100 h-100 border-0 shadow-lg rounded-lg overflow-hidden'
 								>
 									<img
 										className='card-img-top'
@@ -122,7 +116,11 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 										</p>
 										<div className='d-flex justify-content-between align-items-center'>
 											<div className='likes-container d-flex align-items-center'>
-												<p
+												<button
+													style={{
+														backgroundColor: theme.background,
+														color: theme.color,
+													}}
 													onClick={() =>
 														handleLikeToggle(
 															card._id as string,
@@ -134,12 +132,10 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 														)
 															? "text-danger"
 															: "text-light"
-													} fs-4`}
+													} fs-5 rounded-5`}
 												>
 													{heart}
-												</p>
-												<sub>
-													<p
+													<sub
 														className={`${
 															card.likes?.includes(
 																decodedToken?._id,
@@ -149,8 +145,8 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 														} mx-1 fs-5`}
 													>
 														{card.likes?.length}
-													</p>
-												</sub>
+													</sub>
+												</button>
 											</div>
 										</div>
 									</div>
@@ -160,7 +156,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 					})}
 				</div>
 			</div>
-		</>
+		</main>
 	);
 };
 

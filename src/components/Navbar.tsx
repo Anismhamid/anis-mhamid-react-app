@@ -4,7 +4,7 @@ import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
 import {fathMe} from "../fontAwesome/Icons";
-import {SiteTheme} from "../App";
+import { SiteTheme } from "../theme/theme";
 
 interface NavbarProps {
 	darkSetter: Function;

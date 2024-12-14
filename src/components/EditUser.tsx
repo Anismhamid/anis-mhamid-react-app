@@ -8,7 +8,8 @@ import * as yup from "yup";
 import {FormikValues, useFormik} from "formik";
 import CardsInput from "../atoms/modals/CardsInput";
 import {leftArrow, leftRight} from "../fontAwesome/Icons";
-import {SiteTheme} from "../App";
+import { SiteTheme } from "../theme/theme";
+import BackBsotton from "../atoms/BackButtons";
 
 interface EditUserProps {}
 
@@ -112,22 +113,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<div className=' d-flex justify-content-around'>
-				<button
-					style={{backgroundColor: theme.background, color: theme.color}}
-					className=' bg-transparent border-0 bg-dark'
-					onClick={() => navigate(-1)}
-				>
-					<span className=' m-5 fs-2'>{leftArrow}</span>
-				</button>
-				<button
-					style={{backgroundColor: theme.background, color: theme.color}}
-					className=' bg-transparent border-0 bg-dark'
-					onClick={() => navigate(-1)}
-				>
-					<span className=' m-5 fs-2'>{leftRight}</span>
-				</button>
-			</div>
+			<BackBsotton />
 			<div className='container mb-5'>
 				<div className='row my-5 fw-bold lead'>
 					<div className='col-12'>
