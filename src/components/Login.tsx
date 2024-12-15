@@ -1,4 +1,9 @@
-import {FunctionComponent, useState, useEffect, ReactComponentElement} from "react";
+import {
+	FunctionComponent,
+	useState,
+	useEffect,
+	useContext,
+} from "react";
 import {useNavigate} from "react-router-dom";
 import {getUserById, loginIn} from "../services/userServices";
 import {pathes} from "../routes/Routes";
@@ -10,12 +15,14 @@ import {jwtDecode} from "jwt-decode";
 import useToken from "../hooks/useToken";
 import {errorMSG, wellcomeMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
+import {SiteTheme} from "../theme/theme";
 
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
 	const {isAdmin, auth, setAuth, setIsAdmin, setIsBusiness, setIsLogedIn} =
 		useUserContext();
+	const theme = useContext(SiteTheme);
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState<boolean>(false);
 	const {decodedToken} = useToken();
@@ -89,12 +96,12 @@ const Login: FunctionComponent<LoginProps> = () => {
 	}
 
 	return (
-		<main className='container mt-5'>
+		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<div className='row justify-content-center'>
 				<div className='col-md-6'>
 					<form
 						onSubmit={formik.handleSubmit}
-						className='login shadow-lg p-4 rounded-3 bg-white'
+						className='login shadow-lg p-4 rounded-4 border'
 					>
 						<h2 className='text-center text-primary mb-4'>Login</h2>
 

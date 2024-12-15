@@ -10,17 +10,17 @@ const BackBsotton: FunctionComponent<BackBottonsProps> = () => {
 	const theme = useContext(SiteTheme);
 
 	return (
-		<div className=' d-flex justify-content-around'>
+		<div className='d-flex justify-content-around'>
 			<button
 				style={{backgroundColor: theme.background, color: theme.color}}
-				className=' bg-transparent border-0 bg-dark'
+				className=' bg-transparent border-0'
 				onClick={() => navigate(-1)}
 			>
 				<span className=' m-5 fs-2'>{leftArrow}</span>
 			</button>
 			<button
 				style={{backgroundColor: theme.background, color: theme.color}}
-				className=' bg-transparent border-0 bg-dark'
+				className=' bg-transparent border-0'
 				onClick={() => navigate(-1)}
 			>
 				<span className=' m-5 fs-2'>{leftRight}</span>

@@ -1,5 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {Cards} from "../interfaces/Cards";
+import {infoMSG} from "../atoms/taosyify/Toastify";
 
 const api: string = import.meta.env.VITE_API_URL;
 
@@ -93,29 +94,35 @@ export const createNewCard = async (card: Cards) => {
 };
 
 export const putCard = async (cardId: string, newCard: Cards) => {
-	let token: string | null = localStorage.getItem("token");
-	if (!token) return;
+	const token = localStorage.token;
+
+	if (!token) {
+		console.error("No authentication token found.");
+		return;
+	}
+
 	try {
-		const response = await axios.request({
-			...getCards,
-			url: `${api}/${cardId}`,
+		const fullUrl = `${api}/cards/${cardId}`;
+		console.log("Making PUT request to:", fullUrl); // For debugging
+
+		const response = await axios.put(fullUrl, newCard, {
 			headers: {"x-auth-token": token},
-			data: newCard,
 		});
+
 		return response.data;
 	} catch (error) {
-		console.log(error);
-		throw new Error();
+			console.error("Unexpected Error:", error);
+		}
+		throw new Error("Failed to update card.");
 	}
-};
 
 export const getCardById = async (cardId: string) => {
 	let token: string | null = localStorage.getItem("token");
 	if (!token) return;
 	try {
-		const response = await axios.get(`${api}/cards/${cardId}`,{
+		const response = await axios.get(`${api}/cards/${cardId}`, {
 			headers: {},
-		})
+		});
 		return response.data;
 	} catch (error) {
 		console.log(error);
@@ -153,4 +160,3 @@ export const deleteCardById = async (cardId: string) => {
 		}
 	}
 };
-

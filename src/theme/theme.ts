@@ -1,9 +1,9 @@
 import { createContext } from "react";
 
 export const theme = {
-	light: {background: "rgb(239, 246, 255)", color: "rgb(56, 56, 56)"},
+	light: {background: "rgb(239, 246, 255)", color: "#212529"},
 	dark: {
-		background: "rgb(22, 22, 22)",
+		background: "#212529",
 		color: "rgb(255, 255, 255)",
 	},
 };

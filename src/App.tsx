@@ -1,9 +1,11 @@
-import {BrowserRouter as Router, Routes} from "react-router-dom";
+import {Route, BrowserRouter as Router, Routes} from "react-router-dom";
 import {routes} from "./routes/Routes";
 import Navbar from "./components/Navbar";
 import {ToastContainer} from "react-toastify";
 import {useEffect, useState} from "react";
 import {SiteTheme, theme} from "./theme/theme";
+import React from "react";
+import Sidebar from "./components/Sidebar";
 
 function App() {
 	const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -20,27 +22,24 @@ function App() {
 	};
 
 	return (
-		<SiteTheme.Provider value={darkMode ? theme.dark : theme.light}>
-			<Router>
-				<ToastContainer />
-				<Navbar
-					darkSetter={() => {
-						handleTheme();
-					}}
-				/>
-				<Routes>
-					{routes.login}
-					{routes.cards}
-					{routes.register}
-					{routes.about}
-					{routes.favCards}
-					{routes.myCards}
-					{routes.sandBox}
-					{routes.userDetails}
-					{routes.profile}
-				</Routes>
-			</Router>
-		</SiteTheme.Provider>
+		<>
+			<SiteTheme.Provider value={darkMode ? theme.dark : theme.light}>
+				<Router>
+					<ToastContainer />
+					<Navbar
+						darkSetter={() => {
+							handleTheme();
+						}}
+					/>
+					<Sidebar />
+					<Routes>
+						{Object.entries(routes).map(([key, route]) => (
+							<React.Fragment key={key}>{route}</React.Fragment>
+						))}
+					</Routes>
+				</Router>
+			</SiteTheme.Provider>
+		</>
 	);
 }
 

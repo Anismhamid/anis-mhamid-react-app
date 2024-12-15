@@ -11,22 +11,20 @@ import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import useCards from "../hooks/useCards";
-import UpdateCardModal from "../atoms/modals/UpdateCardModal";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {Cards} from "../interfaces/Cards";
-import {Button} from "react-bootstrap";
-import { SiteTheme } from "../theme/theme";
+import {SiteTheme} from "../theme/theme";
+import {Link} from "react-router-dom";
+import {pathes} from "../routes/Routes";
+
 interface CardsHomeProps {}
 
 const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {decodedToken} = useToken();
-	const {isAdmin, isLogedIn} = useUserContext();
+	const {isAdmin, isLogedIn,isBusiness} = useUserContext();
 	const {allCards, setCards, error} = useCards();
-	const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-	const onHide = useCallback(() => setOpenUpdateModal(false), []);
-	const onShow = useCallback(() => setOpenUpdateModal(true), []);
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 	const theme = useContext(SiteTheme);
@@ -73,6 +71,15 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<div className='container py-5 lead'>
 				<h1 className='text-start my-5'>Home</h1>
+				{isAdmin || isBusiness&& (
+					<div className='mb-4'>
+						<Link to={pathes.myCards}>
+							<button className='btn btn-primary btn-lg'>
+								Add New Card
+							</button>
+						</Link>
+					</div>
+				)}
 				<div className='row'>
 					{allCards.map((card: Cards) => (
 						<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
@@ -83,14 +90,21 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 									color: theme.color,
 								}}
 							>
-								<img
-									className='card-img-top'
-									src={card.image.url}
-									alt={card.image.alt}
-									style={{
-										height: "200px",
-									}}
-								/>
+								<Link
+									to={`${pathes.cardDetails.replace(
+										":cardId",
+										card._id as string,
+									)}`}
+								>
+									<img
+										className='card-img-top'
+										src={card.image.url}
+										alt={card.image.alt}
+										style={{
+											height: "200px",
+										}}
+									/>
+								</Link>
 								<div className='card-body'>
 									<h5 className='card-title text-center'>
 										{card.title}
@@ -152,15 +166,19 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 													</sub>
 												</div>
 											</div>
-											{isAdmin && (
+											{(isAdmin ||
+												card.user_id === decodedToken._id) && (
 												<div className='mt-3 d-flex justify-content-around'>
-													<button
-														onClick={onShow}
-														className='btn btn-warning btn-sm'
+													<Link
+														to={`${pathes.cardDetails.replace(
+															":cardId",
+															card._id as string,
+														)}`}
 													>
-														Edit
-													</button>
-
+														<button className='btn btn-warning btn-sm'>
+															Edit
+														</button>
+													</Link>
 													<button
 														onClick={() => {
 															onShowDeleteCardModal();
@@ -186,7 +204,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						</div>
 					))}
 
-					<UpdateCardModal show={openUpdateModal} onHide={onHide} />
 					<DeleteUserModal
 						render={() => onHideDeleteCardModal()}
 						show={showDeleteModal}

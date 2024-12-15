@@ -3,8 +3,8 @@ import {Link, NavLink, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
-import {fathMe} from "../fontAwesome/Icons";
-import { SiteTheme } from "../theme/theme";
+import {fathMe, logOut} from "../fontAwesome/Icons";
+import {SiteTheme} from "../theme/theme";
 
 interface NavbarProps {
 	darkSetter: Function;
@@ -63,10 +63,11 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 				<div className='container-fluid'>
 					{/* Dark Mode Toggle Button */}
 					<button
+						style={{backgroundColor: theme.background, color: theme.color}}
 						onClick={() => darkSetter()}
 						id='toggle-theme'
 						aria-label='Toggle theme'
-						className='btn btn-link'
+						className='btn btn-link border-primary'
 					>
 						{fathMe}
 					</button>
@@ -79,7 +80,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 					{/* Navbar Toggler for Mobile */}
 					<button
 						style={{color: theme.color, backgroundColor: theme.background}}
-						className='navbar-toggler'
+						className='navbar-toggler border-primary text-primary'
 						type='button'
 						data-bs-toggle='collapse'
 						data-bs-target='#navbarSupportedContent'
@@ -88,11 +89,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 						aria-label='Toggle navigation'
 					>
 						<span
-							style={{
-								color: theme.color,
-								backgroundColor: theme.background,
-							}}
-							className='navbar-toggler-icon'
+							className='navbar-toggler-icon text-primary'
 						></span>
 					</button>
 
@@ -154,7 +151,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 											About
 										</NavLink>
 									</li>
-									{isBusiness && (
+									{isBusiness === true && (
 										<li className='nav-item'>
 											<NavLink
 												style={{color: theme.color}}
@@ -168,7 +165,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 								</>
 							)}
 						</ul>
-
+						{/* TODO:cards Search Bar */}
 						{/* Search Bar */}
 						<form
 							className='d-flex me-3'
@@ -176,11 +173,11 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 							aria-label='Search cards'
 						>
 							<input
-								id='search'
-								name='search'
+								id='searchCard'
+								name='searchCard'
 								className='form-control me-2 search-input'
 								type='search'
-								placeholder='Search'
+								placeholder='Search Card'
 								aria-label='Search'
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
@@ -189,9 +186,8 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 								Search
 							</button>
 						</form>
-
 						{/* Login/Logout */}
-						<div className='d-flex justify-content-between align-items-center'>
+						<div className='d-flex mt-3 mb-2 justify-content-between align-items-center'>
 							{isLogedIn ? (
 								<Link
 									style={{
@@ -202,7 +198,9 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									onClick={handleLogout}
 									className='fw-bold'
 								>
-									LogOut
+									<span>
+										logOut <span>{logOut}</span>
+									</span>
 								</Link>
 							) : (
 								<div

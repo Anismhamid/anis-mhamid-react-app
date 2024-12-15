@@ -1,4 +1,4 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, useContext} from "react";
 import {useFormik} from "formik";
 import * as yup from "yup";
 import {User} from "../interfaces/User";
@@ -7,11 +7,13 @@ import {pathes} from "../routes/Routes";
 import {registerNewUser} from "../services/userServices";
 import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
 import CardsInput from "../atoms/modals/CardsInput";
+import {SiteTheme} from "../theme/theme";
 
 interface RegisterProps {}
 
 const Register: FunctionComponent<RegisterProps> = () => {
 	const navigate = useNavigate();
+	const theme = useContext(SiteTheme);
 
 	const formik = useFormik<User>({
 		initialValues: {
@@ -88,9 +90,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 				registerNewUser(values)
 					.then(() => {
 						navigate(pathes.login);
-						successMSG(
-							`Please Login to get in Bcards`,
-						);
+						successMSG(`Please Login to get in Bcards`);
 					})
 					.catch((err) => {
 						errorMSG(`Registration failed: ${err.message || err}`);
@@ -102,250 +102,254 @@ const Register: FunctionComponent<RegisterProps> = () => {
 	});
 
 	return (
-		<main className='container my-5'>
-			<h1 className='text-center text-light mb-5'>REGISTER</h1>
-
-			<form
-				onSubmit={formik.handleSubmit}
-				className='shadow-lg p-4 rounded-3 bg-white'
-			>
-				{/* First and Middle Name */}
-				<div className='row mb-3'>
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"name.first"}
-							type={"text"}
-							value={formik.values.name.first}
-							error={formik.errors.name?.first}
-							touched={formik.touched.name?.first}
-							placeholder={"First name"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"name.middle"}
-							type={"text"}
-							value={formik.values.name.middle}
-							error={formik.errors.name?.middle}
-							touched={formik.touched.name?.middle}
-							placeholder={"Middle Name"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-				{/* Last Name and Phone */}
-				<div className='row mb-3'>
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"name.last"}
-							type={"text"}
-							value={formik.values.name.last}
-							error={formik.errors.name?.last}
-							touched={formik.touched.name?.last}
-							placeholder={"Last name"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"phone"}
-							type={"tel"}
-							value={formik.values.phone}
-							error={formik.errors.phone}
-							touched={formik.touched.phone}
-							placeholder={"Phone"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-				{/* Email and Password */}
-				<div className='row mb-3'>
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"email"}
-							type={"email"}
-							value={formik.values.email}
-							error={formik.errors.email}
-							touched={formik.touched.email}
-							placeholder={"Email"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"password"}
-							type={"password"}
-							value={formik.values.password}
-							error={formik.errors.password}
-							touched={formik.touched.password}
-							placeholder={"Password"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-
-				{/* Image URL and Alt Text */}
-				<div className='row mb-3'>
-					<div className='col-md-6 col-sm-12'>
-						<div className='form-floating mb-3'>
-							<input
-								type={"text"}
-								id={"image"}
-								name={"image.url"}
-								value={formik.values.image.url}
-								placeholder={"Image URL"}
-								className={`form-control`}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								aria-label={"url"}
-							/>
-							<label
-								htmlFor={"image"}
-								className='form-label fw-bold text-secondary'
-							>
-								{"Image Url"}
-							</label>
-						</div>
-					</div>
-
-					<div className='col-md-6 col-sm-12'>
-						<div className='form-floating mb-3'>
-							<input
-								type={"text"}
-								id={"image.alt"}
-								name={"image.alt"}
-								value={formik.values.image.alt}
-								placeholder={"Image URL"}
-								className={`form-control`}
-								onChange={formik.handleChange}
-								onBlur={formik.handleBlur}
-								aria-label={"imageAlt"}
-							/>
-							<label
-								htmlFor={"image.alt"}
-								className='form-label fw-bold text-secondary'
-							>
-								{"Image Alt text"}
-							</label>
-						</div>
-					</div>
-				</div>
-
-				{/* Address fields */}
-				<div className='row mb-3'>
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"address.state"}
-							type={"text"}
-							value={formik.values.address.state}
-							error={formik.errors.address?.state}
-							touched={formik.touched.address?.state}
-							placeholder={"State"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-
-					<div className='col-md-6 col-sm-12'>
-						<CardsInput
-							name={"address.country"}
-							type={"text"}
-							value={formik.values.address.country}
-							error={formik.errors.address?.country}
-							touched={formik.touched.address?.country}
-							placeholder={"Country"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-				<div className='row mt-3'>
-					<div className='col-md-6 col-sm-12 mt-2'>
-						<CardsInput
-							name={"address.city"}
-							type={"text"}
-							value={formik.values.address.city}
-							error={formik.errors.address?.city}
-							touched={formik.touched.address?.city}
-							placeholder={"City"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-					<div className='col-md-6 col-sm-12 mt-2'>
-						<CardsInput
-							name={"address.street"}
-							type={"text"}
-							value={formik.values.address.street}
-							error={formik.errors.address?.street}
-							touched={formik.touched.address?.street}
-							placeholder={"Street"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-				{/* House number and Zip */}
-				<div className='row mt-3'>
-					<div className='col-md-6 col-sm-12 mt-2'>
-						<CardsInput
-							name={"address.houseNumber"}
-							type={"number"}
-							value={formik.values.address.houseNumber}
-							error={formik.errors.address?.houseNumber}
-							touched={formik.touched.address?.houseNumber}
-							placeholder={"House number"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-					<div className='col-md-6 col-sm-12 mt-2'>
-						<CardsInput
-							name={"address.zip"}
-							type={"number"}
-							value={formik.values.address.zip}
-							error={formik.errors.address?.zip}
-							touched={formik.touched.address?.zip}
-							placeholder={"Zip code"}
-							onChange={formik.handleChange}
-							onBlur={formik.handleBlur}
-						/>
-					</div>
-				</div>
-				{/* Business Account Checkbox */}
-				<div className='text-start my-3  w-50'>
-					<hr />
-					<input
-						type='checkbox'
-						name='isBusiness'
-						className='form-check-input'
-						id='isBusiness'
-						checked={formik.values.isBusiness ? true : false}
-						onChange={formik.handleChange}
-					/>
-					<label className='form-check-label fw-bold mx-2' htmlFor='isBusiness'>
-						Business Account
-					</label>
-				</div>
-				{/* Submit Button */}
-				<button
-					type='submit'
-					className='btn btn-primary w-100 py-2 mt-3'
-					disabled={!formik.dirty || !formik.isValid}
+		<main style={{backgroundColor: theme.background, color: theme.color}}>
+			<div className='container justify-content-center pt-5'>
+				<form
+					onSubmit={formik.handleSubmit}
+					className='shadow-lg p-4 rounded-4 py-5 border'
 				>
-					REGISTER
-				</button>
-			</form>
+			<h1 className='text-center py-5'>REGISTER</h1>
+					{/* First and Middle Name */}
+					<div className='row mb-3'>
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"name.first"}
+								type={"text"}
+								value={formik.values.name.first}
+								error={formik.errors.name?.first}
+								touched={formik.touched.name?.first}
+								placeholder={"First name"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"name.middle"}
+								type={"text"}
+								value={formik.values.name.middle}
+								error={formik.errors.name?.middle}
+								touched={formik.touched.name?.middle}
+								placeholder={"Middle Name"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+					</div>
+					{/* Last Name and Phone */}
+					<div className='row mb-3'>
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"name.last"}
+								type={"text"}
+								value={formik.values.name.last}
+								error={formik.errors.name?.last}
+								touched={formik.touched.name?.last}
+								placeholder={"Last name"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"phone"}
+								type={"tel"}
+								value={formik.values.phone}
+								error={formik.errors.phone}
+								touched={formik.touched.phone}
+								placeholder={"Phone"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+					</div>
+					{/* Email and Password */}
+					<div className='row mb-3'>
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"email"}
+								type={"email"}
+								value={formik.values.email}
+								error={formik.errors.email}
+								touched={formik.touched.email}
+								placeholder={"Email"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"password"}
+								type={"password"}
+								value={formik.values.password}
+								error={formik.errors.password}
+								touched={formik.touched.password}
+								placeholder={"Password"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+					</div>
+
+					{/* Image URL and Alt Text */}
+					<div className='row mb-3'>
+						<div className='col-md-6 col-sm-12'>
+							<div className='form-floating mb-3'>
+								<input
+									type={"text"}
+									id={"image"}
+									name={"image.url"}
+									value={formik.values.image.url}
+									placeholder={"Image URL"}
+									className={`form-control`}
+									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
+									aria-label={"url"}
+								/>
+								<label
+									htmlFor={"image"}
+									className='form-label fw-bold text-secondary'
+								>
+									{"Image Url"}
+								</label>
+							</div>
+						</div>
+
+						<div className='col-md-6 col-sm-12'>
+							<div className='form-floating mb-3'>
+								<input
+									type={"text"}
+									id={"image.alt"}
+									name={"image.alt"}
+									value={formik.values.image.alt}
+									placeholder={"Image URL"}
+									className={`form-control`}
+									onChange={formik.handleChange}
+									onBlur={formik.handleBlur}
+									aria-label={"imageAlt"}
+								/>
+								<label
+									htmlFor={"image.alt"}
+									className='form-label fw-bold text-secondary'
+								>
+									{"Image Alt text"}
+								</label>
+							</div>
+						</div>
+					</div>
+
+					{/* Address fields */}
+					<div className='row mb-3'>
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"address.state"}
+								type={"text"}
+								value={formik.values.address.state}
+								error={formik.errors.address?.state}
+								touched={formik.touched.address?.state}
+								placeholder={"State"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+
+						<div className='col-md-6 col-sm-12'>
+							<CardsInput
+								name={"address.country"}
+								type={"text"}
+								value={formik.values.address.country}
+								error={formik.errors.address?.country}
+								touched={formik.touched.address?.country}
+								placeholder={"Country"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+					</div>
+					<div className='row mt-3'>
+						<div className='col-md-6 col-sm-12 mt-2'>
+							<CardsInput
+								name={"address.city"}
+								type={"text"}
+								value={formik.values.address.city}
+								error={formik.errors.address?.city}
+								touched={formik.touched.address?.city}
+								placeholder={"City"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+						<div className='col-md-6 col-sm-12 mt-2'>
+							<CardsInput
+								name={"address.street"}
+								type={"text"}
+								value={formik.values.address.street}
+								error={formik.errors.address?.street}
+								touched={formik.touched.address?.street}
+								placeholder={"Street"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+					</div>
+					{/* House number and Zip */}
+					<div className='row mt-3'>
+						<div className='col-md-6 col-sm-12 mt-2'>
+							<CardsInput
+								name={"address.houseNumber"}
+								type={"number"}
+								value={formik.values.address.houseNumber}
+								error={formik.errors.address?.houseNumber}
+								touched={formik.touched.address?.houseNumber}
+								placeholder={"House number"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+						<div className='col-md-6 col-sm-12 mt-2'>
+							<CardsInput
+								name={"address.zip"}
+								type={"number"}
+								value={formik.values.address.zip}
+								error={formik.errors.address?.zip}
+								touched={formik.touched.address?.zip}
+								placeholder={"Zip code"}
+								onChange={formik.handleChange}
+								onBlur={formik.handleBlur}
+							/>
+						</div>
+					</div>
+					{/* Business Account Checkbox */}
+					<div className='text-start my-3  w-50'>
+						<hr />
+						<input
+							type='checkbox'
+							name='isBusiness'
+							className='form-check-input'
+							id='isBusiness'
+							checked={formik.values.isBusiness ? true : false}
+							onChange={formik.handleChange}
+						/>
+						<label
+							className='form-check-label fw-bold mx-2'
+							htmlFor='isBusiness'
+						>
+							Business Account
+						</label>
+					</div>
+					{/* Submit Button */}
+					<button
+						type='submit'
+						className='btn btn-primary w-100 py-2 mt-3'
+						disabled={!formik.dirty || !formik.isValid}
+					>
+						REGISTER
+					</button>
+				</form>
+			</div>
 		</main>
 	);
 };

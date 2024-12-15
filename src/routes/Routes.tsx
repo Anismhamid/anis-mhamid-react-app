@@ -8,6 +8,8 @@ import Cards from "../components/Cards";
 import SandBox from "../components/SandBox";
 import MyCards from "../components/MyCards";
 import UserDetails from "../components/EditUser";
+import CardDetails from "../components/CardDeatails";
+import PageNotFound from "../components/PageNotFound";
 
 export const routes = {
 	cards: <Route path='/' element={<Cards />} />,
@@ -19,6 +21,8 @@ export const routes = {
 	myCards: <Route path='/myCards' element={<MyCards />} />,
 	profile: <Route path='/profile' element={<Profile />} />,
 	userDetails: <Route path='/userDetails/:userId' element={<UserDetails />} />,
+	cardDetails: <Route path='/cardDetails/:cardId' element={<CardDetails />} />,
+	pageNotFound: <Route path='*' element={<PageNotFound />} />,
 };
 
 export const pathes = {
@@ -31,4 +35,6 @@ export const pathes = {
 	myCards: "/myCards",
 	profile: "/profile",
 	userDetails: "/userDetails/:userId",
+	cardDetails: "/cardDetails/:cardId",
+	pageNotFound: "*",
 };

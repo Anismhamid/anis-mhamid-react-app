@@ -84,9 +84,9 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<BackBsotton />
-			<div className='container m-auto my-5'>
+			<div className='container m-auto mt-2'>
 				<h1 className='text-center mb-4'>User Profile</h1>
-				<div className='card shadow-lg rounded-4' data-bs-theme='dark'>
+				<div className='card shadow-lg rounded-4 p-1' data-bs-theme='dark'>
 					<div className='card-body'>
 						<div className='d-flex align-items-center mb-4'>
 							<div className='me-4'>

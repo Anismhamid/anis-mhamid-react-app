@@ -1,5 +1,5 @@
-import {useState, useEffect, FunctionComponent, createContext, useContext} from "react";
-import {useNavigate, useParams} from "react-router-dom";
+import {useState, useEffect, FunctionComponent, useContext} from "react";
+import {useParams} from "react-router-dom";
 import {putUserData, getUserById} from "../services/userServices";
 import Loading from "./Loading";
 import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
@@ -7,8 +7,7 @@ import {User} from "../interfaces/User";
 import * as yup from "yup";
 import {FormikValues, useFormik} from "formik";
 import CardsInput from "../atoms/modals/CardsInput";
-import {leftArrow, leftRight} from "../fontAwesome/Icons";
-import { SiteTheme } from "../theme/theme";
+import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
 
 interface EditUserProps {}
@@ -16,7 +15,6 @@ interface EditUserProps {}
 const EditUser: FunctionComponent<EditUserProps> = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const {userId} = useParams<string>();
-	const navigate = useNavigate();
 	const theme = useContext(SiteTheme);
 	const [user, setUser] = useState<User>({
 		name: {first: "", middle: "", last: ""},
@@ -114,7 +112,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<BackBsotton />
-			<div className='container mb-5'>
+			<div className='container'>
 				<div className='row my-5 fw-bold lead'>
 					<div className='col-12'>
 						<p className='text-light fs-1 lead'>
@@ -128,11 +126,6 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 							className=' img-fluid rounded-5 my-4'
 							style={{maxWidth: "20rem"}}
 						/>
-					</div>
-					<div className='col-12'>
-						<button className=' m-2' onClick={() => navigate(-1)}>
-							back
-						</button>
 					</div>
 					<div className='col-12'>
 						<p className=' lead '>
@@ -200,7 +193,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 
 						<div className='col-md-6 col-sm-12'>
 							<CardsInput
-								name={"phone"}
+								name={"phone-no"}
 								type={"tel"}
 								value={formik.values.phone}
 								error={formik.errors.phone}

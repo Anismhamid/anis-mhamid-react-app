@@ -4,9 +4,10 @@ import {heart, leftArrow, leftRight} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import {Cards} from "../interfaces/Cards";
-import {useNavigate} from "react-router-dom";
-import { SiteTheme } from "../theme/theme";
+import {Link, useNavigate} from "react-router-dom";
+import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
+import {pathes} from "../routes/Routes";
 
 interface FavCardsProps {}
 
@@ -85,23 +86,31 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 									}}
 									className='card w-100 h-100 border-0 shadow-lg rounded-lg overflow-hidden'
 								>
-									<img
-										className='card-img-top'
-										src={card.image.url}
-										alt={card.image.alt}
-										style={{
-											objectFit: "cover",
-											height: "300px",
-											transition: "transform 0.3s ease",
-										}}
-										onMouseOver={(e) => {
-											e.currentTarget.style.transform =
-												"scale(1.1)";
-										}}
-										onMouseOut={(e) => {
-											e.currentTarget.style.transform = "scale(1)";
-										}}
-									/>
+									<Link
+										to={`${pathes.cardDetails.replace(
+											":cardId",
+											card._id as string,
+										)}`}
+									>
+										<img
+											className='card-img-top'
+											src={card.image.url}
+											alt={card.image.alt}
+											style={{
+												objectFit: "cover",
+												height: "300px",
+												transition: "transform 0.3s ease",
+											}}
+											onMouseOver={(e) => {
+												e.currentTarget.style.transform =
+													"scale(1.1)";
+											}}
+											onMouseOut={(e) => {
+												e.currentTarget.style.transform =
+													"scale(1)";
+											}}
+										/>
+									</Link>
 									<div className='card-body'>
 										<h5 className='card-title'>{card.title}</h5>
 										<p className='card-subtitle text-center mb-2 text-muted'>

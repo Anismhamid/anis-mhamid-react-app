@@ -1,23 +1,29 @@
 import {FormikValues, useFormik} from "formik";
-import {FunctionComponent, useEffect, useState} from "react";
+import {FunctionComponent, useContext, useEffect, useState} from "react";
 import * as yup from "yup";
-import CardsInput from "./CardsInput";
-import {Cards} from "../../interfaces/Cards";
-import {getCardById, putCard} from "../../services/cardsServices";
-import {successMSG} from "../taosyify/Toastify";
-import initialValues from "./cardsInitionalValues";
+import CardsInput from "../atoms/modals/CardsInput";
+import {Cards} from "../interfaces/Cards";
+import {getCardById, putCard} from "../services/cardsServices";
+import {successMSG} from "../atoms/taosyify/Toastify";
+import initialValues from "../atoms/modals/cardsInitionalValues";
 import {useParams} from "react-router-dom";
+import {SiteTheme} from "../theme/theme";
 
-interface UpdateCardFormProps {}
+interface UpdateCardFormProps {
+	refresh: () => void;
+}
 
-const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = () => {
+const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = ({refresh}) => {
 	const [card, setCard] = useState<Cards>(initialValues);
 	const {cardId} = useParams<{cardId: string}>();
+	const theme = useContext(SiteTheme);
 
 	useEffect(() => {
-		getCardById(cardId as string).then((res) => {
-			setCard(res);
-		});
+		getCardById(cardId as string)
+			.then((res) => {
+				setCard(res);
+			})
+			.catch((err) => console.log(err));
 	}, [cardId]);
 
 	const formik: FormikValues = useFormik<Cards>({
@@ -68,21 +74,31 @@ const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = () => {
 			}),
 		}),
 		onSubmit: (values: Cards) => {
-			putCard(cardId as string, values).then((res) => {
-				successMSG(`${res.title} card is Updated successfuly`);
-			});
+			try {
+				putCard(cardId as string, values as Cards)
+					.then((res) => {
+						refresh();
+						successMSG(`${res.title} card is updated successfully`);
+					})
+					.catch((error) => {
+						console.error("Error updating card:", error);
+					});
+			} catch (error) {
+				console.log(error);
+			}
 		},
 	});
 
 	return (
-		<div className='container mt-5'>
+		<div className='container'>
 			<form
+				style={{backgroundColor: theme.background, color: theme.color}}
 				onSubmit={formik.handleSubmit}
-				className='fw-bold card p-4 shadow-lg rounded-3'
+				className=' card p-4 shadow-lg border rounded-4'
 			>
 				{/* Title and Subtitle */}
 				<div className='row'>
-					<div className='col-6'>
+					<div className='col-6 '>
 						<CardsInput
 							placeholder='Title'
 							name='title'
@@ -271,6 +287,7 @@ const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = () => {
 
 				<div className='mb-3'>
 					<button
+						disabled={!formik.isValid || !formik.dirty}
 						type='submit'
 						className='btn btn-success w-100 py-2 fw-bold shadow-lg'
 					>

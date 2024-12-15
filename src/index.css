@@ -16,6 +16,7 @@
 
 main {
 	min-height: 90vh;
+	padding-bottom: 80px;
 }
 
 .card2 {
@@ -93,6 +94,7 @@ button:focus-visible {
 
 
 img {
+	overflow: hidden;
 	transform: scale(1);
 	object-fit: cover;
 	-webkit-transform: scale(1);
@@ -112,4 +114,26 @@ img:hover {
 	-moz-transform: scale(1.1);
 	-ms-transform: scale(1.1);
 	-o-transform: scale(1.1);
+}
+
+.footer {
+	min-height:50px;
+	max-height:50px;
+	width: 100%;
+	z-index: 100;
+	& .footer-icon{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	& div{
+		width: 100%;
+		font-size: 1.5rem;
+		border: 1px solid #ffffff23;
+		border-radius: 5px;
+		-webkit-border-radius: 5px;
+		-moz-border-radius: 5px;
+		-ms-border-radius: 5px;
+		-o-border-radius: 5px;
+}
 }

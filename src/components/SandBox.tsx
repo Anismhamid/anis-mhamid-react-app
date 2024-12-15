@@ -8,8 +8,8 @@ import {
 } from "react";
 import {deleteUserById, getAllUsers} from "../services/userServices";
 import {User} from "../interfaces/User";
-import {Link, useNavigate} from "react-router-dom";
-import {edit, leftArrow, leftRight, trash} from "../fontAwesome/Icons";
+import {Link} from "react-router-dom";
+import {edit, trash} from "../fontAwesome/Icons";
 import {Pagination} from "react-bootstrap";
 import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
@@ -18,10 +18,10 @@ import Loading from "./Loading";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
+import PageNotFound from "./PageNotFound";
 
 const SandBox: FunctionComponent = () => {
 	const usersPerPage = 50;
-	const navigate = useNavigate();
 	const {decodedToken} = useToken();
 	const {isAdmin} = useUserContext();
 	const [users, setUsers] = useState<User[]>([]);
@@ -63,7 +63,7 @@ const SandBox: FunctionComponent = () => {
 					errorMSG("Error fetching users.");
 					setISLoading(false);
 				});
-		} else return;
+		} else return
 	}, [render, isAdmin]);
 
 	const refresh = () => setRender(!render);
@@ -182,7 +182,7 @@ const SandBox: FunctionComponent = () => {
 								</Link>
 							</div>
 
-							{isLoading && isAdmin === true && (
+							{isLoading && isAdmin && (
 								<>
 									<div className='d-flex text-end justify-content-end my-3'>
 										<Link to={`/userDetails/${user._id}`}>
@@ -220,8 +220,8 @@ const SandBox: FunctionComponent = () => {
 					>
 						<thead>
 							<tr>
-								<th colSpan={8}>Image</th>
-								<th colSpan={2}>Full Name</th>
+								<th colSpan={6}>Image</th>
+								<th colSpan={4}>Full Name</th>
 								<th colSpan={1}>Edit</th>
 								<th colSpan={1}>Delete</th>
 							</tr>
@@ -229,7 +229,7 @@ const SandBox: FunctionComponent = () => {
 						<tbody>
 							{currentUsers.map((user: User) => (
 								<tr key={user._id}>
-									<td colSpan={8}>
+									<td colSpan={6}>
 										<Link to={`/userDetails/${user._id}`}>
 											<img
 												className='img-fluid mx-5 rounded-5'
@@ -238,8 +238,8 @@ const SandBox: FunctionComponent = () => {
 												}
 												alt={`${user.image?.alt}'s profile`}
 												style={{
-													width: "160px",
-													height: "120px",
+													width: "70px",
+													height: "70px",
 												}}
 											/>
 										</Link>

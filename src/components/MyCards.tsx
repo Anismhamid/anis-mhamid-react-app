@@ -6,8 +6,10 @@ import Loading from "./Loading";
 import AddNewCardModal from "../atoms/modals/AddNewCardModal";
 import {Cards} from "../interfaces/Cards";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
-import { SiteTheme } from "../theme/theme";
+import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
+import {Link} from "react-router-dom";
+import {pathes} from "../routes/Routes";
 
 interface MyCardsProps {}
 
@@ -101,26 +103,26 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 									className='col-12 col-md-6 col-xl-4 my-3'
 								>
 									<div className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'>
-										<img
-											className='card-img-top'
-											src={
-												card.image?.url || "default-image-url.jpg"
-											}
-											alt={card.image?.alt || "Card Image"}
-											style={{
-												objectFit: "cover",
-												height: "300px",
-												transition: "transform 0.3s ease",
-											}}
-											onMouseOver={(e) =>
-												(e.currentTarget.style.transform =
-													"scale(1.1)")
-											}
-											onMouseOut={(e) =>
-												(e.currentTarget.style.transform =
-													"scale(1)")
-											}
-										/>
+										<Link
+											to={`${pathes.cardDetails.replace(
+												":cardId",
+												card._id as string,
+											)}`}
+										>
+											<img
+												className='card-img-top'
+												src={
+													card.image?.url ||
+													"default-image-url.jpg"
+												}
+												alt={card.image?.alt || "Card Image"}
+												style={{
+													objectFit: "cover",
+													height: "300px",
+													transition: "transform 0.3s ease",
+												}}
+											/>
+										</Link>
 										<div className='card-body'>
 											<h5 className='card-title'>{card.title}</h5>
 											<p className='card-subtitle text-center mb-2 text-light-emphasis'>
@@ -194,11 +196,25 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 													}
 													render={() => refresh()}
 												/>
-												<button
-													onClick={() => onShowDeleteModal()}
-												>
-													{trash}
-												</button>
+												<div className='mt-3 d-flex justify-content-around'>
+													<Link
+														to={`${pathes.cardDetails.replace(
+															":cardId",
+															card._id as string,
+														)}`}
+													>
+														<button className='btn btn-warning btn-sm'>
+															Edit
+														</button>
+													</Link>
+													<button
+														onClick={() =>
+															onShowDeleteModal()
+														}
+													>
+														{trash}
+													</button>
+												</div>
 											</div>
 										</div>
 									</div>
