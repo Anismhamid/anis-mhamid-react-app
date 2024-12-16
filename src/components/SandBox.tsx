@@ -15,12 +15,13 @@ import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
-import DeleteUserModal from "../atoms/modals/DeleteUserModal";
+import DeleteUserModal from "../atoms/modals/DeleteModal";
 import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
-import PageNotFound from "./PageNotFound";
 
-const SandBox: FunctionComponent = () => {
+interface SandBoxProps {}
+
+const SandBox: FunctionComponent<SandBoxProps> = () => {
 	const usersPerPage = 50;
 	const {decodedToken} = useToken();
 	const {isAdmin} = useUserContext();
@@ -63,7 +64,7 @@ const SandBox: FunctionComponent = () => {
 					errorMSG("Error fetching users.");
 					setISLoading(false);
 				});
-		} else return
+		} else return;
 	}, [render, isAdmin]);
 
 	const refresh = () => setRender(!render);
@@ -121,6 +122,7 @@ const SandBox: FunctionComponent = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<BackBsotton />
+			// TODO: after search fix
 			<div className='d-flex justify-content-around'>
 				<h2>SandBox</h2>
 				<div className='mt-3 mb-3'>
@@ -144,7 +146,6 @@ const SandBox: FunctionComponent = () => {
 					</form>
 				</div>
 			</div>
-
 			{/* Displaying the user result or all users */}
 			{userSearch && userSearch.length > 0 ? (
 				<div
@@ -244,7 +245,7 @@ const SandBox: FunctionComponent = () => {
 											/>
 										</Link>
 									</td>
-									<td colSpan={2}>
+									<td colSpan={4}>
 										{user.name.first} {user.name.last}
 									</td>
 									{decodedToken?.isAdmin && (

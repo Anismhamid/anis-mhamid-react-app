@@ -115,7 +115,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 			<div className='container'>
 				<div className='row my-5 fw-bold lead'>
 					<div className='col-12'>
-						<p className='text-light fs-1 lead'>
+						<p className='fs-1 lead'>
 							{user.isBusiness ? "admin" : "Client"}
 						</p>
 					</div>

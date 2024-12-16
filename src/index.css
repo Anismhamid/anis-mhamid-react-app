@@ -81,8 +81,9 @@ button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
 
-.table tbody tr:hover {
-	background-color: rgba(0, 123, 255, 0.1);
+.logout:hover {
+	padding: 6px;
+	outline: 4px auto -webkit-focus-ring-color;
 }
 
 
@@ -117,23 +118,32 @@ img:hover {
 }
 
 .footer {
-	min-height:50px;
-	max-height:50px;
+	min-height: 40px;
+	max-height: 40px;
 	width: 100%;
 	z-index: 100;
-	& .footer-icon{
+
+	& .footer-icon {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		position: relative;
+
 	}
-	& div{
-		width: 100%;
+
+	& div {
 		font-size: 1.5rem;
-		border: 1px solid #ffffff23;
 		border-radius: 5px;
 		-webkit-border-radius: 5px;
 		-moz-border-radius: 5px;
 		-ms-border-radius: 5px;
 		-o-border-radius: 5px;
-}
+		width: 90%;
+		margin: 0 auto;
+
+		& button {
+			position: relative;
+			bottom: 17px;
+		}
+	}
 }

@@ -1,4 +1,4 @@
-import {FunctionComponent, useContext, useEffect, useState} from "react";
+import {FunctionComponent, useContext, useEffect, useMemo, useState} from "react";
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
@@ -23,7 +23,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 		isBusiness,
 	} = useUserContext();
 	const {decodedToken} = useToken();
-	const [searchTerm, setSearchTerm] = useState<string>("");
 
 	useEffect(() => {
 		if (decodedToken) {
@@ -46,14 +45,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 		navigate(pathes.cards);
 	};
 
-	const handleSearch = (e: React.FormEvent) => {
-		e.preventDefault();
-		if (searchTerm.trim()) {
-			// Handle your search functionality here
-			console.log("Searching for:", searchTerm);
-		}
-	};
-
 	return (
 		<header className='w-100 sticky-top'>
 			<nav
@@ -74,7 +65,11 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 
 					{/* Logo */}
 					<NavLink className='navbar-brand logo' to={pathes.cards}>
-						<img className='img-fluid w-75' src='/bCards.png' alt='bCards' />
+						<img
+							className='img-fluid w-75'
+							src='/lightMod-bCards.png'
+							alt='bCards'
+						/>
 					</NavLink>
 
 					{/* Navbar Toggler for Mobile */}
@@ -88,9 +83,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 						aria-expanded='false'
 						aria-label='Toggle navigation'
 					>
-						<span
-							className='navbar-toggler-icon text-primary'
-						></span>
+						<span className='navbar-toggler-icon text-primary'></span>
 					</button>
 
 					{/* Navbar Links */}
@@ -165,27 +158,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 								</>
 							)}
 						</ul>
-						{/* TODO:cards Search Bar */}
-						{/* Search Bar */}
-						<form
-							className='d-flex me-3'
-							onSubmit={handleSearch}
-							aria-label='Search cards'
-						>
-							<input
-								id='searchCard'
-								name='searchCard'
-								className='form-control me-2 search-input'
-								type='search'
-								placeholder='Search Card'
-								aria-label='Search'
-								value={searchTerm}
-								onChange={(e) => setSearchTerm(e.target.value)}
-							/>
-							<button className='btn btn-outline-info' type='submit'>
-								Search
-							</button>
-						</form>
 						{/* Login/Logout */}
 						<div className='d-flex mt-3 mb-2 justify-content-between align-items-center'>
 							{isLogedIn ? (
@@ -198,8 +170,8 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									onClick={handleLogout}
 									className='fw-bold'
 								>
-									<span>
-										logOut <span>{logOut}</span>
+									<span className="logout text-danger">
+										LOGIUT <span>{logOut}</span>
 									</span>
 								</Link>
 							) : (

@@ -12,7 +12,7 @@ import {useUserContext} from "../context/UserContext";
 import {SiteTheme} from "../theme/theme";
 import {deleteCardById} from "../services/cardsServices";
 import BackBsotton from "../atoms/BackButtons";
-import DeleteUserModal from "../atoms/modals/DeleteUserModal";
+import DeleteUserModal from "../atoms/modals/DeleteModal";
 import UpdateCardForm from "./UpdateCardForm";
 import useToken from "../hooks/useToken";
 
@@ -51,9 +51,9 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 			style={{backgroundColor: theme.background, color: theme.color}}
 		>
 			<BackBsotton />
-			<div className='w-50 m-auto my-5'>
+			<div className='w-25 m-auto my-5'>
 				<img
-					className='img-fluid m-auto p-1 w-100'
+					className='img-fluid m-auto p-1'
 					src={card.image.url}
 					alt={card.image.alt}
 					onMouseOver={(e) => {
@@ -62,7 +62,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 				/>
 			</div>
 			<div
-				className='w-75 m-auto card w-100 h-100 border-1 border-info shadow-lg rounded-lg overflow-hidden my-5'
+				className='m-auto card border-0 shadow overflow-hidden my-5 w-75 p-3'
 				style={{
 					backgroundColor: theme.background,
 					color: theme.color,
@@ -73,19 +73,21 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 					<h6 className='card-subtitle text-center mb-2 text-secondary'>
 						{card.subtitle}
 					</h6>
-					<hr />
-					<div className='card-text'>
-						<h5>Phone:</h5>
+					<hr className='w-50 m-auto' />
+					<div className='card-text mt-5'>
+						<h6>Phone:</h6>
+						<hr className='w-25 border-danger' />
 						<p>{card.phone}</p>
-						<h5>Address:</h5>
+						<h6>Address:</h6>
+						<hr className='w-25 border-danger' />
 						<p>
 							{card.address.city}, {card.address.street}
 						</p>
 					</div>
 
-					<hr />
 					<div className='card-text'>
-						<h5 className='lead fw-bold'>description</h5>
+						<h6>description</h6>
+						<hr className='w-25 border-danger' />
 						<p className='lead '>{card.description}</p>
 					</div>
 					<>

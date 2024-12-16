@@ -1,11 +1,11 @@
 import {FunctionComponent, useState, useEffect, useCallback, useContext} from "react";
 import {deleteCardById, getMyCards, updateLikeStatus} from "../services/cardsServices";
-import {heart, trash} from "../fontAwesome/Icons";
+import {edit, heart, trash} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import AddNewCardModal from "../atoms/modals/AddNewCardModal";
 import {Cards} from "../interfaces/Cards";
-import DeleteUserModal from "../atoms/modals/DeleteUserModal";
+import DeleteUserModal from "../atoms/modals/DeleteModal";
 import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
 import {Link} from "react-router-dom";
@@ -203,11 +203,12 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 															card._id as string,
 														)}`}
 													>
-														<button className='btn btn-warning btn-sm'>
-															Edit
+														<button className='mx-3 text-warning'>
+															{edit}
 														</button>
 													</Link>
 													<button
+														className='text-danger'
 														onClick={() =>
 															onShowDeleteModal()
 														}

@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {Cards} from "../interfaces/Cards";
-import {infoMSG} from "../atoms/taosyify/Toastify";
+import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 
 const api: string = import.meta.env.VITE_API_URL;
 
@@ -88,7 +88,7 @@ export const createNewCard = async (card: Cards) => {
 		});
 		return response;
 	} catch (error) {
-		console.log(error);
+		errorMSG("Authentication Error");
 		throw new Error();
 	}
 };

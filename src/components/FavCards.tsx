@@ -15,8 +15,9 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const [cards, setCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
-	const navigate = useNavigate();
 	const theme = useContext(SiteTheme);
+
+
 	const handleLikeToggle = (cardId: string) => {
 		const updatedCards = cards.map((card: any) => {
 			if (card._id === cardId) {
