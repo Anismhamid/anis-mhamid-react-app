@@ -41,35 +41,40 @@ const Register: FunctionComponent<RegisterProps> = () => {
 		},
 		validationSchema: yup.object({
 			name: yup.object({
-				first: yup.string().required().min(2).max(256),
+				first: yup.string().required("Name is required").min(2).max(256),
 				middle: yup.string().min(2).max(256).optional(),
 				last: yup.string().required().min(2).max(256),
 			}),
 			phone: yup
 				.string()
-				.required("Phone number is required")
-				.min(9)
-				.max(11)
+				.required()
+				.min(10)
+				.max(10)
 				.matches(
-					/^(\(\d{3}\)\s?|\d{3}[-.\s]?)\d{3}[-.\s]?\d{4}$/,
+					/0\d([\d]{0,1})([-]{0,1})\d{7}/,
 					"Invalid phone number format. Example: (123) 456-7890 or 123-456-7890",
 				),
 			email: yup
 				.string()
 				.required("Email is required")
 				.email("Invalid email format")
-				.min(5, "Email must be at least 5 characters long"),
+				.min(5, "Email must be at least 5 characters long")
+				.matches(/[^@ \t\r\n]+@[^@ \t\r\n]+\.[^@ \t\r\n]+/),
 			password: yup
 				.string()
 				.required("Password is required")
 				.min(7, "Password must be at least 7 characters long")
-				.max(20, "Password must be at most 20 characters long"),
+				.max(20, "Password must be at most 20 characters long")
+				.matches(
+					/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).{8,}$/,
+				),
 			image: yup.object({
 				url: yup
 					.string()
 					.min(14, "Image URL must be at least 14 characters long")
 					.url("Please provide a valid URL")
-					.optional(),
+					.optional()
+					.matches(/https?:\/\/[^\s]+/),
 				alt: yup
 					.string()
 					.min(2, "Image alt text must be at least 2 characters long")
@@ -108,7 +113,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 					onSubmit={formik.handleSubmit}
 					className='shadow-lg p-4 rounded-4 py-5 border'
 				>
-			<h1 className='text-center py-5'>REGISTER</h1>
+					<h1 className='text-center py-5'>REGISTER</h1>
 					{/* First and Middle Name */}
 					<div className='row mb-3'>
 						<div className='col-md-6 col-sm-12'>
@@ -131,7 +136,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 								value={formik.values.name.middle}
 								error={formik.errors.name?.middle}
 								touched={formik.touched.name?.middle}
-								placeholder={"Middle Name"}
+								placeholder={"Middle Name (optional)"}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}
 							/>

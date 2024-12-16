@@ -15,7 +15,7 @@ import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
-import DeleteUserModal from "../atoms/modals/DeleteModal";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
 

@@ -1,13 +1,14 @@
 import {FunctionComponent, useContext, useEffect, useState} from "react";
 import {getLikedCardById, updateLikeStatus} from "../services/cardsServices";
-import {heart, leftArrow, leftRight} from "../fontAwesome/Icons";
+import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import {Cards} from "../interfaces/Cards";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
 import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
 import {pathes} from "../routes/Routes";
+import { handleLikeToggle_Cards } from "../handleFunctions/cards";
 
 interface FavCardsProps {}
 
@@ -16,32 +17,6 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
-
-
-	const handleLikeToggle = (cardId: string) => {
-		const updatedCards = cards.map((card: any) => {
-			if (card._id === cardId) {
-				const isLiked: any = card.likes.includes(decodedToken._id);
-				if (isLiked) {
-					// User is unliking the card
-					card.likes = card.likes.filter(
-						(id: string) => id !== decodedToken._id,
-					);
-				} else {
-					// User is liking the card
-					card.likes.push(decodedToken._id);
-				}
-
-				updateLikeStatus(cardId, decodedToken._id).catch((err) => {
-					console.log("Failed to update like status:", err);
-				});
-			}
-			return card;
-		});
-
-		// Update the state with the new list of cards
-		setCards(updatedCards);
-	};
 
 	useEffect(() => {
 		if (!decodedToken._id) {
@@ -60,7 +35,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				console.log("Failed to fetch cards.");
 				setLoading(false);
 			});
-	}, [decodedToken, handleLikeToggle]);
+	}, [decodedToken, handleLikeToggle_Cards,cards]);
 
 	if (loading) {
 		return <Loading />;
@@ -132,8 +107,11 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 														color: theme.color,
 													}}
 													onClick={() =>
-														handleLikeToggle(
+														handleLikeToggle_Cards(
 															card._id as string,
+															cards,
+															decodedToken._id as string,
+															setCards
 														)
 													}
 													className={`${

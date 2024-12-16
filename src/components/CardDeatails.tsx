@@ -6,21 +6,22 @@ import {
 	useState,
 } from "react";
 import useCards from "../hooks/useCards";
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {Cards} from "../interfaces/Cards";
 import {useUserContext} from "../context/UserContext";
 import {SiteTheme} from "../theme/theme";
-import {deleteCardById} from "../services/cardsServices";
 import BackBsotton from "../atoms/BackButtons";
-import DeleteUserModal from "../atoms/modals/DeleteModal";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import UpdateCardForm from "./UpdateCardForm";
 import useToken from "../hooks/useToken";
+import {handleDeleteCard_Cards} from "../handleFunctions/cards";
+import {pathes} from "../routes/Routes";
 
 interface CardDetailsProps {}
 
 const CardDetails: FunctionComponent<CardDetailsProps> = () => {
+	const navigate = useNavigate();
 	const {decodedToken} = useToken();
-
 	const {isAdmin, isLogedIn} = useUserContext();
 	const {allCards, setCards} = useCards();
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
@@ -31,19 +32,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 	const {cardId} = useParams<string>();
 	const card = allCards?.find((card: Cards) => card._id === cardId);
 
-	const handleDeleteCard = (id: string) => {
-		deleteCardById(id)
-			.then(() => {
-				setCards((prev) => prev.filter((c) => c._id === c._id));
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
-
-	if (!card) {
-		return <p className='text-center text-danger'>Card not found.</p>;
-	}
+	if (!card) return <p className='text-center text-danger'>Card not found.</p>;
 
 	return (
 		<main
@@ -115,7 +104,11 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 				show={showDeleteModal}
 				onHide={() => onHideDeleteCardModal()}
 				onDelete={() => {
-					handleDeleteCard(cardToDelete as string);
+					handleDeleteCard_Cards(
+						cardToDelete as string,
+						setCards((prev) => prev.filter((c) => c._id === c._id)),
+					);
+					navigate(pathes.cards);
 				}}
 			/>
 			{isAdmin || (isLogedIn && card.user_id === decodedToken._id) ? (

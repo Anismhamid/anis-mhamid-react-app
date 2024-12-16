@@ -11,12 +11,16 @@ import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import useCards from "../hooks/useCards";
-import DeleteModal from "../atoms/modals/DeleteModal";
+import DeleteModal from "../atoms/modals/DeleteUserModal";
 import {Cards} from "../interfaces/Cards";
 import {SiteTheme} from "../theme/theme";
 import {Link} from "react-router-dom";
 import {pathes} from "../routes/Routes";
-import {handleDeleteCard, handleLikeToggle} from "../handleFunctions/cards";
+import {
+	handleDeleteCard_Cards,
+	handleLikeToggle_Cards,
+	handleSearch,
+} from "../handleFunctions/cards";
 
 interface CardsHomeProps {}
 
@@ -28,7 +32,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {isAdmin, isLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
@@ -48,10 +51,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 			);
 		});
 	}, [searchTerm]);
-
-	const handleSearch = (e: React.FormEvent) => {
-		e.preventDefault();
-	};
 
 	if (!allCards.length) {
 		return <Loading />;
@@ -134,7 +133,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 																color: theme.color,
 															}}
 															onClick={() =>
-																handleLikeToggle(
+																handleLikeToggle_Cards(
 																	card._id as string,
 																	allCards,
 																	decodedToken?._id,
@@ -211,9 +210,9 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						<></>
 					)}
 					{isAdmin || isBusiness ? (
-						<div className='mb-4 bg-dark'>
+						<div className='mb-4'>
 							<Link to={pathes.myCards}>
-								<button className='btn btn-primary btn-lg'>
+								<button className='btn btn-dark btn-sm'>
 									Add New Card
 								</button>
 							</Link>
@@ -276,7 +275,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 																color: theme.color,
 															}}
 															onClick={() =>
-																handleLikeToggle(
+																handleLikeToggle_Cards(
 																	card._id as string,
 																	allCards,
 																	decodedToken?._id,
@@ -355,7 +354,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 							show={showDeleteModal}
 							onHide={() => onHideDeleteCardModal()}
 							onDelete={() => {
-								handleDeleteCard(
+								handleDeleteCard_Cards(
 									cardToDelete as string,
 									setCards((prev) =>
 										prev.filter((c) => c._id !== cardToDelete),

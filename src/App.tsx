@@ -1,4 +1,4 @@
-import {Route, BrowserRouter as Router, Routes} from "react-router-dom";
+import {BrowserRouter as Router, Routes} from "react-router-dom";
 import {routes} from "./routes/Routes";
 import Navbar from "./components/Navbar";
 import {ToastContainer} from "react-toastify";
@@ -6,6 +6,9 @@ import {useEffect, useState} from "react";
 import {SiteTheme, theme} from "./theme/theme";
 import React from "react";
 import Sidebar from "./components/Sidebar";
+
+
+
 
 function App() {
 	const [darkMode, setDarkMode] = useState<boolean>(() => {
@@ -18,7 +21,7 @@ function App() {
 	}, [darkMode]);
 
 	const handleTheme = () => {
-		setDarkMode((prev) => !prev);
+		setDarkMode((oldprev) => !oldprev);
 	};
 
 	return (

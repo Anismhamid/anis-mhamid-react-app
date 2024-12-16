@@ -30,7 +30,24 @@ The application supports **CRUD** operations, allowing users to:
 -   **Update** business card information.
 -   **Delete** business cards when needed.
 
-## User Roles and Permissions
+## CRUD Operations
+
+**Create**
+
+-   Users can create new business cards by providing necessary information (name, title, etc.) through a form.
+
+**Read**
+
+-   Users can view their own or public business cards. Admins can view all users' and businesses' cards.
+
+**Update**:
+
+-   Users can edit their own business cards and update details such as title, description, and contact information Admin users can do this.
+
+**Delete**:
+
+-   Users can delete their own business cards. Admin users can delete any business card or user data.
+Roles and Permissions
 
 ### 1. **Unregistered User**
 
@@ -65,18 +82,19 @@ The application supports **CRUD** operations, allowing users to:
     -   Can access protected admin paths and perform higher-level administration tasks.
 
 ## Technologies Used
-- **React**: JavaScript library for building the user interface.
-- **Vite**: Next-generation build tool for faster development and production builds.
-- **React Router**: For routing and navigating between pages.
-- **Formik**: For handling forms with validation.
-- **Yup**: For form validation schemas.
-- **Axios**: For making HTTP requests.
-- **JWT (JSON Web Tokens)**: For secure user authentication.
-- **React Context API**: For managing global user state (authentication and roles).
-- **Toastify**: To display notifications such as success and error messages.
-- **Bootstrap**: For responsive UI components.
-- **React-Bootstrap**: A React component library for Bootstrap, providing Bootstrap components as React components.
-- **React FontAwesome**: To include and use FontAwesome icons in the React app.
+
+-   **React**: JavaScript library for building the user interface.
+-   **Vite**: Next-generation build tool for faster development and production builds.
+-   **React Router**: For routing and navigating between pages.
+-   **Formik**: For handling forms with validation.
+-   **Yup**: For form validation schemas.
+-   **Axios**: For making HTTP requests.
+-   **JWT (JSON Web Tokens)**: For secure user authentication.
+-   **React Context API**: For managing global user state (authentication and roles).
+-   **Toastify**: To display notifications such as success and error messages.
+-   **Bootstrap**: For responsive UI components.
+-   **React-Bootstrap**: A React component library for Bootstrap, providing Bootstrap components as React components.
+-   **React FontAwesome**: To include and use FontAwesome icons in the React app.
 
 ## Project Structure
 

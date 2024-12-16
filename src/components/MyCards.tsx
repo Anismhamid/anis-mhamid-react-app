@@ -1,15 +1,16 @@
 import {FunctionComponent, useState, useEffect, useCallback, useContext} from "react";
-import {deleteCardById, getMyCards, updateLikeStatus} from "../services/cardsServices";
+import {deleteCardById, getMyCards} from "../services/cardsServices";
 import {edit, heart, trash} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import AddNewCardModal from "../atoms/modals/AddNewCardModal";
 import {Cards} from "../interfaces/Cards";
-import DeleteUserModal from "../atoms/modals/DeleteModal";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {SiteTheme} from "../theme/theme";
 import BackBsotton from "../atoms/BackButtons";
 import {Link} from "react-router-dom";
 import {pathes} from "../routes/Routes";
+import {handleLikeToggle_MyCards} from "../handleFunctions/cards";
 
 interface MyCardsProps {}
 
@@ -48,28 +49,6 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				setLoading(false);
 			});
 	}, [decodedToken, cards.length, setCards, refresh]);
-
-	const handleLikeToggle = (cardId: string) => {
-		if (!decodedToken || !decodedToken._id) return;
-
-		const updatedCards = cards.map((card: any) => {
-			if (card._id === cardId) {
-				const isLiked = card.likes.includes(decodedToken._id);
-				const updatedLikes = isLiked
-					? card.likes.filter((id: string) => id !== decodedToken._id)
-					: [...card.likes, decodedToken._id];
-
-				return {...card, likes: updatedLikes};
-			}
-			return card;
-		});
-
-		setCards(updatedCards);
-
-		updateLikeStatus(cardId, decodedToken._id).catch((err) => {
-			console.log("Failed to update like status:", err);
-		});
-	};
 
 	const handleDeleteCard = (cardId: string) => {
 		deleteCardById(cardId)
@@ -158,8 +137,11 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 												<div className='likes-container d-flex align-items-center'>
 													<p
 														onClick={() =>
-															handleLikeToggle(
+															handleLikeToggle_MyCards(
 																card._id as string,
+																decodedToken,
+																cards,
+																setCards,
 															)
 														}
 														className={`${

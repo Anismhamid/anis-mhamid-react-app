@@ -7,24 +7,27 @@ const useCards = () => {
 	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
-		getAllCards()
-			.then((res: Cards[] | null) => {
-				if (res) {
-					setCards(res);
-					setError(null);
-				} else {
-					setCards([]);
-					setError("No cards available.");
-				}
-			})
-			.catch((err) => {
-				console.error("Error loading cards:", err);
-				const errorMessage =
-					err?.response?.data?.message ||
-					"Failed to load cards. Please try again later.";
-				setError(errorMessage);
-			})
-	}, []); 
+		const interval = setInterval(() => {
+			getAllCards()
+				.then((res: Cards[] | null) => {
+					if (res) {
+						setCards(res.reverse());
+						setError(null);
+					} else {
+						setCards([]);
+						setError("No cards available.");
+					}
+				})
+				.catch((err) => {
+					console.error("Error loading cards:", err);
+					const errorMessage =
+						err?.response?.data?.message ||
+						"Failed to load cards. Please try again later.";
+					setError(errorMessage);
+				});
+		}, 1000);
+		return () => clearInterval(interval);
+	}, []);
 
 	return {allCards, setCards, error};
 };

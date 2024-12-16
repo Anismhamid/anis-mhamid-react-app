@@ -7,7 +7,7 @@ import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
 import {Link, useNavigate} from "react-router-dom";
 import useToken from "../hooks/useToken";
-import DeleteUserModal from "../atoms/modals/DeleteModal";
+import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import Loading from "./Loading";
 import {successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
