@@ -3,6 +3,7 @@ import {
 	SetStateAction,
 	useCallback,
 	useContext,
+	useEffect,
 	useMemo,
 	useState,
 } from "react";
@@ -25,15 +26,24 @@ import {
 interface CardsHomeProps {}
 
 const CardsHome: FunctionComponent<CardsHomeProps> = () => {
-	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
+	const {decodedToken} = useToken();
 	const {allCards, setCards, error} = useCards();
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const {isAdmin, isLogedIn, isBusiness} = useUserContext();
+	const {isAdmin, isLogedIn,setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
+
+
+		useEffect(() => {
+		if (decodedToken._d ) {
+			setIsLogedIn(true);
+		} else {
+			setIsLogedIn(false);
+		}
+	}, [decodedToken]);
 
 	const filteredCards = useMemo(() => {
 		const query = searchTerm.trim().toLowerCase();
@@ -85,7 +95,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 				<div className='row ms-auto'>
 					{filteredCards.length > 0 ? (
 						filteredCards.map((card) => (
-							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
+							<div key={card._id} className=' col-12 col-md-6 col-xl-4 my-3'>
 								<div
 									className='custom-boder card2 card shadow-lg rounded overflow-hidden'
 									style={{
@@ -126,7 +136,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 											<p>{card.email}</p>
 										</div>
 
-										{isLogedIn && decodedToken && (
+										{isLogedIn && (
 											<>
 												<hr />
 												<div className='d-flex justify-content-between align-items-center'>
@@ -268,7 +278,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 											<h5>{card.email}</h5>
 										</div>
 
-										{isLogedIn && decodedToken && (
+										{isLogedIn && decodedToken._d && (
 											<>
 												<hr />
 												<div className='d-flex justify-content-between align-items-center'>

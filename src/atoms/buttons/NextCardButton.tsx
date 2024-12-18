@@ -4,6 +4,7 @@ import {SiteTheme} from "../../theme/theme";
 import {leftArrow, rightArrow} from "../../fontAwesome/Icons";
 import useCards from "../../hooks/useCards";
 import {Cards} from "../../interfaces/Cards";
+import {errorMSG, infoMSG} from "../taosyify/Toastify";
 
 interface NextCardButtonProps {}
 
@@ -24,7 +25,7 @@ const NextCardButton: FunctionComponent<NextCardButtonProps> = () => {
 		} else if (backCard) {
 			navigate(`/cardDetails/${next}`);
 		} else {
-			console.log("No next card found.");
+			errorMSG("No next card found.");
 		}
 	};
 
@@ -33,7 +34,13 @@ const NextCardButton: FunctionComponent<NextCardButtonProps> = () => {
 			<button
 				style={{backgroundColor: theme.background, color: theme.color}}
 				className='bg-transparent border-0'
-				onClick={() => handleNextCardNavigation(backCard._id as string)}
+				onClick={() => {
+					if (backCard) {
+						handleNextCardNavigation(backCard._id as string);
+					} else {
+						infoMSG("This is the first card found.");
+					}
+				}}
 				disabled={!nextCard}
 			>
 				<span className='fs-4 next-back-home'>{leftArrow} Back</span>
@@ -41,7 +48,9 @@ const NextCardButton: FunctionComponent<NextCardButtonProps> = () => {
 			<button
 				style={{backgroundColor: theme.background, color: theme.color}}
 				className='bg-transparent border-0'
-				onClick={() => handleNextCardNavigation(nextCard._id as string)}
+				onClick={() => {
+					handleNextCardNavigation(nextCard._id as string);
+				}}
 				disabled={!nextCard}
 			>
 				<span className='fs-4 next-back-home'>next {rightArrow}</span>

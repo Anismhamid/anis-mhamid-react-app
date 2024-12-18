@@ -24,8 +24,15 @@ const Login: FunctionComponent<LoginProps> = () => {
 	const {decodedToken} = useToken();
 
 	useEffect(() => {
+		let token = localStorage.token;
+		if (token) {
+			console.log(token);
+		} else {
+			console.log("no token");
+		}
+
 		try {
-			if (decodedToken && decodedToken._id)
+			if (token && decodedToken._id)
 				getUserById(decodedToken._id)
 					.then(() => {
 						setAuth({...decodedToken, isAdmin: isAdmin});
@@ -35,9 +42,11 @@ const Login: FunctionComponent<LoginProps> = () => {
 					})
 					.catch((err) => {
 						wellcomeMSG(err);
+						setIsLogedIn(false);
 					});
 		} catch (err) {
 			errorMSG("Failed to find user");
+			setIsLogedIn(false);
 		}
 	}, []);
 

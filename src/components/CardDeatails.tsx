@@ -3,6 +3,7 @@ import {
 	SetStateAction,
 	useCallback,
 	useContext,
+	useEffect,
 	useState,
 } from "react";
 import useCards from "../hooks/useCards";
@@ -18,7 +19,7 @@ import Loading from "./Loading";
 import Button from "../atoms/buttons/Button";
 import NextCardButton from "../atoms/buttons/NextCardButton";
 import {heart} from "../fontAwesome/Icons";
-import { pathes } from "../routes/Routes";
+import {pathes} from "../routes/Routes";
 
 interface CardDetailsProps {}
 
@@ -39,7 +40,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<Button text='Home' path={()=>navigate(pathes.cards)} />
+			<Button text='Home' path={() => navigate(pathes.cards)} />
 			<h6 className='lead display-5 mx-3 my-3'>Card Details</h6>
 			<hr className=' w-25' />
 			<div className='card-details-image'>
@@ -150,10 +151,12 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 				</div>
 			</div>
 			<div className='container-sm'>
-				<hr className=' mb-4' />
-				<h6 className=' display-6 mx-3'>Edit Card</h6>
 				{isAdmin || (isLogedIn && card.user_id === decodedToken._id) ? (
-					<UpdateCardForm refresh={() => {}} />
+					<>
+						<hr className=' mb-4' />
+						<h6 className=' display-6 mx-3'>Edit Card</h6>
+						<UpdateCardForm refresh={() => {}} />
+					</>
 				) : null}
 			</div>
 			<DeleteModal
