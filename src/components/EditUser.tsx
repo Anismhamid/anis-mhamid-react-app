@@ -1,21 +1,26 @@
-import {useState, useEffect, FunctionComponent, useContext} from "react";
-import {useParams} from "react-router-dom";
-import {putUserData, getUserById} from "../services/userServices";
+import {useState, useEffect, FunctionComponent, useContext, SetStateAction} from "react";
+import {useNavigate, useParams} from "react-router-dom";
+import {putUserData, getUserById, deleteUserById} from "../services/userServices";
 import Loading from "./Loading";
-import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
+import {errorMSG, infoMSG, successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
 import * as yup from "yup";
 import {FormikValues, useFormik} from "formik";
 import CardsInput from "../atoms/modals/CardsInput";
 import {SiteTheme} from "../theme/theme";
-import BackBsotton from "../atoms/BackButtons";
-
+import Button from "../atoms/buttons/Button";
+import DeleteModal from "../atoms/modals/DeleteUserModal";
+import {pathes} from "../routes/Routes";
 interface EditUserProps {}
 
 const EditUser: FunctionComponent<EditUserProps> = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const {userId} = useParams<string>();
 	const theme = useContext(SiteTheme);
+	const navigate = useNavigate();
+
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
 	const [user, setUser] = useState<User>({
 		name: {first: "", middle: "", last: ""},
 		phone: "",
@@ -25,6 +30,9 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 		image: {url: "", alt: ""},
 		isBusiness: false,
 	});
+
+	const onShowDeleteCardModal = () => setShowDeleteModal(true);
+	const onHideDeleteCardModal = () => setShowDeleteModal(false);
 
 	const formik: FormikValues = useFormik<User>({
 		enableReinitialize: true,
@@ -95,7 +103,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 
 		setIsLoading(true);
 		getUserById(userId)
-			.then((data) => {
+			.then((data: User) => {
 				setUser(data);
 				setIsLoading(false);
 			})
@@ -105,18 +113,36 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				setIsLoading(false);
 				errorMSG("Error fetching user details");
 			});
-	}, [userId, setUser]);
+	}, [userId]);
+
+	// Handle Delete
+	const handleDelete = (userId: string) => {
+		try {
+			deleteUserById(userId)
+				.then(() => {
+					navigate(pathes.sandBox);
+					infoMSG("User deleted successfully.");
+				})
+				.catch((err) => {
+					console.log(err);
+					errorMSG("Error deleting user.");
+				});
+		} catch (error) {
+			console.log(error);
+			errorMSG("Failed to delete user.");
+		}
+	};
 
 	if (isLoading) return <Loading />;
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<BackBsotton />
+			<Button text={"Back"} path={()=>navigate(pathes.sandBox)} />
 			<div className='container'>
-				<div className='row my-5 fw-bold lead'>
+				<div className='row mp-5 fw-bold lead'>
 					<div className='col-12'>
-						<p className='fs-1 lead'>
-							{user.isBusiness ? "admin" : "Client"}
+						<p className='fs-1 lead mt-5'>
+							{user.isBusiness ? "Business" : "Client"}
 						</p>
 					</div>
 					<div className='col-12'>
@@ -142,6 +168,15 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 					</div>
 				</div>
 				<hr className=' border-light' />
+				<button
+					onClick={() => {
+						onShowDeleteCardModal();
+						setCardToDelete(user._id as string);
+					}}
+					className='btn btn-danger btn-sm'
+				>
+					Delete
+				</button>
 				<h6 className=' lead'>Edit User</h6>
 				<form
 					onSubmit={formik.handleSubmit}
@@ -343,6 +378,14 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 					</button>
 				</form>
 			</div>
+			<DeleteModal
+				render={() => onHideDeleteCardModal()}
+				show={showDeleteModal}
+				onHide={() => onHideDeleteCardModal()}
+				onDelete={() => {
+					handleDelete(cardToDelete as string);
+				}}
+			/>
 		</main>
 	);
 };

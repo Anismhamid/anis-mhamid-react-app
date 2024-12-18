@@ -1,7 +1,7 @@
 import {FunctionComponent, useContext} from "react";
 import {SiteTheme} from "../theme/theme";
-import BackBsotton from "../atoms/BackButtons";
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
+
 interface AboutProps {}
 
 const About: FunctionComponent<AboutProps> = () => {
@@ -9,7 +9,6 @@ const About: FunctionComponent<AboutProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<BackBsotton />
 			<div className='container p-5'>
 				<header className='text-center mb-4'>
 					<h1 className='display-4 text-primary'>About bCards</h1>
@@ -65,7 +64,7 @@ const About: FunctionComponent<AboutProps> = () => {
 
 				<footer className='text-center mt-5 py-3 border-top w-100'>
 					<h2 className='mt-5'>Contact Us</h2>
-					<p className=" lead">
+					<p className=' lead'>
 						Have questions or want to learn more? Feel free to reach out to us
 						at
 					</p>

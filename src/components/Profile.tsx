@@ -1,7 +1,7 @@
 import {FunctionComponent, useCallback, useContext, useEffect, useState} from "react";
 import {deleteUserById, getUserById, patchUserBusiness} from "../services/userServices";
 
-import {edit, leftArrow, leftRight, trash} from "../fontAwesome/Icons";
+import {edit, trash} from "../fontAwesome/Icons";
 
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
@@ -12,7 +12,7 @@ import Loading from "./Loading";
 import {successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
 import {SiteTheme} from "../theme/theme";
-import BackBsotton from "../atoms/BackButtons";
+import Button from "../atoms/buttons/Button";
 
 interface ProfileProps {}
 
@@ -53,8 +53,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 			deleteUserById(userId).then((res) => {
 				setIsLogedIn(false);
 				successMSG(`${res.name.first} Has been deleted`);
-				navigate(pathes.cards);
 				localStorage.removeItem("token");
+				navigate(pathes.cards);
 			});
 		} catch (error) {
 			console.log(error);
@@ -83,7 +83,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<BackBsotton />
+			<Button text='Home' path={() => navigate(pathes.cards)} />
 			<div className='container m-auto mt-2'>
 				<h1 className='text-center mb-4'>User Profile</h1>
 				<div className='card shadow-lg rounded-4 p-1' data-bs-theme='dark'>
@@ -178,7 +178,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 							</div>
 							<div className='col-6'>
 								<Link to={""} className='text-danger' onClick={onShow}>
-									Drop {trash}
+									Delete {trash}
 								</Link>
 							</div>
 						</div>

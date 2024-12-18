@@ -7,33 +7,33 @@ export const tooltips = {
 		</Tooltip>
 	),
 	myCards: (
-		<Tooltip id='homeTooltip'>
+		<Tooltip id='cardsTooltip'>
 			<strong>My Cards</strong>
 		</Tooltip>
 	),
 	users: (
-		<Tooltip id='homeTooltip'>
+		<Tooltip id='usersTooltip'>
 			<strong>Users</strong>
 		</Tooltip>
 	),
 	sandBox: (
-		<Tooltip id='homeTooltip'>
-			<strong>sandBox</strong>
+		<Tooltip id='sandBoxTooltip'>
+			<strong>Sand Box</strong>
 		</Tooltip>
 	),
 	favCards: (
-		<Tooltip id='homeTooltip'>
-			<strong>favCards</strong>
+		<Tooltip id='favoriteCardsTooltip'>
+			<strong>Favorite Cards</strong>
 		</Tooltip>
 	),
 	about: (
-		<Tooltip id='homeTooltip'>
-			<strong>about</strong>
+		<Tooltip id='aboutTooltip'>
+			<strong>About</strong>
 		</Tooltip>
 	),
 	profile: (
-		<Tooltip id='homeTooltip'>
-			<strong>profile</strong>
+		<Tooltip id='profileTooltip'>
+			<strong>Profile</strong>
 		</Tooltip>
 	),
 };

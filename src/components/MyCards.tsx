@@ -1,35 +1,39 @@
-import {FunctionComponent, useState, useEffect, useCallback, useContext} from "react";
-import {deleteCardById, getMyCards} from "../services/cardsServices";
+import {FunctionComponent, useState, useEffect, useContext, SetStateAction} from "react";
+import {getMyCards} from "../services/cardsServices";
 import {edit, heart, trash} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import AddNewCardModal from "../atoms/modals/AddNewCardModal";
 import {Cards} from "../interfaces/Cards";
-import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {SiteTheme} from "../theme/theme";
-import BackBsotton from "../atoms/BackButtons";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
-import {handleLikeToggle_MyCards} from "../handleFunctions/cards";
+import {handleDeleteCard_Cards, handleLikeToggle_MyCards} from "../handleFunctions/cards";
+import Button from "../atoms/buttons/Button";
+import DeleteModal from "../atoms/modals/DeleteUserModal";
 
 interface MyCardsProps {}
 
 const MyCards: FunctionComponent<MyCardsProps> = () => {
+	const navigate = useNavigate();
 	const {decodedToken} = useToken();
+	const theme = useContext(SiteTheme);
 	const [cards, setCards] = useState<Cards[]>([]);
+	const [render, setRender] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [showAddModal, setShowAddModal] = useState<boolean>(false);
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
-	const theme = useContext(SiteTheme);
+	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
 
-	const onHide = useCallback<Function>(() => setShowAddModal(false), []);
-	const onShow = useCallback<Function>(() => setShowAddModal(true), []);
-	const onHideDeleteModal = useCallback<Function>(() => setShowDeleteModal(false), []);
-	const onShowDeleteModal = useCallback<Function>(() => setShowDeleteModal(true), []);
+	const onHideDeleteModal = () => setShowDeleteModal(false);
+	const onShowDeleteModal = () => setShowDeleteModal(true);
+	const onHide = () => setShowAddModal(false);
+	const onShow = () => setShowAddModal(true);
 
 	const refresh = () => {
 		onHideDeleteModal();
 		onHide();
+		setRender(true);
 	};
 
 	useEffect(() => {
@@ -37,7 +41,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 		getMyCards(decodedToken._id)
 			.then((res: Cards[]) => {
 				setCards(
-					res.map((card: Cards) => ({
+					res.reverse().map((card: Cards) => ({
 						...card,
 						likes: card.likes || [],
 					})),
@@ -48,23 +52,13 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				console.error(err);
 				setLoading(false);
 			});
-	}, [decodedToken, cards.length, setCards, refresh]);
-
-	const handleDeleteCard = (cardId: string) => {
-		deleteCardById(cardId)
-			.then(() => {
-				console.log(cardId);
-			})
-			.catch((err) => {
-				console.log(err);
-			});
-	};
+	}, [decodedToken, render]);
 
 	if (loading) return <Loading />;
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<BackBsotton />
+			<Button text='Back' path={() => navigate(pathes.cards)} />
 			<div className='container py-5'>
 				<h2 className='lead display-5'>My Cards</h2>
 				<hr className='border-light' />
@@ -168,16 +162,6 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 														</p>
 													</sub>
 												</div>
-												<DeleteUserModal
-													show={showDeleteModal}
-													onHide={onHideDeleteModal}
-													onDelete={() =>
-														handleDeleteCard(
-															card._id as string,
-														)
-													}
-													render={() => refresh()}
-												/>
 												<div className='mt-3 d-flex justify-content-around'>
 													<Link
 														to={`${pathes.cardDetails.replace(
@@ -191,9 +175,12 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 													</Link>
 													<button
 														className='text-danger'
-														onClick={() =>
-															onShowDeleteModal()
-														}
+														onClick={() => {
+															onShowDeleteModal();
+															setCardToDelete(
+																card._id as string,
+															);
+														}}
 													>
 														{trash}
 													</button>
@@ -208,10 +195,23 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 						<p>No Data</p>
 					)}
 				</div>
+				<DeleteModal
+					render={() => onHideDeleteModal()}
+					show={showDeleteModal}
+					onHide={() => onHideDeleteModal()}
+					onDelete={() => {
+						handleDeleteCard_Cards(
+							cardToDelete as string,
+							setCards((prev) =>
+								prev.filter((c) => c._id !== cardToDelete),
+							),
+						);
+					}}
+				/>
 				<AddNewCardModal
-					refresh={() => refresh()}
 					show={showAddModal}
-					onHide={onHide}
+					refresh={() => refresh()}
+					onHide={() => onHide()}
 				/>
 			</div>
 		</main>

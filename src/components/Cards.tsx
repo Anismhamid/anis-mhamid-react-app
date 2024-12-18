@@ -60,29 +60,34 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<div className='container py-5 lead'>
 				{/* Search Bar */}
-				<form
-					className='d-flex me-3'
-					onSubmit={handleSearch}
-					aria-label='Search cards'
-				>
-					<input
-						id='searchCard'
-						name='searchCard'
-						className='form-control me-2 search-input'
-						type='search'
-						placeholder='card name /phone /email /country'
-						aria-label='Search'
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-				</form>
-				<h1 className='text-start my-5'>Home</h1>
-				<div className='row'>
-					{searchTerm && filteredCards.length > 0 ? (
+				<div className='custom-border rounded-3 p-2'>
+					<label htmlFor='searchCard' className='mb-2 display-6'>
+						Search
+					</label>
+					<form
+						className='d-flex me-3'
+						onSubmit={handleSearch}
+						aria-label='Search cards'
+					>
+						<input
+							id='searchCard'
+							name='searchCard'
+							className='form-control me-2 search-input'
+							type='search'
+							placeholder='card name /phone /email /country'
+							aria-label='Search'
+							value={searchTerm}
+							onChange={(e) => setSearchTerm(e.target.value)}
+						/>
+					</form>
+				</div>
+				<h1 className='text-center my-5'>Home</h1>
+				<div className='row ms-auto'>
+					{filteredCards.length > 0 ? (
 						filteredCards.map((card) => (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
 								<div
-									className='card2 card w-100 h-100 border-1 border-info shadow-lg rounded-lg overflow-hidden'
+									className='custom-boder card2 card shadow-lg rounded overflow-hidden'
 									style={{
 										backgroundColor: theme.background,
 										color: theme.color,
@@ -224,7 +229,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						{allCards.map((card: Cards) => (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
 								<div
-									className='card2 card w-100 h-100 border-1 border-info shadow-lg rounded-lg overflow-hidden'
+									className='custom-border card2 card w-100 h-100 border-1 shadow-lg rounded-lg overflow-hidden'
 									style={{
 										backgroundColor: theme.background,
 										color: theme.color,

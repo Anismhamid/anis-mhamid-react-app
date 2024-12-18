@@ -8,7 +8,7 @@ import {
 } from "react";
 import {deleteUserById, getAllUsers} from "../services/userServices";
 import {User} from "../interfaces/User";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {edit, trash} from "../fontAwesome/Icons";
 import {Pagination} from "react-bootstrap";
 import {useUserContext} from "../context/UserContext";
@@ -17,7 +17,8 @@ import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
 import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {SiteTheme} from "../theme/theme";
-import BackBsotton from "../atoms/BackButtons";
+import Button from "../atoms/buttons/Button";
+import {pathes} from "../routes/Routes";
 
 interface SandBoxProps {}
 
@@ -36,6 +37,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 	const onHide = () => setShowDeleteModal(false);
 	const onShow = () => setShowDeleteModal(true);
 	const theme = useContext(SiteTheme);
+	const navigate = useNavigate();
 
 	// Pagination logic
 	const startIndex = (currentPage - 1) * usersPerPage;
@@ -121,10 +123,10 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<BackBsotton />
+			<Button text={"Home"} path={() => navigate(pathes.cards)} />
 			// TODO: after search fix
 			<div className='d-flex justify-content-around'>
-				<h2>SandBox</h2>
+				<h2 className='lead display-5'>SandBox</h2>
 				<div className='mt-3 mb-3'>
 					<form className='d-flex me-3' onSubmit={(e) => e.preventDefault()}>
 						<input

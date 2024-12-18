@@ -1,4 +1,4 @@
-import {FunctionComponent, useContext, useEffect, useMemo, useState} from "react";
+import {FunctionComponent, useContext, useEffect} from "react";
 import {Link, NavLink, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
@@ -135,6 +135,17 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 											</NavLink>
 										</li>
 									)}
+										{isBusiness === true && (
+											<li className='nav-item'>
+												<NavLink
+													style={{color: theme.color}}
+													className='nav-link'
+													to={pathes.myCards}
+												>
+													My Cards
+												</NavLink>
+											</li>
+										)}
 									<li className='nav-item'>
 										<NavLink
 											style={{color: theme.color}}
@@ -144,17 +155,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 											About
 										</NavLink>
 									</li>
-									{isBusiness === true && (
-										<li className='nav-item'>
-											<NavLink
-												style={{color: theme.color}}
-												className='nav-link'
-												to={pathes.myCards}
-											>
-												My Cards
-											</NavLink>
-										</li>
-									)}
 								</>
 							)}
 						</ul>

@@ -25,7 +25,11 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 				>
 					{isAdmin && (
 						<div
-						style={{backgroundColor:isActive(pathes.sandBox) ? "#83B4BC":""}}
+							style={{
+								backgroundColor: isActive(pathes.sandBox)
+									? "#83B4BC"
+									: "",
+							}}
 							className={` footer-icon `}
 						>
 							<Link to={pathes.sandBox}>
@@ -65,12 +69,58 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 											isActive(pathes.favCards)
 												? "text-danger"
 												: "text-light"
-										} rounded-5 fs-6`}
+										} rounded-5 fs-5`}
 									>
 										{heart}
 									</button>
 								</OverlayTrigger>
 							</ButtonToolbar>
+						</Link>
+					</div>
+					<div
+						style={{
+							backgroundColor: isActive(pathes.profile) ? "#83B4BC" : "",
+						}}
+						className={` footer-icon `}
+					>
+						<Link to={pathes.profile}>
+							<ButtonToolbar>
+								<OverlayTrigger
+									placement='top'
+									overlay={tooltips.profile}
+								>
+									<button
+										className={`${
+											isActive(pathes.profile)
+												? "text-danger"
+												: "text-light"
+										} rounded-5 fs-5`}
+									>
+										{profile}
+									</button>
+								</OverlayTrigger>
+							</ButtonToolbar>
+						</Link>
+					</div>
+					<div
+						style={{
+							backgroundColor: isActive(pathes.cards) ? "#83B4BC" : "",
+						}}
+						className={` footer-icon `}
+					>
+						<Link to={pathes.cards}>
+							<ButtonToolbar />
+							<OverlayTrigger placement='top' overlay={tooltips.cards}>
+								<button
+									className={`${
+										isActive(pathes.cards)
+											? "text-danger"
+											: "text-light"
+									} rounded-5 fs-2`}
+								>
+									{home}
+								</button>
+							</OverlayTrigger>
 						</Link>
 					</div>
 					{isBusiness && (
@@ -102,53 +152,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 							</Link>
 						</div>
 					)}
-					<div
-						style={{
-							backgroundColor: isActive(pathes.cards) ? "#83B4BC" : "",
-						}}
-						className={` footer-icon `}
-					>
-						<Link to={pathes.cards}>
-							<ButtonToolbar>
-								<OverlayTrigger placement='top' overlay={tooltips.cards}>
-									<button
-										className={`${
-											isActive(pathes.cards)
-												? "text-danger"
-												: "text-light"
-										} rounded-5 fs-2`}
-									>
-										{home}
-									</button>
-								</OverlayTrigger>
-							</ButtonToolbar>
-						</Link>
-					</div>
-					<div
-						style={{
-							backgroundColor: isActive(pathes.profile) ? "#83B4BC" : "",
-						}}
-						className={` footer-icon `}
-					>
-						<Link to={pathes.profile}>
-							<ButtonToolbar>
-								<OverlayTrigger
-									placement='top'
-									overlay={tooltips.profile}
-								>
-									<button
-										className={`${
-											isActive(pathes.profile)
-												? "text-danger"
-												: "text-light"
-										} rounded-5 fs-5`}
-									>
-										{profile}
-									</button>
-								</OverlayTrigger>
-							</ButtonToolbar>
-						</Link>
-					</div>
+
 					<div
 						style={{
 							backgroundColor: isActive(pathes.about) ? "#83B4BC" : "",

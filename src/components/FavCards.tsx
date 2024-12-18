@@ -1,14 +1,14 @@
 import {FunctionComponent, useContext, useEffect, useState} from "react";
-import {getLikedCardById, updateLikeStatus} from "../services/cardsServices";
+import {getLikedCardById} from "../services/cardsServices";
 import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import {Cards} from "../interfaces/Cards";
 import {Link} from "react-router-dom";
 import {SiteTheme} from "../theme/theme";
-import BackBsotton from "../atoms/BackButtons";
 import {pathes} from "../routes/Routes";
-import { handleLikeToggle_Cards } from "../handleFunctions/cards";
+import {handleLikeToggle_Cards} from "../handleFunctions/cards";
+import Button from "../atoms/buttons/Button";
 
 interface FavCardsProps {}
 
@@ -35,7 +35,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				console.log("Failed to fetch cards.");
 				setLoading(false);
 			});
-	}, [decodedToken, handleLikeToggle_Cards,cards]);
+	}, [decodedToken, handleLikeToggle_Cards, cards]);
 
 	if (loading) {
 		return <Loading />;
@@ -48,7 +48,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				color: theme.color,
 			}}
 		>
-			<BackBsotton />
+			<Button text={"Back"} />
 			<div className='container py-5'>
 				<h2>My favorite Business Cards</h2>
 				<div className='row'>
@@ -111,7 +111,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 															card._id as string,
 															cards,
 															decodedToken._id as string,
-															setCards
+															setCards,
 														)
 													}
 													className={`${

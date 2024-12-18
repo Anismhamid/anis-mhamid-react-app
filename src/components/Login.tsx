@@ -1,9 +1,4 @@
-import {
-	FunctionComponent,
-	useState,
-	useEffect,
-	useContext,
-} from "react";
+import {FunctionComponent, useState, useEffect, useContext} from "react";
 import {useNavigate} from "react-router-dom";
 import {getUserById, loginIn} from "../services/userServices";
 import {pathes} from "../routes/Routes";
@@ -11,21 +6,40 @@ import * as yup from "yup";
 import {FormikValues, useFormik} from "formik";
 import {UserLogin} from "../interfaces/User";
 import {useUserContext} from "../context/UserContext";
-import {jwtDecode} from "jwt-decode";
 import useToken from "../hooks/useToken";
 import {errorMSG, wellcomeMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
 import {SiteTheme} from "../theme/theme";
+import {closedEye, eye} from "../fontAwesome/Icons";
 
 interface LoginProps {}
 
 const Login: FunctionComponent<LoginProps> = () => {
+	const [showPassword, setShowPassword] = useState(false);
 	const {isAdmin, auth, setAuth, setIsAdmin, setIsBusiness, setIsLogedIn} =
 		useUserContext();
 	const theme = useContext(SiteTheme);
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState<boolean>(false);
 	const {decodedToken} = useToken();
+
+	useEffect(() => {
+		try {
+			if (decodedToken && decodedToken._id)
+				getUserById(decodedToken._id)
+					.then(() => {
+						setAuth({...decodedToken, isAdmin: isAdmin});
+						setIsAdmin(decodedToken.isAdmin);
+						setIsBusiness(auth?.isBusiness ? true : false);
+						setIsLogedIn(true);
+					})
+					.catch((err) => {
+						wellcomeMSG(err);
+					});
+		} catch (err) {
+			errorMSG("Failed to find user");
+		}
+	}, []);
 
 	useEffect(() => {
 		if (decodedToken && localStorage.token) {
@@ -36,26 +50,6 @@ const Login: FunctionComponent<LoginProps> = () => {
 			return;
 		}
 	}, [decodedToken]);
-
-	useEffect(() => {
-		try {
-			if (decodedToken && decodedToken._id)
-				getUserById(decodedToken._id)
-					.then(() => {
-						setAuth({...decodedToken, isAdmin: isAdmin});
-						setIsAdmin(decodedToken.isAdmin);
-						setIsBusiness(auth?.isBusiness as boolean);
-						setIsLogedIn(true);
-					})
-					.catch((err) => {
-						wellcomeMSG(err);
-						return;
-					});
-		} catch (err) {
-			errorMSG("Failed to find user");
-			console.error(err);
-		}
-	}, []);
 
 	const validationSchema = yup.object({
 		email: yup
@@ -80,8 +74,6 @@ const Login: FunctionComponent<LoginProps> = () => {
 					setLoading(false);
 					localStorage.setItem("token", res.data);
 					navigate(pathes.cards);
-					const deco = jwtDecode(res.data);
-					wellcomeMSG(`Welcome Back! 🦄 ${deco.nbf}`);
 				})
 				.catch((err) => {
 					setLoading(false);
@@ -138,7 +130,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 
 						<div className='form-floating mb-3'>
 							<input
-								type='password'
+								type={showPassword ? "text" : "password"} // Toggle between text and password type
 								autoComplete='off'
 								className={`form-control ${
 									formik.touched.password && formik.errors.password
@@ -154,6 +146,19 @@ const Login: FunctionComponent<LoginProps> = () => {
 								disabled={loading}
 								aria-label='Password'
 							/>
+							<button
+								type='button'
+								onClick={() => setShowPassword((prev) => !prev)}
+								style={{
+									position: "absolute",
+									right: "10px",
+									top: "50%",
+									transform: "translateY(-50%)",
+								}}
+								className='btn btn-link'
+							>
+								{showPassword ? eye : closedEye}{" "}
+							</button>
 							{formik.touched.password && formik.errors.password && (
 								<div className='invalid-feedback'>
 									{formik.errors.password}

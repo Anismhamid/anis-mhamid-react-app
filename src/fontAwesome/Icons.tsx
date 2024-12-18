@@ -4,6 +4,8 @@ import {
 	faBriefcase,
 	faCircleExclamation,
 	faEdit,
+	faEye,
+	faEyeSlash,
 	faHeart,
 	faHome,
 	faInfoCircle,
@@ -24,7 +26,7 @@ export const errorCircle = <FontAwesomeIcon icon={faCircleExclamation} />;
 export const plus = <FontAwesomeIcon icon={faPlus} />;
 export const fathMe = <FontAwesomeIcon icon={faMoon} />;
 export const leftArrow = <FontAwesomeIcon icon={faArrowLeft} />;
-export const leftRight = <FontAwesomeIcon icon={faArrowRight} />;
+export const rightArrow = <FontAwesomeIcon icon={faArrowRight} />;
 export const home = <FontAwesomeIcon icon={faHome} />;
 export const business = <FontAwesomeIcon icon={faBriefcase} />;
 export const profile = <FontAwesomeIcon icon={faUserTie} />;
@@ -32,3 +34,5 @@ export const star = <FontAwesomeIcon icon={faStar} />;
 export const users = <FontAwesomeIcon icon={faUsers} />;
 export const about = <FontAwesomeIcon icon={faInfoCircle} />;
 export const logOut = <FontAwesomeIcon icon={faRightFromBracket} />;
+export const eye = <FontAwesomeIcon icon={faEye} />;
+export const closedEye = <FontAwesomeIcon icon={faEyeSlash} />;

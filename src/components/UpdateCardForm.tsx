@@ -190,8 +190,7 @@ const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = ({refresh}) => {
 							onBlur={formik.handleBlur}
 						/>
 					</div>
-					____
-					<div className='col-3'>
+					<div className='col-4'>
 						<CardsInput
 							placeholder='alt'
 							name='image.alt'
@@ -261,7 +260,7 @@ const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = ({refresh}) => {
 					</div>
 					<div className='col-4'>
 						<CardsInput
-							placeholder='houseNumber'
+							placeholder='house NO'
 							name='address.houseNumber'
 							type='number'
 							value={formik.values.address.houseNumber}

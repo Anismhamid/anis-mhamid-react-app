@@ -1,6 +1,6 @@
 import axios from "axios";
 import {User, UserLogin} from "../interfaces/User";
-import {infoMSG} from "../atoms/taosyify/Toastify";
+import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 const api: string = `${import.meta.env.VITE_API_URL}/users`;
 
 const token = {
@@ -17,20 +17,23 @@ const getUsers = {
 
 // Login function
 export async function loginIn(login: UserLogin): Promise<any> {
-	const response = await axios.post(`${api}/login`, login);
-	return response;
+	try {
+		const response = await axios.post(`${api}/login`, login);
+		return response;
+	} catch (error) {
+		console.log(error);
+		throw new Error("Login failed, please try again.");
+	}
 }
 
 // Fetch all users
 export async function getAllUsers() {
 	try {
-		const response = await axios.request({
-			...getUsers
-		});
-
+		const response = await axios.request(getUsers);
 		return response.data;
 	} catch (error) {
 		console.log(error);
+		errorMSG("Filed to fetch data please try again later")
 	}
 }
 
@@ -75,6 +78,9 @@ export const patchUserBusiness = async (
 	user: {isBusiness: boolean},
 ) => {
 	let token = localStorage.getItem("token");
+	if (!token) {
+		throw new Error("Token not found.");
+	}
 	try {
 		const response = await axios.patch(`${api}/${cardId}`, data, {
 			headers: {"x-auth-token": token},

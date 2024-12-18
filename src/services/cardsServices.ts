@@ -132,17 +132,6 @@ export const getCardById = async (cardId: string) => {
 
 export const deleteCardById = async (cardId: string) => {
 	const token: string | null = localStorage.getItem("token");
-
-	if (!token) {
-		console.error("Token is missing or invalid.");
-		return;
-	}
-
-	if (!cardId) {
-		console.error("Card ID is missing or invalid.");
-		return;
-	}
-
 	try {
 		const response = await axios.delete(`${api}/cards/${cardId}`, {
 			headers: {
@@ -154,9 +143,9 @@ export const deleteCardById = async (cardId: string) => {
 		return response.data;
 	} catch (error) {
 		if (axios.isAxiosError(error)) {
-			console.error("Axios error:", error.response?.data || error.message);
+			errorMSG(`Internet connection error: ${error.response?.data || error.message}`);
 		} else {
-			console.error("Unexpected error:", error);
+			errorMSG(`Unexpected error: ${error}`);
 		}
 	}
 };
