@@ -71,6 +71,7 @@ export const deleteUserById = async (userId: string) => {
 	}
 };
 
+
 export const patchUserBusiness = async (
 	cardId: string,
 	data: {isBusiness: boolean},

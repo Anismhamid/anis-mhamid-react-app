@@ -10,7 +10,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import {Cards} from "../interfaces/Cards";
 import {useUserContext} from "../context/UserContext";
 import {SiteTheme} from "../theme/theme";
-import DeleteModal from "../atoms/modals/DeleteUserModal";
+import DeleteModal from "../atoms/modals/DeleteModal";
 import UpdateCardForm from "./UpdateCardForm";
 import useToken from "../hooks/useToken";
 import {handleDeleteCard_Cards, handleLikeToggle_MyCards} from "../handleFunctions/cards";

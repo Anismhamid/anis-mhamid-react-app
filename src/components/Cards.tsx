@@ -12,7 +12,7 @@ import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import useCards from "../hooks/useCards";
-import DeleteModal from "../atoms/modals/DeleteUserModal";
+import DeleteModal from "../atoms/modals/DeleteModal";
 import {Cards} from "../interfaces/Cards";
 import {SiteTheme} from "../theme/theme";
 import {Link} from "react-router-dom";
@@ -276,7 +276,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 											<h5>{card.email}</h5>
 										</div>
 
-										{decodedToken && (
+										{decodedToken._id && (
 											<>
 												<hr />
 												<div className='d-flex justify-content-between align-items-center'>

@@ -7,12 +7,12 @@ import {pathes} from "../routes/Routes";
 import {useUserContext} from "../context/UserContext";
 import {Link, useNavigate} from "react-router-dom";
 import useToken from "../hooks/useToken";
-import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import Loading from "./Loading";
-import {successMSG} from "../atoms/taosyify/Toastify";
+import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
 import {SiteTheme} from "../theme/theme";
 import Button from "../atoms/buttons/Button";
+import DeleteModal from "../atoms/modals/DeleteModal";
 
 interface ProfileProps {}
 
@@ -40,14 +40,15 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					setIsLoading(false);
 					setUser(res);
 				})
-				.catch((error) => {
-					console.warn("2. Failed to fetch user data:", error);
+				.catch(() => {
+					errorMSG("2. Failed to fetch user data:");
 					setIsLoading(false);
 				});
 		} else {
 		}
 	}, [decodedToken._id, render]);
 
+	// Profile handle Delete
 	const handleDelete: Function = (userId: string) => {
 		try {
 			deleteUserById(userId).then((res) => {
@@ -61,6 +62,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 		}
 	};
 
+	// Profile handle switch user business
 	const handleSwitchChange: Function = async () => {
 		const newData = !isBusiness;
 
@@ -154,11 +156,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										role='switch'
 										id='flexSwitchCheckChecked'
 										checked={user.isBusiness ? true : false}
-										onChange={() => {
-											handleSwitchChange();
-											console.log(user.isBusiness ? true : false);
-											
-										}}
+										onChange={() => handleSwitchChange()}
 									/>
 									<label
 										className='form-check-label  fw-bold'
@@ -188,7 +186,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						</div>
 					</div>
 				</div>
-				<DeleteUserModal
+				<DeleteModal
 					show={showDleteModal}
 					onHide={() => onHide()}
 					onDelete={() => handleDelete(user._id)}

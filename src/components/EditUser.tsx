@@ -9,7 +9,7 @@ import {FormikValues, useFormik} from "formik";
 import CardsInput from "../atoms/modals/CardsInput";
 import {SiteTheme} from "../theme/theme";
 import Button from "../atoms/buttons/Button";
-import DeleteModal from "../atoms/modals/DeleteUserModal";
+import DeleteModal from "../atoms/modals/DeleteModal";
 import {ButtonToolbar, OverlayTrigger} from "react-bootstrap";
 import {tooltips} from "../atoms/ToolTip";
 import {handleDelete_User} from "../handleFunctions/users";

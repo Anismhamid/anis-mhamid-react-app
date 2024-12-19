@@ -15,10 +15,10 @@ import {useUserContext} from "../context/UserContext";
 import useToken from "../hooks/useToken";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
-import DeleteUserModal from "../atoms/modals/DeleteUserModal";
 import {SiteTheme} from "../theme/theme";
 import Button from "../atoms/buttons/Button";
 import {pathes} from "../routes/Routes";
+import DeleteModal from "../atoms/modals/DeleteModal";
 
 interface SandBoxProps {}
 
@@ -198,7 +198,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 												{edit}
 											</button>
 										</Link>
-										<DeleteUserModal
+										<DeleteModal
 											render={() => refresh()}
 											show={showDeleteModal}
 											onHide={onHide}
@@ -260,7 +260,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 												</Link>
 											</td>
 											<td colSpan={1}>
-												<DeleteUserModal
+												<DeleteModal
 													render={() => refresh()}
 													show={showDeleteModal}
 													onHide={onHide}

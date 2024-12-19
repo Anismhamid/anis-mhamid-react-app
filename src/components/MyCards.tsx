@@ -10,7 +10,7 @@ import {Link, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {handleDeleteCard_Cards, handleLikeToggle_MyCards} from "../handleFunctions/cards";
 import Button from "../atoms/buttons/Button";
-import DeleteModal from "../atoms/modals/DeleteUserModal";
+import DeleteModal from "../atoms/modals/DeleteModal";
 
 interface MyCardsProps {}
 
@@ -63,9 +63,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				<h2 className='lead display-5'>My Cards</h2>
 				<hr className='border-light' />
 				<div className='w-100'>
-					<button onClick={() => onShow()}>
-						Add Card
-					</button>
+					<button onClick={() => onShow()}>Add Card</button>
 				</div>
 				<div className='row'>
 					{cards.length > 0 ? (
@@ -75,7 +73,13 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 									key={index}
 									className='col-12 col-md-6 col-xl-4 my-3'
 								>
-									<div className='card w-100 h-100 bg-dark text-light border-0 shadow-lg rounded-lg overflow-hidden'>
+									<div
+										style={{
+											backgroundColor: theme.background,
+											color: theme.color,
+										}}
+										className='custom-border card2 card w-100 h-100 border-1 shadow-lg rounded-lg overflow-hidden'
+									>
 										<Link
 											to={`${pathes.cardDetails.replace(
 												":cardId",
