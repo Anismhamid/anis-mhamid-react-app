@@ -37,14 +37,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 
-		useEffect(() => {
-		if (decodedToken._d ) {
-			setIsLogedIn(true);
-		} else {
-			setIsLogedIn(false);
-		}
-	}, [decodedToken]);
-
 	const filteredCards = useMemo(() => {
 		const query = searchTerm.trim().toLowerCase();
 
