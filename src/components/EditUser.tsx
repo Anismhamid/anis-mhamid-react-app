@@ -24,21 +24,19 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-	const [user, setUser] = useState<User>({
+	const [user, setUser] = useState<any>({
 		name: {first: "", middle: "", last: ""},
 		phone: "",
 		email: "",
 		password: "",
 		address: {state: "", city: "", country: "", street: "", houseNumber: 0, zip: 0},
 		image: {url: "", alt: ""},
-		isBusiness: false,
-		isAdmin: false,
 	});
 
 	const onShowDeleteCardModal = () => setShowDeleteModal(true);
 	const onHideDeleteCardModal = () => setShowDeleteModal(false);
 
-	const formik: FormikValues = useFormik<User>({
+	const formik: FormikValues = useFormik<any>({
 		enableReinitialize: true,
 		initialValues: {
 			name: {
@@ -56,8 +54,6 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				houseNumber: user.address.houseNumber,
 				zip: user.address.zip,
 			},
-			isAdmin: user.isAdmin,
-			isBusiness: user.isBusiness,
 		},
 		validationSchema: yup.object({
 			name: yup.object({
@@ -67,7 +63,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 			}),
 			phone: yup
 				.string()
-				.required("Phone number is required")
+				.required("Phone number is required  (123) 456-7890 or 123-456-7890")
 				.min(9)
 				.max(11)
 				.matches(
@@ -96,7 +92,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 		}),
 		onSubmit: (values: User) => {
 			putUserData(user._id as string, values).then(() => {
-				setUser((prevUser) =>
+				setUser((prevUser: User) =>
 					prevUser._id === user._id ? {...prevUser, ...values} : prevUser,
 				);
 				successMSG(`${user.name.first} has ben Updated successfuly`);
@@ -114,7 +110,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				setIsLoading(false);
 			})
 			.catch((err) => {
-				setUser((prev) => prev);
+				setUser((prev: User) => prev);
 				console.log(err);
 				setIsLoading(false);
 				errorMSG("Error fetching user details");
@@ -255,7 +251,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 						<div className='col-md-6 col-sm-12'>
 							<div className='form-floating mb-3'>
 								<input
-									type={"text"}
+									type={"url"}
 									id={"image"}
 									name={"image.url"}
 									value={formik.values.image.url}

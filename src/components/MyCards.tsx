@@ -113,21 +113,20 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 												address
 												<hr className=' w-25' />
 												<span className='card-text text-start lead'>
-													{card.address.state}
+													{card.address.state},
 												</span>
-												,
-												<span className='mx-2 card-text text-start lead'>
+												<span className='mx-2 card-text text-start '>
 													{card.address.city}
 												</span>
 												<p className='card-text text-start lead'>
 													{card.address.street},
-													<span className='mx-2 card-text text-start lead'>
+													<span className='mx-2 card-text text-start'>
 														{card.address.houseNumber}
 													</span>
 												</p>
 											</div>
 											<hr />
-											<p className='card-subtitle text-center mb-2 text-light lead'>
+											<p className='card-subtitle text-center mb-2 lead'>
 												{card.description}
 											</p>
 											<hr />
@@ -147,7 +146,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 																decodedToken?._id,
 															)
 																? "text-danger"
-																: "text-light"
+																: ""
 														} fs-4`}
 													>
 														{heart}
@@ -159,7 +158,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 																	decodedToken?._id,
 																)
 																	? "text-danger"
-																	: "text-light"
+																	: ""
 															} mx-1 fs-5`}
 														>
 															{card.likes?.length}

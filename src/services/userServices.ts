@@ -4,7 +4,8 @@ import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 const api: string = `${import.meta.env.VITE_API_URL}/users`;
 
 const token = {
-	"x-auth-token": localStorage.getItem("bCards_token"),
+	"x-auth-token":
+		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNjA4ZDFjN2NkODBjMWZkMjc1MzIiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MzQ2NDEzNDh9.VxjyYRGzg3twgIaBeUhw-neIfMbfmDj9qSzUdEgiiZg",
 };
 
 const getUsers = {
@@ -71,7 +72,6 @@ export const deleteUserById = async (userId: string) => {
 	}
 };
 
-
 export const patchUserBusiness = async (
 	cardId: string,
 	data: {isBusiness: boolean},
@@ -82,7 +82,7 @@ export const patchUserBusiness = async (
 	}
 	try {
 		const response = await axios.patch(`${api}/${cardId}`, data, {
-			headers: {...token},
+			headers: token,
 		});
 		infoMSG(
 			`administration has been changed for ${response.data.email} to ${

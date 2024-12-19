@@ -3,13 +3,13 @@ import {FunctionComponent} from "react";
 import * as yup from "yup";
 import {Cards} from "../../interfaces/Cards";
 import {createNewCard} from "../../services/cardsServices";
-import {successMSG} from "../taosyify/Toastify";
+import {errorMSG, successMSG} from "../taosyify/Toastify";
 import cardsInitionalValues from "./cardsInitionalValues";
 import CardsInput from "./CardsInput";
-import { plus } from "../../fontAwesome/Icons";
+import {plus} from "../../fontAwesome/Icons";
 
 interface AddNewCardFormProps {
-	refresh:Function
+	refresh: Function;
 }
 
 const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
@@ -24,7 +24,10 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 				.min(9, "minimum phone number is 9")
 				.max(11, "maximum phone number is 11")
 				.required()
-				.matches(/^[0-9]{9,11}$/, "Phone number must be between 9 and 11 digits"),
+				.matches(
+					/^(\(\d{3}\)\s?|\d{3}[-.\s]?)\d{3}[-.\s]?\d{4}$/,
+					"Invalid phone number format. Example: (123) 456-7890 or 123-456-7890",
+				),
 			email: yup.string().min(5).required(),
 			web: yup.string().min(14),
 			image: yup.object({
@@ -41,10 +44,14 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 			}),
 		}),
 		onSubmit: (values: Cards) => {
-			createNewCard(values).then(() => {
-				successMSG(`${values.title} card is created successfuly`);
-				refresh();
-			});
+			createNewCard(values)
+				.then(() => {
+					successMSG(`${values.title} card is created successfuly`);
+					refresh();
+				})
+				.catch((err) => {
+					errorMSG(err);
+				});
 		},
 	});
 
@@ -83,16 +90,34 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 				</div>
 
 				{/* Description */}
-				<CardsInput
-					placeholder='Card description'
-					name='description'
-					type='text'
-					value={formik.values.description}
-					error={formik.errors.description}
-					touched={formik.touched.description}
-					onChange={formik.handleChange}
-					onBlur={formik.handleBlur}
-				/>
+				<div className='form-floating mb-3'>
+					<textarea
+					style={{height:"100px"}}
+						id='description'
+						name={"description"}
+						value={formik.values.description}
+						placeholder={"description"}
+						className={`form-control w-100 ${
+							formik.touched.description && formik.errors.description
+								? "is-invalid"
+								: ""
+						}`}
+						onChange={formik.handleChange}
+						onBlur={formik.handleBlur}
+						aria-label={"description"}
+					/>
+					{formik.touched.description && formik.errors.description && (
+						<div className='invalid-feedback'>
+							{formik.errors.description}
+						</div>
+					)}
+					<label
+						htmlFor={"description"}
+						className='form-label fw-bold text-secondary'
+					>
+						{"description"}
+					</label>
+				</div>
 
 				{/* Phone and Email */}
 				<div className='row'>
@@ -218,7 +243,7 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 					</div>
 					<div className='col-4'>
 						<CardsInput
-							placeholder='houseNumber'
+							placeholder='houseNo'
 							name='address.houseNumber'
 							type='number'
 							value={formik.values.address.houseNumber}

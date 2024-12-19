@@ -21,7 +21,6 @@ export interface User {
 		zip: number;
 	};
 	isBusiness?: boolean;
-	isAdmin?: boolean;
 }
 
 export interface UserLogin {

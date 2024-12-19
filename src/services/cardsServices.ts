@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {Cards} from "../interfaces/Cards";
-import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
+import {errorMSG} from "../atoms/taosyify/Toastify";
 
 const api: string = import.meta.env.VITE_API_URL;
 
@@ -94,7 +94,7 @@ export const createNewCard = async (card: Cards) => {
 };
 
 export const putCard = async (cardId: string, newCard: Cards) => {
-	const token = localStorage.token;
+	const token = localStorage.bCards_token;
 
 	if (!token) {
 		console.error("No authentication token found.");

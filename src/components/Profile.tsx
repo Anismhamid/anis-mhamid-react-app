@@ -13,6 +13,7 @@ import {User} from "../interfaces/User";
 import {SiteTheme} from "../theme/theme";
 import Button from "../atoms/buttons/Button";
 import DeleteModal from "../atoms/modals/DeleteModal";
+import GlobalModal from "../atoms/modals/GlobalModal";
 
 interface ProfileProps {}
 
@@ -21,13 +22,17 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	const [isLoadnig, setIsLoading] = useState<boolean>(true);
 	const [render, setRender] = useState<boolean>(false);
 	const {decodedToken} = useToken();
-	const {setIsLogedIn, isBusiness, setIsBusiness} = useUserContext();
+	const {setIsLogedIn, isBusiness, setIsBusiness, setAuth, setIsAdmin} =
+		useUserContext();
 	const navigate = useNavigate();
 	const theme = useContext(SiteTheme);
 	const [showDleteModal, setShowDeleteModal] = useState(false);
+	const [showModalGl, setShowDModalGl] = useState(false);
 
 	const onHide = useCallback<() => void>((): void => setShowDeleteModal(false), []);
 	const onShow = useCallback<() => void>((): void => setShowDeleteModal(true), []);
+	const onHideGl = useCallback<() => void>((): void => setShowDModalGl(false), []);
+	const onShowGl = useCallback<() => void>((): void => setShowDModalGl(true), []);
 
 	const refresh = () => {
 		setRender(!render);
@@ -77,6 +82,15 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 		} catch (error) {
 			console.error("Error updating data:", error);
 		}
+	};
+
+	const handleLogout = () => {
+		setAuth(null);
+		setIsAdmin(false);
+		setIsBusiness(false);
+		setIsLogedIn(false);
+		localStorage.removeItem("bCards_token");
+		navigate(pathes.cards);
 	};
 
 	if (isLoadnig) {
@@ -155,11 +169,23 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										type='checkbox'
 										role='switch'
 										id='flexSwitchCheckChecked'
-										checked={user.isBusiness ? true : false}
-										onChange={() => handleSwitchChange()}
+										checked={user.isBusiness}
+										onChange={() => {
+											onShowGl();
+										}}
+									/>
+									<GlobalModal
+										show={showModalGl}
+										onHide={() => onHideGl()}
+										navegateTo={async () => {
+											await handleSwitchChange();
+											handleLogout();
+										}}
+										header={"Change account type"}
+										bodyText={"You need to login again"}
 									/>
 									<label
-										className='form-check-label  fw-bold'
+										className='form-check-label fw-bold'
 										htmlFor='flexSwitchCheckChecked'
 									>
 										{user.isBusiness
