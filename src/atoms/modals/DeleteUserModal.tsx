@@ -10,6 +10,7 @@ interface DeleteModalProps {
 	render: Function;
 }
 
+
 const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 	onHide,
 	show,

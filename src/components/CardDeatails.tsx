@@ -3,7 +3,6 @@ import {
 	SetStateAction,
 	useCallback,
 	useContext,
-	useEffect,
 	useState,
 } from "react";
 import useCards from "../hooks/useCards";
@@ -53,36 +52,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 					}}
 				/>
 			</div>
-			<div className=' container d-flex w-25'>
-				<p
-					onClick={() =>
-						handleLikeToggle_MyCards(
-							card._id as string,
-							decodedToken,
-							allCards,
-							setCards,
-						)
-					}
-					className={`${
-						card.likes?.includes(decodedToken?._id)
-							? "text-danger"
-							: "text-dark"
-					} fs-2 text-end `}
-				>
-					{heart}
-				</p>
-				<sub>
-					<p
-						className={`${
-							card.likes?.includes(decodedToken?._id)
-								? "text-danger"
-								: "text-dark"
-						} mx-1 fs-5 text-end`}
-					>
-						{card.likes?.length}
-					</p>
-				</sub>
-			</div>
+
 			<NextCardButton />
 			<div
 				className='m-auto	custom-border rounded-3 card shadow overflow-hidden my-5 w-75 p-3'
@@ -96,8 +66,44 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 					<h6 className='card-subtitle text-center mb-2 text-secondary'>
 						{card.subtitle}
 					</h6>
-
 					<hr className='w-50 m-auto' />
+					<div className='container w-25 d-flex align-items-center justify-content-center'>
+						<p
+							onClick={() =>
+								handleLikeToggle_MyCards(
+									card._id as string,
+									decodedToken,
+									allCards,
+									setCards,
+								)
+							}
+							className={`${
+								card.likes?.includes(decodedToken?._id)
+									? "text-danger"
+									: "text-dark"
+							} fs-2 text-center`}
+						>
+							{heart}
+						</p>
+						<p
+							className={`${
+								card.likes?.includes(decodedToken?._id)
+									? "text-danger"
+									: "text-dark"
+							} mx-1 text-center`}
+						>
+							Likes
+						</p>
+						<p
+							className={`${
+								card.likes?.includes(decodedToken?._id)
+									? "text-danger"
+									: "text-dark"
+							} mx-1 fs-5 text-csnter`}
+						>
+							{card.likes?.length}
+						</p>
+					</div>
 					<div className='row'>
 						<div className='col-12'>
 							<div className='card-text mt-5'>
@@ -131,7 +137,6 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 							></iframe>
 						</div>
 					</div>
-
 					<>
 						{((isLogedIn && isAdmin) ||
 							(isLogedIn && card.user_id === decodedToken._id)) && (

@@ -4,7 +4,7 @@ import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import {Cards} from "../interfaces/Cards";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {SiteTheme} from "../theme/theme";
 import {pathes} from "../routes/Routes";
 import {handleLikeToggle_Cards} from "../handleFunctions/cards";
@@ -17,6 +17,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
+	const nanegate = useNavigate();
 
 	useEffect(() => {
 		if (!decodedToken._id) {
@@ -28,18 +29,15 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				const liked = res.filter((card: any) =>
 					card.likes.includes(decodedToken._id),
 				);
-				setCards(liked);
-				setLoading(false);
+				setCards(liked.reverse());
 			})
 			.catch(() => {
 				console.log("Failed to fetch cards.");
-				setLoading(false);
-			});
-	}, [decodedToken, handleLikeToggle_Cards, cards]);
+			})
+			.finally(() => setLoading(false));
+	}, [decodedToken, cards]);
 
-	if (loading) {
-		return <Loading />;
-	}
+	if (loading) return <Loading />;
 
 	return (
 		<main
@@ -48,9 +46,10 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				color: theme.color,
 			}}
 		>
-			<Button text={"Back"} />
+			<Button text={"Back"} path={() => nanegate(pathes.cards)} />
+			<h6 className='lead display-5 my-3'>My favorite Business Cards</h6>
+			<hr className=" w-50" />
 			<div className='container py-5'>
-				<h2>My favorite Business Cards</h2>
 				<div className='row'>
 					{cards.map((card: Cards) => {
 						return (
@@ -106,14 +105,16 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 														backgroundColor: theme.background,
 														color: theme.color,
 													}}
-													onClick={() =>
-														handleLikeToggle_Cards(
+													onClick={async () => {
+														setLoading(true);
+														await handleLikeToggle_Cards(
 															card._id as string,
 															cards,
 															decodedToken._id as string,
 															setCards,
-														)
-													}
+														);
+														setLoading(false);
+													}}
 													className={`${
 														card.likes?.includes(
 															decodedToken._id,

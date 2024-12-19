@@ -1,8 +1,8 @@
 import {useState, useEffect, FunctionComponent, useContext, SetStateAction} from "react";
 import {useNavigate, useParams} from "react-router-dom";
-import {putUserData, getUserById, deleteUserById} from "../services/userServices";
+import {putUserData, getUserById} from "../services/userServices";
 import Loading from "./Loading";
-import {errorMSG, infoMSG, successMSG} from "../atoms/taosyify/Toastify";
+import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
 import {User} from "../interfaces/User";
 import * as yup from "yup";
 import {FormikValues, useFormik} from "formik";
@@ -10,7 +10,10 @@ import CardsInput from "../atoms/modals/CardsInput";
 import {SiteTheme} from "../theme/theme";
 import Button from "../atoms/buttons/Button";
 import DeleteModal from "../atoms/modals/DeleteUserModal";
-import {pathes} from "../routes/Routes";
+import {ButtonToolbar, OverlayTrigger} from "react-bootstrap";
+import {tooltips} from "../atoms/ToolTip";
+import {handleDelete_User} from "../handleFunctions/users";
+
 interface EditUserProps {}
 
 const EditUser: FunctionComponent<EditUserProps> = () => {
@@ -29,6 +32,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 		address: {state: "", city: "", country: "", street: "", houseNumber: 0, zip: 0},
 		image: {url: "", alt: ""},
 		isBusiness: false,
+		isAdmin: false,
 	});
 
 	const onShowDeleteCardModal = () => setShowDeleteModal(true);
@@ -52,6 +56,8 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				houseNumber: user.address.houseNumber,
 				zip: user.address.zip,
 			},
+			isAdmin: user.isAdmin,
+			isBusiness: user.isBusiness,
 		},
 		validationSchema: yup.object({
 			name: yup.object({
@@ -115,34 +121,26 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 			});
 	}, [userId]);
 
-	// Handle Delete
-	const handleDelete = (userId: string) => {
-		try {
-			deleteUserById(userId)
-				.then(() => {
-					navigate(pathes.sandBox);
-					infoMSG("User deleted successfully.");
-				})
-				.catch((err) => {
-					console.log(err);
-					errorMSG("Error deleting user.");
-				});
-		} catch (error) {
-			console.log(error);
-			errorMSG("Failed to delete user.");
-		}
-	};
-
 	if (isLoading) return <Loading />;
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<Button text={"Back"} path={()=>navigate(pathes.sandBox)} />
+			<Button text={"Back"} path={() => navigate(-1)} />
+			<h6 className='lead display-5 my-3'>User Details</h6>
+			<hr className=' w-25' />
 			<div className='container'>
 				<div className='row mp-5 fw-bold lead'>
 					<div className='col-12'>
-						<p className='fs-1 lead mt-5'>
+						<p className='fs-1 lead mt-5 w-25'>
 							{user.isBusiness ? "Business" : "Client"}
+						</p>
+						<img
+							style={{maxWidth: "55px"}}
+							src={user.isAdmin ? "/admin.png" : "/user.png"}
+							alt={user.isAdmin ? "/admin icon" : "/user icon"}
+						/>
+						<p className='lead w-25 fw-bold text-success'>
+							{user.isAdmin ? "Admin" : "Client"}
 						</p>
 					</div>
 					<div className='col-12'>
@@ -166,18 +164,30 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 							{user.address.country} , {user.address.city}
 						</p>
 					</div>
+					<div className=' border p-2 bg-light d-flex align-items-center justify-content-around'>
+						<button
+							onClick={() => {
+								onShowDeleteCardModal();
+								setCardToDelete(user._id as string);
+							}}
+							className='btn btn-outline-danger fw-bold'
+						>
+							DELETE ACCOUNT
+						</button>
+						<ButtonToolbar>
+							<OverlayTrigger placement='top' overlay={tooltips.soon}>
+								<button
+									onClick={() => {}}
+									className='btn btn-outline-secondary fw-bold'
+								>
+									FREEZE ACCOUNT
+								</button>
+							</OverlayTrigger>
+						</ButtonToolbar>
+					</div>
 				</div>
-				<hr className=' border-light' />
-				<button
-					onClick={() => {
-						onShowDeleteCardModal();
-						setCardToDelete(user._id as string);
-					}}
-					className='btn btn-danger btn-sm'
-				>
-					Delete
-				</button>
-				<h6 className=' lead'>Edit User</h6>
+				<h6 className=' lead display-6 mt-3'>Edit User</h6>
+				<hr className='mt-3' />
 				<form
 					onSubmit={formik.handleSubmit}
 					className=' border shadow-lg p-4 rounded-3'
@@ -383,7 +393,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				show={showDeleteModal}
 				onHide={() => onHideDeleteCardModal()}
 				onDelete={() => {
-					handleDelete(cardToDelete as string);
+					handleDelete_User(cardToDelete as string);
 				}}
 			/>
 		</main>

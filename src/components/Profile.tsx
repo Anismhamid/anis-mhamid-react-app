@@ -53,7 +53,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 			deleteUserById(userId).then((res) => {
 				setIsLogedIn(false);
 				successMSG(`${res.name.first} Has been deleted`);
-				localStorage.removeItem("token");
+				localStorage.removeItem("bCards_token");
 				navigate(pathes.cards);
 			});
 		} catch (error) {
@@ -154,7 +154,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										role='switch'
 										id='flexSwitchCheckChecked'
 										checked={user.isBusiness ? true : false}
-										onChange={() => handleSwitchChange()}
+										onChange={() => {
+											handleSwitchChange();
+											console.log(user.isBusiness ? true : false);
+											
+										}}
 									/>
 									<label
 										className='form-check-label  fw-bold'

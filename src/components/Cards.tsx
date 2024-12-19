@@ -30,12 +30,20 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {decodedToken} = useToken();
 	const {allCards, setCards, error} = useCards();
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const {isAdmin, isLogedIn,setIsLogedIn, isBusiness} = useUserContext();
+	const {isAdmin, isLogedIn, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
+	useEffect(() => {
+		const token = localStorage.bCards_token;
+		if (token) {
+			setIsLogedIn(true);
+		} else {
+			setIsLogedIn(false);
+		}
+	}, [decodedToken]);
 
 	const filteredCards = useMemo(() => {
 		const query = searchTerm.trim().toLowerCase();
@@ -61,6 +69,13 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<div className='container py-5 lead'>
+				{isBusiness && (
+					<div className='mb-4'>
+						<Link to={pathes.myCards}>
+							<button className='btn btn-dark btn-sm'>Add New Card</button>
+						</Link>
+					</div>
+				)}
 				{/* Search Bar */}
 				<div className='custom-border rounded-3 p-2'>
 					<label htmlFor='searchCard' className='mb-2 display-6'>
@@ -84,10 +99,14 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 					</form>
 				</div>
 				<h1 className='text-center my-5'>Home</h1>
+				<hr />
 				<div className='row ms-auto'>
 					{filteredCards.length > 0 ? (
 						filteredCards.map((card) => (
-							<div key={card._id} className=' col-12 col-md-6 col-xl-4 my-3'>
+							<div
+								key={card._id}
+								className=' col-12 col-md-6 col-xl-4 my-3'
+							>
 								<div
 									className='custom-boder card2 card shadow-lg rounded overflow-hidden'
 									style={{
@@ -152,7 +171,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 																	decodedToken?._id,
 																)
 																	? "text-danger"
-																	: ""
+																	: "text-dark"
 															} fs-4 rounded-5`}
 														>
 															{heart}
@@ -175,9 +194,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 														</sub>
 													</div>
 												</div>
-												{(isAdmin ||
-													card.user_id ===
-														decodedToken._id) && (
+												{isAdmin && (
 													<div className='mt-3 d-flex justify-content-around'>
 														<Link
 															to={`${pathes.cardDetails.replace(
@@ -213,17 +230,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 								</div>
 							</div>
 						))
-					) : (
-						<></>
-					)}
-					{isAdmin || isBusiness ? (
-						<div className='mb-4'>
-							<Link to={pathes.myCards}>
-								<button className='btn btn-dark btn-sm'>
-									Add New Card
-								</button>
-							</Link>
-						</div>
 					) : (
 						<></>
 					)}
@@ -270,7 +276,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 											<h5>{card.email}</h5>
 										</div>
 
-										{isLogedIn && decodedToken._d && (
+										{decodedToken && (
 											<>
 												<hr />
 												<div className='d-flex justify-content-between align-items-center'>

@@ -63,7 +63,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 				<h2 className='lead display-5'>My Cards</h2>
 				<hr className='border-light' />
 				<div className='w-100'>
-					<button className='w-100 bg-opacity-50' onClick={() => onShow()}>
+					<button onClick={() => onShow()}>
 						Add Card
 					</button>
 				</div>

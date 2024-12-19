@@ -4,8 +4,7 @@ import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 const api: string = `${import.meta.env.VITE_API_URL}/users`;
 
 const token = {
-	"x-auth-token":
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTBhZTc1OWRiMzgxM2E2NTAyZmMyZmMiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE2OTg4NDI5NTJ9.En62ry5Gu9FMBAvxyltv0eRYhpJIJs_aW06QAtxXRck",
+	"x-auth-token": localStorage.getItem("bCards_token"),
 };
 
 const getUsers = {
@@ -33,7 +32,7 @@ export async function getAllUsers() {
 		return response.data;
 	} catch (error) {
 		console.log(error);
-		errorMSG("Filed to fetch data please try again later")
+		errorMSG("Filed to fetch data please try again later");
 	}
 }
 
@@ -77,13 +76,12 @@ export const patchUserBusiness = async (
 	data: {isBusiness: boolean},
 	user: {isBusiness: boolean},
 ) => {
-	let token = localStorage.getItem("token");
 	if (!token) {
 		throw new Error("Token not found.");
 	}
 	try {
 		const response = await axios.patch(`${api}/${cardId}`, data, {
-			headers: {"x-auth-token": token},
+			headers: {...token},
 		});
 		infoMSG(
 			`administration has been changed for ${response.data.email} to ${

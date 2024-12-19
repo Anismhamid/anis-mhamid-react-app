@@ -36,4 +36,9 @@ export const tooltips = {
 			<strong>Profile</strong>
 		</Tooltip>
 	),
+	soon: (
+		<Tooltip id='comingSoonTooltip'>
+			<strong>Coming Soon..</strong>
+		</Tooltip>
+	),
 };

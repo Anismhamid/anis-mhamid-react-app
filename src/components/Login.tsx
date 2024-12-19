@@ -24,15 +24,18 @@ const Login: FunctionComponent<LoginProps> = () => {
 	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		let token = localStorage.token;
-		if (token) {
-			console.log(token);
+		const token = localStorage.bCards_token;
+		if (token && decodedToken._id) {
+			setIsLogedIn(true);
+			navigate(pathes.cards);
 		} else {
-			console.log("no token");
+			setIsLogedIn(false);
 		}
+	}, [decodedToken]);
 
+	useEffect(() => {
 		try {
-			if (token && decodedToken._id)
+			if (decodedToken._id)
 				getUserById(decodedToken._id)
 					.then(() => {
 						setAuth({...decodedToken, isAdmin: isAdmin});
@@ -51,7 +54,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 	}, []);
 
 	useEffect(() => {
-		if (decodedToken && localStorage.token) {
+		if (decodedToken && localStorage.bCards_token) {
 			setIsLogedIn(true);
 			navigate(pathes.cards);
 		} else {
@@ -81,20 +84,17 @@ const Login: FunctionComponent<LoginProps> = () => {
 			loginIn(values)
 				.then((res) => {
 					setLoading(false);
-					localStorage.setItem("token", res.data);
+					localStorage.setItem("bCards_token", res.data);
 					navigate(pathes.cards);
 				})
-				.catch((err) => {
+				.catch(() => {
 					setLoading(false);
-					errorMSG("Login failed, please try again.");
-					console.error(err);
+					errorMSG("User not exist try anoter email.");
 				});
 		},
 	});
 
-	if (loading) {
-		return <Loading />;
-	}
+	if (loading) return <Loading />;
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
@@ -139,7 +139,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 
 						<div className='form-floating mb-3'>
 							<input
-								type={showPassword ? "text" : "password"} // Toggle between text and password type
+								type={showPassword ? "text" : "password"}
 								autoComplete='off'
 								className={`form-control ${
 									formik.touched.password && formik.errors.password

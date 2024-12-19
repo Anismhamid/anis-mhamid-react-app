@@ -35,7 +35,7 @@ export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
 };
 
 export const updateLikeStatus = async (cardId: string, userId: string): Promise<any> => {
-	let token: string | null = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("bCards_token");
 	if (!token) return;
 
 	const payload = {
@@ -60,7 +60,7 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 };
 
 export const getMyCards = async (userId: string) => {
-	let token: string | null = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("bCards_token");
 	if (!token) return;
 	try {
 		const response = await axios.request({
@@ -77,7 +77,7 @@ export const getMyCards = async (userId: string) => {
 };
 
 export const createNewCard = async (card: Cards) => {
-	let token: string | null = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("bCards_token");
 	if (!token) return;
 	try {
 		let response: Cards = await axios.request({
@@ -117,7 +117,7 @@ export const putCard = async (cardId: string, newCard: Cards) => {
 	}
 
 export const getCardById = async (cardId: string) => {
-	let token: string | null = localStorage.getItem("token");
+	let token: string | null = localStorage.getItem("bCards_token");
 	if (!token) return;
 	try {
 		const response = await axios.get(`${api}/cards/${cardId}`, {
@@ -131,7 +131,7 @@ export const getCardById = async (cardId: string) => {
 };
 
 export const deleteCardById = async (cardId: string) => {
-	const token: string | null = localStorage.getItem("token");
+	const token: string | null = localStorage.getItem("bCards_token");
 	try {
 		const response = await axios.delete(`${api}/cards/${cardId}`, {
 			headers: {

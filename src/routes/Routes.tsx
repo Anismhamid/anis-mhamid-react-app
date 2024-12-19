@@ -25,16 +25,16 @@ export const routes = {
 	pageNotFound: <Route path='*' element={<PageNotFound />} />,
 };
 
-export const pathes = {
-	cards: "/",
-	register: "/register",
-	login: "/login",
-	about: "/about",
-	favCards: "/fav-cards",
-	sandBox: "/sandBox",
-	myCards: "/myCards",
-	profile: "/profile",
-	userDetails: "/userDetails/:userId",
-	cardDetails: "/cardDetails/:cardId",
-	pageNotFound: "*",
-};
+export enum pathes {
+	cards = "/",
+	register = "/register",
+	login = "/login",
+	about = "/about",
+	favCards = "/fav-cards",
+	sandBox = "/sandBox",
+	myCards = "/myCards",
+	profile = "/profile",
+	userDetails = "/userDetails/:userId",
+	cardDetails = "/cardDetails/:cardId",
+	pageNotFound = "*",
+}

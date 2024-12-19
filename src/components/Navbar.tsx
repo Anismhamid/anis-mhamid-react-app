@@ -41,7 +41,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 		setIsAdmin(false);
 		setIsBusiness(false);
 		setIsLogedIn(false);
-		localStorage.removeItem("token");
+		localStorage.removeItem("bCards_token");
 		navigate(pathes.cards);
 	};
 

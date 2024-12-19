@@ -8,7 +8,7 @@ interface DecodedToken {
 }
 
 function useToken() {
-	const token = localStorage.getItem("token");
+	const token = localStorage.getItem("bCards_token");
 	const [decodedToken, setAfterDecode] = useState<any>({});
 
 	useEffect(() => {
