@@ -23,7 +23,7 @@ import DeleteModal from "../atoms/modals/DeleteModal";
 interface SandBoxProps {}
 
 const SandBox: FunctionComponent<SandBoxProps> = () => {
-	const usersPerPage = 10;
+	const usersPerPage = 100;
 	const {decodedToken} = useToken();
 	const {isAdmin} = useUserContext();
 	const [users, setUsers] = useState<User[]>([]);
@@ -122,6 +122,27 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 			<Button text={"Home"} path={() => navigate(pathes.cards)} />
 			<h6 className='lead display-5 my-3 fw-bold'>SandBox</h6>
 			<hr className=' w-25' />
+			{/* Pagination */}
+			<div className='container-sm'>
+				<Pagination
+					className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'
+					data-bs-theme='dark'
+				>
+					{[...Array(Math.ceil(usersToDisplay.length / usersPerPage))].map(
+						(_, i) => (
+							<Pagination.Item
+								key={i}
+								active={currentPage === i + 1}
+								onClick={() => {
+									setCurrentPage(i + 1);
+								}}
+							>
+								{i + 1}
+							</Pagination.Item>
+						),
+					)}
+				</Pagination>
+			</div>
 			<div className='d-flex justify-content-around'>
 				<div className='mt-3 mb-3'>
 					<form className='d-flex me-3' onSubmit={(e) => e.preventDefault()}>
@@ -211,94 +232,74 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 				</div>
 			)}
 			{!searchTerm && (
-			<div className='table-responsive'>
-				<table
-					style={{backgroundColor: theme.background, color: theme.color}}
-					className='table table-striped'
-				>
-					<thead>
-						<tr>
-							<th colSpan={6}>Image</th>
-							<th colSpan={4}>Full Name</th>
-							<th colSpan={1}>Edit</th>
-							<th colSpan={1}>Delete</th>
-						</tr>
-					</thead>
-					<tbody>
-						{currentUsers.map((user: User) => (
-							<tr key={user._id}>
-								<td colSpan={6}>
-									<Link to={`/userDetails/${user._id}`}>
-										<img
-											className='img-fluid mx-5 rounded-5'
-											src={user.image.url || "/avatar-design.png"}
-											alt={`${user.image?.alt}'s profile`}
-											style={{
-												width: "70px",
-												height: "70px",
-											}}
-										/>
-									</Link>
-								</td>
-								<td colSpan={4}>
-									{user.name.first} {user.name.last}
-								</td>
-								{decodedToken?.isAdmin && (
-									<>
-										<td colSpan={1}>
-											<Link to={`/userDetails/${user._id}`}>
-												<button className='text-warning '>
-													{edit}
-												</button>
-											</Link>
-										</td>
-										<td colSpan={1}>
-											<DeleteModal
-												toDelete='User account'
-												render={() => refresh()}
-												show={showDeleteModal}
-												onHide={onHide}
-												onDelete={() =>
-													handleDelete(user._id as string)
-												}
-												navigateTo={""}
-											/>
-											<button
-												className='text-danger '
-												onClick={onShow}
-											>
-												{trash}
-											</button>
-										</td>
-									</>
-								)}
-							</tr>
-						))}
-					</tbody>
-				</table>
-
-				{/* Pagination */}
-				<div className='container-sm'>
-					<Pagination
-						className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'
-						data-bs-theme='dark'
+				<div className='table-responsive'>
+					<table
+						style={{backgroundColor: theme.background, color: theme.color}}
+						className='table table-striped'
 					>
-						{[...Array(Math.ceil(usersToDisplay.length / usersPerPage))].map(
-							(_, i) => (
-								<Pagination.Item
-									key={i}
-									active={currentPage === i + 1}
-									onClick={() => {
-										setCurrentPage(i + 1);
-									}}
-								>
-									{i + 1}
-								</Pagination.Item>
-							),
-						)}
-					</Pagination>
+						<thead>
+							<tr>
+								<th colSpan={6}>Image</th>
+								<th colSpan={4}>Full Name</th>
+								<th colSpan={1}>Edit</th>
+								<th colSpan={1}>Delete</th>
+							</tr>
+						</thead>
+						<tbody>
+							{currentUsers.map((user: User) => (
+								<tr key={user._id}>
+									<td colSpan={6}>
+										<Link to={`/userDetails/${user._id}`}>
+											<img
+												className='img-fluid mx-5 rounded-5'
+												src={
+													user.image.url || "/avatar-design.png"
+												}
+												alt={`${user.image?.alt}'s profile`}
+												style={{
+													width: "70px",
+													height: "70px",
+												}}
+											/>
+										</Link>
+									</td>
+									<td colSpan={4}>
+										{user.name.first} {user.name.last}
+									</td>
+									{decodedToken?.isAdmin && (
+										<>
+											<td colSpan={1}>
+												<Link to={`/userDetails/${user._id}`}>
+													<button className='text-warning '>
+														{edit}
+													</button>
+												</Link>
+											</td>
+											<td colSpan={1}>
+												<DeleteModal
+													toDelete='User account'
+													render={() => refresh()}
+													show={showDeleteModal}
+													onHide={onHide}
+													onDelete={() =>
+														handleDelete(user._id as string)
+													}
+													navigateTo={""}
+												/>
+												<button
+													className='text-danger '
+													onClick={onShow}
+												>
+													{trash}
+												</button>
+											</td>
+										</>
+									)}
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
-			</div>
 			)}
 		</main>
 	);
