@@ -1,6 +1,6 @@
 import {FunctionComponent, useState, useEffect, useContext, SetStateAction} from "react";
 import {getMyCards} from "../services/cardsServices";
-import {edit, heart, trash} from "../fontAwesome/Icons";
+import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
 import Loading from "./Loading";
 import AddNewCardModal from "../atoms/modals/AddNewCardModal";

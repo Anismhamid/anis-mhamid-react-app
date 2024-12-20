@@ -7,7 +7,7 @@ import {registerNewUser} from "../services/userServices";
 import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
 import CardsInput from "../atoms/modals/CardsInput";
 import {SiteTheme} from "../theme/theme";
-import { registeryFormikShcema, registeryFormikValues } from "../fomikFormsValidation/RegisteryFormik";
+import { registeryFormikShcema, registeryFormikValues } from "../fomikFormsValidation/registeryFormik";
 
 interface RegisterProps {}
 

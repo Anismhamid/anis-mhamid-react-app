@@ -169,10 +169,9 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 				onDelete={() => {
 					handleDeleteCard_Cards(
 						cardToDelete as string,
-						setCards((prev) => prev.filter((c) => c._id !== cardToDelete)),
+						setCards((prev) => prev.filter((c) => c._id !== cardToDelete))
 					);
-				}}
-			/>
+				} } navigateTo={"-1"}			/>
 		</main>
 	);
 };
