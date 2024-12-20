@@ -122,7 +122,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<Button text={"Back"} path={() => navigate(-1)} />
-			<h6 className='lead display-5 my-3'>User Details</h6>
+			<h6 className='lead display-5 my-3 fw-bold'>User Details</h6>
 			<hr className=' w-25' />
 			<div className='container'>
 				<div className='row mp-5 fw-bold lead'>
@@ -391,8 +391,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				onHide={() => onHideDeleteCardModal()}
 				onDelete={() => {
 					handleDelete_User(cardToDelete as string);
-				}}
-			/>
+				} } navigateTo={""}			/>
 		</main>
 	);
 };

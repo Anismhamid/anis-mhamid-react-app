@@ -40,16 +40,13 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<Button text='Home' path={() => navigate(pathes.cards)} />
-			<h6 className='lead display-5 mx-3 my-3'>Card Details</h6>
+			<h6 className='lead display-5 mx-3 my-3 fw-bold'>Card Details</h6>
 			<hr className=' w-25' />
 			<div className='card-details-image'>
 				<img
 					className='img-fluid'
 					src={card.image.url}
 					alt={card.image.alt}
-					onMouseOver={(e) => {
-						e.currentTarget.style.transform = "scale(1)";
-					}}
 				/>
 			</div>
 

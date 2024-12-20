@@ -12,12 +12,12 @@ const Button: FunctionComponent<ButtonProps> = ({text,path}) => {
 	return (
 		<div
 			className={`text-start mb-5 rounded rounded-bottom-3 border-end border-3 border-bottom`}
-			style={{width: "100px"}}
+			style={{width: "7rem"}}
 		>
 			<button
 				onClick={() => path()}
 				style={{backgroundColor: theme.background, color: theme.color}}
-				className='bg-transparent border-1  w-100'
+				className='w-100'
 			>
 				<span className='fs-4 next-back-home fw-bold'>{text}</span>
 			</button>

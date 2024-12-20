@@ -11,6 +11,7 @@ import {pathes} from "../routes/Routes";
 import {handleDeleteCard_Cards, handleLikeToggle_MyCards} from "../handleFunctions/cards";
 import Button from "../atoms/buttons/Button";
 import DeleteModal from "../atoms/modals/DeleteModal";
+import DeleteAndEditButtons from "../atoms/buttons/DeleteAndEditButtons";
 
 interface MyCardsProps {}
 
@@ -166,27 +167,17 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 													</sub>
 												</div>
 												<div className='mt-3 d-flex justify-content-around'>
-													<Link
-														to={`${pathes.cardDetails.replace(
-															":cardId",
-															card._id as string,
-														)}`}
-													>
-														<button className='mx-3 text-warning'>
-															{edit}
-														</button>
-													</Link>
-													<button
-														className='text-danger'
-														onClick={() => {
-															onShowDeleteModal();
+													<DeleteAndEditButtons
+														onShowDeleteCardModal={() =>
+															onShowDeleteModal()
+														}
+														setCardToDelete={() =>
 															setCardToDelete(
 																card._id as string,
-															);
-														}}
-													>
-														{trash}
-													</button>
+															)
+														}
+														card={card}
+													/>
 												</div>
 											</div>
 										</div>
@@ -199,7 +190,8 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 					)}
 				</div>
 				<DeleteModal
-					toDelete="Card from your cards"
+					navigateTo={""}
+					toDelete='Card from your cards'
 					render={() => onHideDeleteModal()}
 					show={showDeleteModal}
 					onHide={() => onHideDeleteModal()}

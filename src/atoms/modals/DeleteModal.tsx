@@ -9,6 +9,7 @@ interface DeleteModalProps {
 	onDelete: Function;
 	render: Function;
 	toDelete: string;
+	navigateTo: string;
 }
 
 const DeleteModal: FunctionComponent<DeleteModalProps> = ({
@@ -17,6 +18,7 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 	onDelete,
 	render,
 	toDelete,
+	navigateTo,
 }) => {
 	const navigate = useNavigate();
 	return (
@@ -44,7 +46,7 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 						onClick={() => {
 							onDelete();
 							render();
-							navigate(-1);
+							navigate(navigateTo || "");
 						}}
 					>
 						DELETE

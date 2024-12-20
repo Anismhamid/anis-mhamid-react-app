@@ -1,4 +1,11 @@
-import {FunctionComponent, useContext, useEffect, useState} from "react";
+import {
+	FunctionComponent,
+	SetStateAction,
+	useCallback,
+	useContext,
+	useEffect,
+	useState,
+} from "react";
 import {getLikedCardById} from "../services/cardsServices";
 import {heart} from "../fontAwesome/Icons";
 import useToken from "../hooks/useToken";
@@ -7,21 +14,31 @@ import {Cards} from "../interfaces/Cards";
 import {Link, useNavigate} from "react-router-dom";
 import {SiteTheme} from "../theme/theme";
 import {pathes} from "../routes/Routes";
-import {handleLikeToggle_Cards} from "../handleFunctions/cards";
+import {handleDeleteCard_Cards, handleLikeToggle_Cards} from "../handleFunctions/cards";
 import Button from "../atoms/buttons/Button";
+import {useUserContext} from "../context/UserContext";
+import useCards from "../hooks/useCards";
+import DeleteModal from "../atoms/modals/DeleteModal";
+import DeleteAndEditButtons from "../atoms/buttons/DeleteAndEditButtons";
 
 interface FavCardsProps {}
 
 const FavCards: FunctionComponent<FavCardsProps> = () => {
-	const [cards, setCards] = useState<Cards[]>([]);
+	const [cards, setCCards] = useState<Cards[]>([]);
 	const [loading, setLoading] = useState<boolean>(true);
 	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
 	const nanegate = useNavigate();
+	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
+	const {isAdmin, setIsLogedIn} = useUserContext();
+
+	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
+	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 	useEffect(() => {
 		if (!decodedToken._id) {
-			setLoading(false);
+			setIsLogedIn(false);
 			return;
 		}
 		getLikedCardById(decodedToken._id)
@@ -29,7 +46,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				const liked = res.filter((card: any) =>
 					card.likes.includes(decodedToken._id),
 				);
-				setCards(liked.reverse());
+				setCCards(liked.reverse());
 			})
 			.catch(() => {
 				console.log("Failed to fetch cards.");
@@ -47,8 +64,8 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 			}}
 		>
 			<Button text={"Back"} path={() => nanegate(pathes.cards)} />
-			<h6 className='lead display-5 my-3'>My favorite</h6>
-			<hr className=" w-25" />
+			<h6 className='lead display-5 my-3 fw-bold'>My favorite</h6>
+			<hr className=' w-25' />
 			<div className='container py-5'>
 				<div className='row'>
 					{cards.map((card: Cards) => {
@@ -76,14 +93,6 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 												height: "300px",
 												transition: "transform 0.3s ease",
 											}}
-											onMouseOver={(e) => {
-												e.currentTarget.style.transform =
-													"scale(1.1)";
-											}}
-											onMouseOut={(e) => {
-												e.currentTarget.style.transform =
-													"scale(1)";
-											}}
 										/>
 									</Link>
 									<div className='card-body'>
@@ -105,15 +114,13 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 														backgroundColor: theme.background,
 														color: theme.color,
 													}}
-													onClick={async () => {
-														setLoading(true);
-														await handleLikeToggle_Cards(
+													onClick={() => {
+														handleLikeToggle_Cards(
 															card._id as string,
 															cards,
 															decodedToken._id as string,
-															setCards,
+															setCCards,
 														);
-														setLoading(false);
 													}}
 													className={`${
 														card.likes?.includes(
@@ -138,6 +145,22 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 												</button>
 											</div>
 										</div>
+										{(isAdmin ||
+											card.user_id === decodedToken._id) && (
+											<div className='mt-3 d-flex justify-content-around'>
+												<DeleteAndEditButtons
+													setCardToDelete={() =>
+														setCardToDelete(
+															card._id as string,
+														)
+													}
+													card={card}
+													onShowDeleteCardModal={() =>
+														onShowDeleteCardModal()
+													}
+												/>
+											</div>
+										)}
 									</div>
 								</div>
 							</div>
@@ -145,6 +168,19 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 					})}
 				</div>
 			</div>
+			<DeleteModal
+				navigateTo={""}
+				toDelete='Card'
+				render={() => onHideDeleteCardModal()}
+				show={showDeleteModal}
+				onHide={() => onHideDeleteCardModal()}
+				onDelete={() => {
+					handleDeleteCard_Cards(
+						cardToDelete as string,
+						setCCards((prev) => prev.filter((c) => c._id !== cardToDelete)),
+					);
+				}}
+			/>
 		</main>
 	);
 };

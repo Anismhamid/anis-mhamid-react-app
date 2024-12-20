@@ -23,6 +23,7 @@ import {
 	handleSearch,
 } from "../handleFunctions/cards";
 import {Pagination} from "react-bootstrap";
+import DeleteAndEditButtons from "../atoms/buttons/DeleteAndEditButtons";
 
 interface CardsHomeProps {}
 
@@ -30,9 +31,10 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const cardsPerPage = 9;
 	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
-	const {allCards, setCards, error} = useCards();
+	const {allCards, setCards} = useCards();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState<string>("");
+	const [isLoading, setIsLoading] = useState<boolean>(true);
 	const {isAdmin, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
@@ -47,6 +49,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const startIndex = (currentPage - 1) * cardsPerPage;
 
 	const filteredCards = useMemo(() => {
+		setIsLoading(true);
 		const query = searchTerm.trim().toLowerCase();
 
 		return allCards.filter((card) => {
@@ -54,6 +57,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 			const phone = card.phone.toLowerCase();
 			const country = card.address.country.toLowerCase();
 			const email = card.email.toLowerCase();
+			setIsLoading(false);
 
 			return (
 				cardName.includes(query) ||
@@ -71,18 +75,18 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const paginationItems = useMemo(() => {
 		const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
 
-		return [...Array(totalPages)].map(
-			(_, index) => (
-				<Pagination.Item
-					key={index}
-					active={currentPage === index + 1}
-					onClick={() => setCurrentPage(index + 1)}
-				>
-					{index + 1}
-				</Pagination.Item>
-			),
-		);
+		return [...Array(totalPages)].map((_, index) => (
+			<Pagination.Item
+				key={index}
+				active={currentPage === index + 1}
+				onClick={() => setCurrentPage(index + 1)}
+			>
+				{index + 1}
+			</Pagination.Item>
+		));
 	}, [currentPage, filteredCards.length]);
+
+	if (isLoading) return <Loading />;
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
@@ -219,34 +223,17 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 												{(isAdmin ||
 													card.user_id ===
 														decodedToken._id) && (
-													<div className='mt-3 d-flex justify-content-around'>
-														<Link
-															to={`${pathes.cardDetails.replace(
-																":cardId",
+													<DeleteAndEditButtons
+														setCardToDelete={() => {
+															setCardToDelete(
 																card._id as string,
-															)}`}
-														>
-															<button className='btn btn-warning btn-sm'>
-																Edit
-															</button>
-														</Link>
-														<button
-															onClick={() => {
-																onShowDeleteCardModal();
-																setCardToDelete(
-																	card._id as string,
-																);
-															}}
-															className='btn btn-danger btn-sm'
-														>
-															Delete
-														</button>
-														{error && (
-															<div className='alert alert-danger'>
-																{error}
-															</div>
-														)}
-													</div>
+															);
+														}}
+														card={card}
+														onShowDeleteCardModal={() =>
+															onShowDeleteCardModal()
+														}
+													/>
 												)}
 											</>
 										)}
@@ -256,6 +243,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						))}
 
 						<DeleteModal
+							navigateTo={""}
 							toDelete='Card'
 							render={() => onHideDeleteCardModal()}
 							show={showDeleteModal}

@@ -100,10 +100,16 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<Button text='Home' path={() => navigate(pathes.cards)} />
-			<div className='container m-auto mt-2'>
-				<h1 className='text-center mb-4'>User Profile</h1>
+			<h6 className='lead display-5 my-3 fw-bold'>Profile</h6>
+			<hr className=' w-25' />
+			<div className='container m-auto'>
 				<div
-					style={{backgroundColor: theme.background, color: theme.color}}
+					style={{
+						backgroundColor: theme.background,
+						color: theme.color,
+						maxWidth: "40rem",
+						margin: "auto",
+					}}
 					className='card shadow-lg rounded-4 p-1'
 					data-bs-theme='dark'
 				>
@@ -201,13 +207,10 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						</div>
 						<div className='row mt-3 p-3 m-auto text-center '>
 							<button
-							onClick={()=>navigate("/userDetails/${user._id}")}
-							className='col-6'>
-								<span
-									className='text-warning'
-								>
-									Edit {edit}
-								</span>
+								onClick={() => navigate("/userDetails/${user._id}")}
+								className='col-6'
+							>
+								<span className='text-warning'>Edit {edit}</span>
 							</button>
 							<button onClick={() => onShow()} className='col-6'>
 								<span className='text-danger'>Delete {trash}</span>
@@ -221,6 +224,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					onHide={() => onHide()}
 					onDelete={() => handleDelete(user._id)}
 					render={() => refresh()}
+					navigateTo={pathes.login}
 				/>
 			</div>
 		</main>
