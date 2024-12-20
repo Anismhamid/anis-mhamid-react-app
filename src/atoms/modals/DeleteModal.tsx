@@ -1,21 +1,22 @@
 import {FunctionComponent} from "react";
 import {Button, Modal} from "react-bootstrap";
 import {errorCircle} from "../../fontAwesome/Icons";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 interface DeleteModalProps {
 	show: boolean;
 	onHide: Function;
 	onDelete: Function;
 	render: Function;
+	toDelete: string;
 }
-
 
 const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 	onHide,
 	show,
 	onDelete,
 	render,
+	toDelete,
 }) => {
 	const navigate = useNavigate();
 	return (
@@ -27,13 +28,14 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 				keyboard={false}
 				centered
 			>
-				<Modal.Header closeButton>
-					<Modal.Title>Delete User</Modal.Title>
+				<Modal.Header className='bg-danger' closeButton>
+					<Modal.Title className={"text-warning fs-1"}>
+						warning {errorCircle}
+					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
 					<div className='h5 text-danger fw-bold'>
-						<p className=' fs-1'>{errorCircle}</p>
-						warning you sure want to delet this ?
+						you sure want to delet this {toDelete} ?
 					</div>
 				</Modal.Body>
 				<Modal.Footer>

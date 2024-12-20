@@ -385,6 +385,7 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				</form>
 			</div>
 			<DeleteModal
+				toDelete="User account"
 				render={() => onHideDeleteCardModal()}
 				show={showDeleteModal}
 				onHide={() => onHideDeleteCardModal()}

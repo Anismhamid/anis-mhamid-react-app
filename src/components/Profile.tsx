@@ -213,6 +213,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 					</div>
 				</div>
 				<DeleteModal
+					toDelete="User account"
 					show={showDleteModal}
 					onHide={() => onHide()}
 					onDelete={() => handleDelete(user._id)}

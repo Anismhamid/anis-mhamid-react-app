@@ -199,6 +199,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 					)}
 				</div>
 				<DeleteModal
+					toDelete="Card from your cards"
 					render={() => onHideDeleteModal()}
 					show={showDeleteModal}
 					onHide={() => onHideDeleteModal()}

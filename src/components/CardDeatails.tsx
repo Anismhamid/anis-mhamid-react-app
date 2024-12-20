@@ -165,6 +165,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 				) : null}
 			</div>
 			<DeleteModal
+				toDelete="Card"
 				render={() => onHideDeleteCardModal()}
 				show={showDeleteModal}
 				onHide={() => onHideDeleteCardModal()}

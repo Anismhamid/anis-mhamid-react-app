@@ -124,7 +124,6 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<Button text={"Home"} path={() => navigate(pathes.cards)} />
-			// TODO: after search fix
 			<div className='d-flex justify-content-around'>
 				<h2 className='lead display-5'>SandBox</h2>
 				<div className='mt-3 mb-3'>
@@ -195,6 +194,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 											</button>
 										</Link>
 										<DeleteModal
+											toDelete='User account'
 											render={() => refresh()}
 											show={showDeleteModal}
 											onHide={onHide}
@@ -255,6 +255,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 										</td>
 										<td colSpan={1}>
 											<DeleteModal
+												toDelete='User account'
 												render={() => refresh()}
 												show={showDeleteModal}
 												onHide={onHide}

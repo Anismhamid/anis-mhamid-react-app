@@ -22,37 +22,48 @@ import {
 	handleLikeToggle_Cards,
 	handleSearch,
 } from "../handleFunctions/cards";
+import {Pagination} from "react-bootstrap";
 
 interface CardsHomeProps {}
 
 const CardsHome: FunctionComponent<CardsHomeProps> = () => {
-	const theme = useContext(SiteTheme);
+	// rows length
+	const cardsPerPage = 8;
 	const {decodedToken} = useToken();
+	const theme = useContext(SiteTheme);
 	const {allCards, setCards, error} = useCards();
+	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState<string>("");
 	const {isAdmin, isLogedIn, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
+
+	// Show/Hide delete modal
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 	useEffect(() => {
-		const token = localStorage.bCards_token;
-		if (token) {
-			setIsLogedIn(true);
-		} else {
-			setIsLogedIn(false);
-		}
+		const token = localStorage.getItem("bCards_token");
+		setIsLogedIn(!!token);
 	}, [decodedToken]);
 
+	// Pagination index
+	const startIndex = (currentPage - 1) * cardsPerPage;
+
+	// Memoized filtering of cards based on the search term
 	const filteredCards = useMemo(() => {
+		// Normalize the search term by trimming spaces and converting to lowercase
 		const query = searchTerm.trim().toLowerCase();
 
+		// Return the filtered list of cards by matching the query against relevant fields
 		return allCards.filter((card) => {
+			// Convert card properties to lowercase for case-insensitive comparison
 			const cardName = `${card.title}`.toLowerCase();
 			const phone = card.phone.toLowerCase();
 			const country = card.address.country.toLowerCase();
-			const email = card.email?.toLowerCase() || "";
+			const email = card.email.toLowerCase();
+
+			// Checking if the search term exists in any of the card's properties (title, phone, country, email)
 			return (
 				cardName.includes(query) ||
 				phone.includes(query) ||
@@ -60,9 +71,32 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 				country.includes(query)
 			);
 		});
-	}, [searchTerm]);
+	}, [allCards, searchTerm]);
 
-	if (!allCards.length) {
+	// Memoized calculation of the current pages cards based on the filtered cards and the page index
+	const currentCards = useMemo(() => {
+		return filteredCards.slice(startIndex, startIndex + cardsPerPage);
+	}, [filteredCards, startIndex]);
+
+	// Memoized calculation of pagination items based on the filtered cards and the current page
+	const paginationItems = useMemo(() => {
+		const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
+
+		return [...Array(totalPages)].map(
+			// Generate pagination items
+			(_, index) => (
+				<Pagination.Item
+					key={index}
+					active={currentPage === index + 1}
+					onClick={() => setCurrentPage(index + 1)}
+				>
+					{index + 1}
+				</Pagination.Item>
+			),
+		);
+	}, [currentPage, filteredCards.length]);
+
+	if (filteredCards.length === 0) {
 		return <Loading />;
 	}
 
@@ -98,11 +132,18 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						/>
 					</form>
 				</div>
+				{/* Pagination */}
+				<div className='container-sm mt-3'>
+					<Pagination className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'>
+						{paginationItems}
+					</Pagination>
+				</div>
 				<h1 className='text-center my-5'>Home</h1>
 				<hr />
+
 				<div className='row ms-auto'>
-					{filteredCards.length > 0 ? (
-						filteredCards.map((card) => (
+					{currentCards.length > 0 ? (
+						currentCards.map((card) => (
 							<div
 								key={card._id}
 								className=' col-12 col-md-6 col-xl-4 my-3'
@@ -234,7 +275,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						<></>
 					)}
 					<div className='row'>
-						{allCards.map((card: Cards) => (
+						{currentCards.map((card: Cards) => (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
 								<div
 									className='custom-border card2 card w-100 h-100 border-1 shadow-lg rounded-lg overflow-hidden'
@@ -363,6 +404,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						))}
 
 						<DeleteModal
+							toDelete='Card'
 							render={() => onHideDeleteCardModal()}
 							show={showDeleteModal}
 							onHide={() => onHideDeleteCardModal()}
