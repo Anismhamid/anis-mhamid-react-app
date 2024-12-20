@@ -41,28 +41,27 @@ const GlobalModal: FunctionComponent<GlobalModalProps> = ({
 				onHide={() => onHide()}
 				backdrop='static'
 				keyboard={false}
-				data-bs-theme='dark'
 				centered
 				scrollable
 			>
-				<Modal.Header closeButton>
-					<Modal.Title className=' display-6'>{header}</Modal.Title>
+				<Modal.Header className='bg-info' closeButton>
+					<Modal.Title className='display-6 lead'>{header}</Modal.Title>
 				</Modal.Header>
-				<Modal.Body>{bodyText}</Modal.Body>
+				<Modal.Body className='lead fs-4'>{bodyText}</Modal.Body>
 				<Modal.Footer>
 					<Button
 						variant='danger'
-						className='text-success fw-bold'
+						className='text-uppercase'
 						onClick={() => {
 							navegateTo();
 							handleLogout();
 						}}
 					>
-						Agree
+						Log Out
 					</Button>
 					<Button
-						variant='danger'
-						className='text-uppercase fw-bold'
+						variant='secondary'
+						className='text-uppercase '
 						onClick={() => onHide()}
 					>
 						Cancel

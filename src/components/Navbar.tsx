@@ -171,7 +171,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									className='fw-bold'
 								>
 									<span className="logout text-danger">
-										LOGIUT <span>{logOut}</span>
+										LOG OUT <span>{logOut}</span>
 									</span>
 								</Link>
 							) : (
@@ -190,7 +190,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 										to={pathes.login}
 										className='fw-bold mx-2 log-rig'
 									>
-										LOGIN
+										LOG IN
 									</Link>
 									|
 									<NavLink

@@ -23,6 +23,7 @@ import {
 	handleSearch,
 } from "../handleFunctions/cards";
 import {Pagination} from "react-bootstrap";
+import {User} from "../interfaces/User";
 
 interface CardsHomeProps {}
 
@@ -37,7 +38,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {isAdmin, isLogedIn, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-
+	const [whoLikesCard, setWhoLikesCard] = useState<User[]>([]);
 	// Show/Hide delete modal
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);

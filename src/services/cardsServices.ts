@@ -97,24 +97,20 @@ export const putCard = async (cardId: string, newCard: Cards) => {
 	const token = localStorage.bCards_token;
 
 	if (!token) {
-		console.error("No authentication token found.");
+		errorMSG("Error while making authentication please try againg later.");
 		return;
 	}
 
 	try {
-		const fullUrl = `${api}/cards/${cardId}`;
-		console.log("Making PUT request to:", fullUrl); // For debugging
-
-		const response = await axios.put(fullUrl, newCard, {
+		const response = await axios.put(`${api}/cards/${cardId}`, newCard, {
 			headers: {"x-auth-token": token},
 		});
 
 		return response.data;
 	} catch (error) {
-			console.error("Unexpected Error:", error);
-		}
-		throw new Error("Failed to update card.");
+		errorMSG("Unexpected Error try again");
 	}
+};
 
 export const getCardById = async (cardId: string) => {
 	let token: string | null = localStorage.getItem("bCards_token");
@@ -125,8 +121,7 @@ export const getCardById = async (cardId: string) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.log(error);
-		throw new Error();
+		errorMSG(`${error}`);
 	}
 };
 
@@ -143,7 +138,9 @@ export const deleteCardById = async (cardId: string) => {
 		return response.data;
 	} catch (error) {
 		if (axios.isAxiosError(error)) {
-			errorMSG(`Internet connection error: ${error.response?.data || error.message}`);
+			errorMSG(
+				`Internet connection error: ${error.response?.data || error.message}`,
+			);
 		} else {
 			errorMSG(`Unexpected error: ${error}`);
 		}

@@ -102,7 +102,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 			<Button text='Home' path={() => navigate(pathes.cards)} />
 			<div className='container m-auto mt-2'>
 				<h1 className='text-center mb-4'>User Profile</h1>
-				<div className='card shadow-lg rounded-4 p-1' data-bs-theme='dark'>
+				<div
+					style={{backgroundColor: theme.background, color: theme.color}}
+					className='card shadow-lg rounded-4 p-1'
+					data-bs-theme='dark'
+				>
 					<div className='card-body'>
 						<div className='d-flex align-items-center mb-4'>
 							<div className='me-4'>
@@ -110,22 +114,22 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									<img
 										src={user.image.url}
 										alt='Profile image'
-										className=' shadow rounded rounded-5 border p-1 border-dark-subtle shadow-sm'
+										className=' shadow rounded rounded-5 border p-1 border-dark-subtle shadow'
 										width='150'
 										height='150'
 									/>
 								</Link>
 							</div>
-							<div className='borer'>
-								<h2 className='card-title mb-2 text-muted '>
+							<div className=''>
+								<h2 className='card-title mb-2  '>
 									<strong>{user && user.name.first} </strong>
 									{user && user.name.last}
 								</h2>
 								<hr />
-								<p className='text-muted mb-0'>{user.email}</p>
+								<h5 className='mb-0 card-subtitle'>{user.email || ""}</h5>
 							</div>
 						</div>
-						<div className='row  py-2 lead border'>
+						<div className='row  py-2 lead border rounded-3'>
 							<div className='col-5'>
 								<h5 className=' '>Phone</h5>
 							</div>
@@ -147,11 +151,11 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								</p>
 							</div>
 						</div>
-						<div className='row  border'>
+						<div className='row border rounded-1'>
 							<div className='col-5'>
 								<h5>Business account</h5>
 							</div>
-							<div className='col-2 border'>
+							<div className='col-2 border-start border-end'>
 								<p
 									className={
 										user.isBusiness === true
@@ -195,25 +199,24 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								</div>
 							</div>
 						</div>
-						<div className='row mt-3 p-3 m-auto'>
-							<div className='col-6'>
-								<Link
-									className=' text-warning mb-2'
-									to={`/userDetails/${user._id}`}
+						<div className='row mt-3 p-3 m-auto text-center '>
+							<button
+							onClick={()=>navigate("/userDetails/${user._id}")}
+							className='col-6'>
+								<span
+									className='text-warning'
 								>
 									Edit {edit}
-								</Link>
-							</div>
-							<div className='col-6'>
-								<Link to={""} className='text-danger' onClick={onShow}>
-									Delete {trash}
-								</Link>
-							</div>
+								</span>
+							</button>
+							<button onClick={() => onShow()} className='col-6'>
+								<span className='text-danger'>Delete {trash}</span>
+							</button>
 						</div>
 					</div>
 				</div>
 				<DeleteModal
-					toDelete="User account"
+					toDelete='User account'
 					show={showDleteModal}
 					onHide={() => onHide()}
 					onDelete={() => handleDelete(user._id)}
