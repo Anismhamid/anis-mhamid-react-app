@@ -27,13 +27,13 @@ import {Pagination} from "react-bootstrap";
 interface CardsHomeProps {}
 
 const CardsHome: FunctionComponent<CardsHomeProps> = () => {
-	const cardsPerPage = 8;
+	const cardsPerPage = 9;
 	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
 	const {allCards, setCards, error} = useCards();
 	const [currentPage, setCurrentPage] = useState(1);
 	const [searchTerm, setSearchTerm] = useState<string>("");
-	const {isAdmin, isLogedIn, setIsLogedIn, isBusiness} = useUserContext();
+	const {isAdmin, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
@@ -126,138 +126,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 				<hr />
 
 				<div className='row ms-auto'>
-					{currentCards.length > 0 ? (
-						currentCards.map((card) => (
-							<div
-								key={card._id}
-								className=' col-12 col-md-6 col-xl-3 my-3'
-							>
-								<div
-									className='custom-boder card2 card shadow-lg rounded overflow-hidden'
-									style={{
-										backgroundColor: theme.background,
-										color: theme.color,
-									}}
-								>
-									<Link
-										to={`${pathes.cardDetails.replace(
-											":cardId",
-											card._id as string,
-										)}`}
-									>
-										<img
-											className='card-img-top'
-											src={card.image.url}
-											alt={card.image.alt}
-											style={{
-												height: "200px",
-											}}
-										/>
-									</Link>
-									<div className='card-body'>
-										<h5 className='card-title text-center'>
-											{card.title}
-										</h5>
-										<h6 className='card-subtitle text-center mb-2 text-secondary'>
-											{card.subtitle}
-										</h6>
-										<hr />
-										<div className='card-text'>
-											<h5>Phone:</h5>
-											<p>{card.phone}</p>
-											<h5>Address:</h5>
-											<p>
-												{card.address.city},{card.address.street}
-											</p>
-											<p>{card.email}</p>
-										</div>
-
-										{isLogedIn && (
-											<>
-												<hr />
-												<div className='d-flex justify-content-between align-items-center'>
-													<div className='likes-container d-flex align-items-center'>
-														<p
-															style={{
-																backgroundColor:
-																	theme.background,
-																color: theme.color,
-															}}
-															onClick={() =>
-																handleLikeToggle_Cards(
-																	card._id as string,
-																	allCards,
-																	decodedToken?._id,
-																	setCards,
-																)
-															}
-															className={`${
-																card.likes?.includes(
-																	decodedToken?._id,
-																)
-																	? "text-danger"
-																	: "text-dark"
-															} fs-4 rounded-5`}
-														>
-															{heart}
-														</p>
-														<sub>
-															<p
-																style={{
-																	backgroundColor:
-																		theme.background,
-																	color: theme.color,
-																}}
-																className={`${
-																	card.likes?.includes(
-																		decodedToken?._id,
-																	) && "text-danger"
-																} mx-1 fs-5`}
-															>
-																{card.likes?.length}
-															</p>
-														</sub>
-													</div>
-												</div>
-												{isAdmin && (
-													<div className='mt-3 d-flex justify-content-around'>
-														<Link
-															to={`${pathes.cardDetails.replace(
-																":cardId",
-																card._id as string,
-															)}`}
-														>
-															<button className='btn btn-warning btn-sm'>
-																Edit
-															</button>
-														</Link>
-														<button
-															onClick={() => {
-																onShowDeleteCardModal();
-																setCardToDelete(
-																	card._id as string,
-																);
-															}}
-															className='btn btn-danger btn-sm'
-														>
-															Delete
-														</button>
-														{error && (
-															<div className='alert alert-danger'>
-																{error}
-															</div>
-														)}
-													</div>
-												)}
-											</>
-										)}
-									</div>
-								</div>
-							</div>
-						))
-					) : (
-						<></>
-					)}
 					<div className='row'>
 						{currentCards.map((card: Cards) => (
 							<div key={card._id} className='col-12 col-md-6 col-xl-4 my-3'>
