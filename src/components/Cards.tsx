@@ -178,7 +178,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 												<hr />
 												<div className='d-flex justify-content-between align-items-center'>
 													<div className='likes-container d-flex align-items-center'>
-														<p
+														<button
 															style={{
 																backgroundColor:
 																	theme.background,
@@ -200,8 +200,8 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 																	: ""
 															} fs-4 rounded-5`}
 														>
-															{heart}
-														</p>
+															{heart} {card.likes?.length}
+														</button>
 														<sub>
 															<p
 																style={{
@@ -214,26 +214,26 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 																		decodedToken?._id,
 																	) && "text-danger"
 																} mx-1 fs-5`}
-															>
-																{card.likes?.length}
-															</p>
+															></p>
 														</sub>
 													</div>
 												</div>
 												{(isAdmin ||
 													card.user_id ===
 														decodedToken._id) && (
-													<DeleteAndEditButtons
-														setCardToDelete={() => {
-															setCardToDelete(
-																card._id as string,
-															);
-														}}
-														card={card}
-														onShowDeleteCardModal={() =>
-															onShowDeleteCardModal()
-														}
-													/>
+													<div className='mt-3 d-flex justify-content-around'>
+														<DeleteAndEditButtons
+															setCardToDelete={() => {
+																setCardToDelete(
+																	card._id as string,
+																);
+															}}
+															card={card}
+															onShowDeleteCardModal={() =>
+																onShowDeleteCardModal()
+															}
+														/>
+													</div>
 												)}
 											</>
 										)}

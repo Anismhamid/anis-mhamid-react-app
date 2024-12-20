@@ -23,7 +23,7 @@ import DeleteModal from "../atoms/modals/DeleteModal";
 interface SandBoxProps {}
 
 const SandBox: FunctionComponent<SandBoxProps> = () => {
-	const usersPerPage = 50;
+	const usersPerPage = 10;
 	const {decodedToken} = useToken();
 	const {isAdmin} = useUserContext();
 	const [users, setUsers] = useState<User[]>([]);
@@ -42,20 +42,34 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 	// Pagination logic
 	const startIndex = (currentPage - 1) * usersPerPage;
 
+	const filteredUsers = useMemo(() => {
+		const query = searchTerm.trim().toLowerCase();
+		if (!query) return users;
+		return users.filter((user) => {
+			const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
+			const phone = user.phone.toLowerCase();
+			const email = user.email?.toLowerCase();
+			return (
+				fullName.includes(query) ||
+				phone.includes(query) ||
+				email?.includes(query)
+			);
+		});
+	}, [searchTerm,users]);
+
 	const usersToDisplay = useMemo(() => {
-		if (userSearch) {
+		if (userSearch && searchTerm) {
 			return userSearch;
 		}
 		return users;
-	}, [userSearch, users]);
+	}, [userSearch, users,searchTerm]);
 
 	const currentUsers = useMemo(() => {
 		return usersToDisplay.slice(startIndex, startIndex + usersPerPage);
 	}, [usersToDisplay, startIndex]);
 
-	// Fetch users on admin access
 	useEffect(() => {
-		if (isAdmin === true) {
+		if (isAdmin) {
 			getAllUsers()
 				.then((res) => {
 					setUsers(res);
@@ -71,12 +85,10 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 
 	const refresh = () => setRender(!render);
 
-	// Handle Edit
 	const handleEdit = useCallback((userId: string) => {
 		if (selectedUserId || !selectedUserId) setSelectedUserId(userId);
 	}, []);
 
-	// Handle Delete
 	const handleDelete = (userId: string) => {
 		try {
 			deleteUserById(userId)
@@ -96,27 +108,11 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 		}
 	};
 
-	// Handle search
 	const handleSearch = useCallback((name: string) => {
 		setSearchTerm(name);
+		setUserSearch(filteredUsers);
 		setCurrentPage(1);
-	}, []);
-
-	const filteredUsers = useMemo(() => {
-		const query = searchTerm.trim().toLowerCase();
-		if (!query) return null;
-
-		return users.filter((user) => {
-			const fullName = `${user.name.first} ${user.name.last}`.toLowerCase();
-			const phone = user.phone.toLowerCase();
-			const email = user.email?.toLowerCase();
-			return (
-				fullName.includes(query) ||
-				phone.includes(query) ||
-				email?.includes(query)
-			);
-		});
-	}, [searchTerm]);
+	}, [filteredUsers]);
 
 	// Loading state
 	if (isLoading) return <Loading />;
@@ -124,8 +120,9 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<Button text={"Home"} path={() => navigate(pathes.cards)} />
+			<h6 className='lead display-5 my-3 fw-bold'>SandBox</h6>
+			<hr className=' w-25' />
 			<div className='d-flex justify-content-around'>
-				<h2 className='lead display-5'>SandBox</h2>
 				<div className='mt-3 mb-3'>
 					<form className='d-flex me-3' onSubmit={(e) => e.preventDefault()}>
 						<input
@@ -201,6 +198,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 											onDelete={() =>
 												handleDelete(user._id as string)
 											}
+											navigateTo={""}
 										/>
 										<button className='text-danger' onClick={onShow}>
 											{trash}
@@ -212,6 +210,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 					))}
 				</div>
 			)}
+			{!searchTerm && (
 			<div className='table-responsive'>
 				<table
 					style={{backgroundColor: theme.background, color: theme.color}}
@@ -262,6 +261,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 												onDelete={() =>
 													handleDelete(user._id as string)
 												}
+												navigateTo={""}
 											/>
 											<button
 												className='text-danger '
@@ -299,6 +299,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 					</Pagination>
 				</div>
 			</div>
+			)}
 		</main>
 	);
 };

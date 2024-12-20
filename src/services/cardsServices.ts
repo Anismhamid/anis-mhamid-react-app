@@ -21,7 +21,7 @@ export const getAllCards = async (): Promise<Cards[]> => {
 	}
 };
 
-export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
+export const getLikedCardById = async (userId: string)=> {
 	try {
 		const response = await axios.request({
 			...getCards,
@@ -30,7 +30,7 @@ export const getLikedCardById = async (userId: string): Promise<Cards[]> => {
 		return response.data;
 	} catch (error) {
 		console.log("Error fetching cards:", error);
-		throw new Error("Failed to fetch cards");
+		errorMSG("Failed to fetch cards");
 	}
 };
 

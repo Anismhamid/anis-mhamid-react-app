@@ -17,7 +17,6 @@ import {pathes} from "../routes/Routes";
 import {handleDeleteCard_Cards, handleLikeToggle_Cards} from "../handleFunctions/cards";
 import Button from "../atoms/buttons/Button";
 import {useUserContext} from "../context/UserContext";
-import useCards from "../hooks/useCards";
 import DeleteModal from "../atoms/modals/DeleteModal";
 import DeleteAndEditButtons from "../atoms/buttons/DeleteAndEditButtons";
 
@@ -37,6 +36,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 	useEffect(() => {
+
 		getLikedCardById(decodedToken._id)
 			.then((res) => {
 				const liked = res.filter((card: any) =>
@@ -48,7 +48,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 				console.log("Failed to fetch cards.");
 			})
 			.finally(() => setLoading(false));
-	}, [decodedToken, cards]);
+	}, [decodedToken._id]);
 
 	if (loading) return <Loading />;
 
