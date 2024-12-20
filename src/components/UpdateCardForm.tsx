@@ -5,16 +5,16 @@ import CardsInput from "../atoms/modals/CardsInput";
 import {Cards} from "../interfaces/Cards";
 import {getCardById, putCard} from "../services/cardsServices";
 import {successMSG} from "../atoms/taosyify/Toastify";
-import initialValues from "../atoms/modals/cardsInitionalValues";
 import {useParams} from "react-router-dom";
 import {SiteTheme} from "../theme/theme";
+import { cardsFormikValues } from "../fomikFormsValidation/cardsFormikValues";
 
 interface UpdateCardFormProps {
 	refresh: () => void;
 }
 
 const UpdateCardForm: FunctionComponent<UpdateCardFormProps> = ({refresh}) => {
-	const [card, setCard] = useState<Cards>(initialValues);
+	const [card, setCard] = useState<Cards>(cardsFormikValues);
 	const {cardId} = useParams<{cardId: string}>();
 	const theme = useContext(SiteTheme);
 

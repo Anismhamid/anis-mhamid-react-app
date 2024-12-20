@@ -36,6 +36,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 		}
 	}, [decodedToken, setAuth, setIsLogedIn, setIsAdmin, setIsBusiness]);
 
+	// handle log out
 	const handleLogout = () => {
 		setAuth(null);
 		setIsAdmin(false);

@@ -23,12 +23,10 @@ import {
 	handleSearch,
 } from "../handleFunctions/cards";
 import {Pagination} from "react-bootstrap";
-import {User} from "../interfaces/User";
 
 interface CardsHomeProps {}
 
 const CardsHome: FunctionComponent<CardsHomeProps> = () => {
-	// rows length
 	const cardsPerPage = 8;
 	const {decodedToken} = useToken();
 	const theme = useContext(SiteTheme);
@@ -38,8 +36,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {isAdmin, isLogedIn, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-	const [whoLikesCard, setWhoLikesCard] = useState<User[]>([]);
-	// Show/Hide delete modal
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
@@ -48,23 +44,17 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 		setIsLogedIn(!!token);
 	}, [decodedToken]);
 
-	// Pagination index
 	const startIndex = (currentPage - 1) * cardsPerPage;
 
-	// Memoized filtering of cards based on the search term
 	const filteredCards = useMemo(() => {
-		// Normalize the search term by trimming spaces and converting to lowercase
 		const query = searchTerm.trim().toLowerCase();
 
-		// Return the filtered list of cards by matching the query against relevant fields
 		return allCards.filter((card) => {
-			// Convert card properties to lowercase for case-insensitive comparison
 			const cardName = `${card.title}`.toLowerCase();
 			const phone = card.phone.toLowerCase();
 			const country = card.address.country.toLowerCase();
 			const email = card.email.toLowerCase();
 
-			// Checking if the search term exists in any of the card's properties (title, phone, country, email)
 			return (
 				cardName.includes(query) ||
 				phone.includes(query) ||
@@ -74,17 +64,14 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 		});
 	}, [allCards, searchTerm]);
 
-	// Memoized calculation of the current pages cards based on the filtered cards and the page index
 	const currentCards = useMemo(() => {
 		return filteredCards.slice(startIndex, startIndex + cardsPerPage);
 	}, [filteredCards, startIndex]);
 
-	// Memoized calculation of pagination items based on the filtered cards and the current page
 	const paginationItems = useMemo(() => {
 		const totalPages = Math.ceil(filteredCards.length / cardsPerPage);
 
 		return [...Array(totalPages)].map(
-			// Generate pagination items
 			(_, index) => (
 				<Pagination.Item
 					key={index}
@@ -96,10 +83,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 			),
 		);
 	}, [currentPage, filteredCards.length]);
-
-	if (filteredCards.length === 0) {
-		return <Loading />;
-	}
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
@@ -147,7 +130,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						currentCards.map((card) => (
 							<div
 								key={card._id}
-								className=' col-12 col-md-6 col-xl-4 my-3'
+								className=' col-12 col-md-6 col-xl-3 my-3'
 							>
 								<div
 									className='custom-boder card2 card shadow-lg rounded overflow-hidden'

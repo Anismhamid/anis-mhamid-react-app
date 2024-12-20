@@ -1,12 +1,14 @@
 import {FormikValues, useFormik} from "formik";
 import {FunctionComponent} from "react";
-import * as yup from "yup";
 import {Cards} from "../../interfaces/Cards";
 import {createNewCard} from "../../services/cardsServices";
 import {errorMSG, successMSG} from "../taosyify/Toastify";
-import cardsInitionalValues from "./cardsInitionalValues";
 import CardsInput from "./CardsInput";
 import {plus} from "../../fontAwesome/Icons";
+import {
+	cardsFormikValues,
+	cardsFormikValuesSchema,
+} from "../../fomikFormsValidation/cardsFormikValues";
 
 interface AddNewCardFormProps {
 	refresh: Function;
@@ -14,35 +16,8 @@ interface AddNewCardFormProps {
 
 const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 	const formik: FormikValues = useFormik<Cards>({
-		initialValues: cardsInitionalValues,
-		validationSchema: yup.object({
-			title: yup.string().min(2).max(256).required(),
-			subtitle: yup.string().min(2).max(256).required(),
-			description: yup.string().min(2).max(1024).required(),
-			phone: yup
-				.string()
-				.min(9, "minimum phone number is 9")
-				.max(11, "maximum phone number is 11")
-				.required()
-				.matches(
-					/^(\(\d{3}\)\s?|\d{3}[-.\s]?)\d{3}[-.\s]?\d{4}$/,
-					"Invalid phone number format. Example: (123) 456-7890 or 123-456-7890",
-				),
-			email: yup.string().min(5).required(),
-			web: yup.string().min(14),
-			image: yup.object({
-				url: yup.string().url().min(14).required(),
-				alt: yup.string().min(2).max(256).required(),
-			}),
-			address: yup.object({
-				state: yup.string(),
-				country: yup.string().required(),
-				city: yup.string().required(),
-				street: yup.string().required(),
-				houseNumber: yup.number().required(),
-				zip: yup.number(),
-			}),
-		}),
+		initialValues: cardsFormikValues,
+		validationSchema: cardsFormikValuesSchema,
 		onSubmit: (values: Cards) => {
 			createNewCard(values)
 				.then(() => {
@@ -92,7 +67,7 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 				{/* Description */}
 				<div className='form-floating mb-3'>
 					<textarea
-					style={{height:"100px"}}
+						style={{height: "100px"}}
 						id='description'
 						name={"description"}
 						value={formik.values.description}

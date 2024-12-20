@@ -7,9 +7,6 @@ import {SiteTheme, theme} from "./theme/theme";
 import React from "react";
 import Sidebar from "./components/Sidebar";
 
-
-
-
 function App() {
 	const [darkMode, setDarkMode] = useState<boolean>(() => {
 		const savedTheme = localStorage.getItem("darkMode");
