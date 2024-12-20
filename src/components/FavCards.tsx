@@ -31,16 +31,12 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const nanegate = useNavigate();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
-	const {isAdmin, setIsLogedIn} = useUserContext();
+	const {isAdmin} = useUserContext();
 
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 	useEffect(() => {
-		if (!decodedToken._id) {
-			setIsLogedIn(false);
-			return;
-		}
 		getLikedCardById(decodedToken._id)
 			.then((res) => {
 				const liked = res.filter((card: any) =>
