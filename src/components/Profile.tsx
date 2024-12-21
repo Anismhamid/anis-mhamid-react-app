@@ -207,7 +207,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 						</div>
 						<div className='row mt-3 p-3 m-auto text-center '>
 							<button
-								onClick={() => navigate("/userDetails/${user._id}")}
+								onClick={() => navigate(`/userDetails/${user._id}`)}
 								className='col-6'
 							>
 								<span className='text-warning'>Edit {edit}</span>
