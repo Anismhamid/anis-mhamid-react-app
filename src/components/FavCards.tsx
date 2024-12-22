@@ -36,6 +36,7 @@ const FavCards: FunctionComponent<FavCardsProps> = () => {
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 	useEffect(() => {
+		if(!decodedToken._id) return
 
 		getLikedCardById(decodedToken._id)
 			.then((res) => {
