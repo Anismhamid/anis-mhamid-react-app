@@ -11,17 +11,17 @@ const getCards: AxiosRequestConfig = {
 	headers: {},
 };
 
-export const getAllCards = async (): Promise<Cards[]> => {
+export const getAllCards = async () => {
 	try {
 		const response = await axios.request(getCards);
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching all cards:", error);
-		throw new Error("Failed to fetch all cards");
+		errorMSG("Failed to load cards. Please try again laetr");
+		return null;
 	}
 };
 
-export const getLikedCardById = async (userId: string)=> {
+export const getLikedCardById = async (userId: string) => {
 	try {
 		const response = await axios.request({
 			...getCards,
@@ -29,8 +29,8 @@ export const getLikedCardById = async (userId: string)=> {
 		});
 		return response.data;
 	} catch (error) {
-		console.log("Error fetching cards:", error);
 		errorMSG("Failed to fetch cards");
+		return null;
 	}
 };
 
@@ -54,8 +54,8 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 		});
 		return updatedCard;
 	} catch (error) {
-		console.error("Failed to update like status:", error);
-		throw new Error();
+		errorMSG("Failed to update like status. Please try again later");
+		return null;
 	}
 };
 
@@ -71,8 +71,8 @@ export const getMyCards = async (userId: string) => {
 
 		return response.data;
 	} catch (error) {
-		console.log(error);
-		throw new Error();
+		errorMSG("Failed to fetch your cards. Please try again later.");
+		return null;
 	}
 };
 
@@ -89,7 +89,7 @@ export const createNewCard = async (card: Cards) => {
 		return response;
 	} catch (error) {
 		errorMSG("Authentication Error");
-		throw new Error();
+		return null;
 	}
 };
 
@@ -98,7 +98,7 @@ export const putCard = async (cardId: string, newCard: Cards) => {
 
 	if (!token) {
 		errorMSG("Error while making authentication please try againg later.");
-		return;
+		return null;
 	}
 
 	try {
@@ -108,7 +108,8 @@ export const putCard = async (cardId: string, newCard: Cards) => {
 
 		return response.data;
 	} catch (error) {
-		errorMSG("Unexpected Error try again");
+		errorMSG("Failed to update card. Please try again later.");
+		return null;
 	}
 };
 
@@ -121,12 +122,16 @@ export const getCardById = async (cardId: string) => {
 		});
 		return response.data;
 	} catch (error) {
-		errorMSG(`${error}`);
+		errorMSG("Failed to fetch card. Please try again later.");
+		return null;
 	}
 };
 
 export const deleteCardById = async (cardId: string) => {
 	const token: string | null = localStorage.getItem("bCards_token");
+	if (!token) {
+		errorMSG("Authentication required. Please log in.");
+	}
 	try {
 		const response = await axios.delete(`${api}/cards/${cardId}`, {
 			headers: {
@@ -143,6 +148,7 @@ export const deleteCardById = async (cardId: string) => {
 			);
 		} else {
 			errorMSG(`Unexpected error: ${error}`);
+			return null;
 		}
 	}
 };
