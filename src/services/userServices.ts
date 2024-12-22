@@ -27,15 +27,18 @@ export async function loginIn(login: UserLogin): Promise<any> {
 }
 
 // Fetch all users
-export async function getAllUsers() {
+export const getAllUsers = async (page: number, limit: number) => {
 	try {
-		const response = await axios.request(getUsers);
+		const response = await axios.request({
+			...getUsers,
+			url: `${api}?page=${page}&limit=${limit}`,
+		});
 		return response.data;
 	} catch (error) {
 		console.log(error);
 		errorMSG("Filed to fetch data please try again later");
 	}
-}
+};
 
 // Get specific user by ID
 export const getUserById = async (userId: string) => {

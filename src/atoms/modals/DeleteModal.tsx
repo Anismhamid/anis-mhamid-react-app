@@ -47,6 +47,7 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 							onDelete();
 							render();
 							navigate(navigateTo || "");
+							onHide()
 						}}
 					>
 						DELETE

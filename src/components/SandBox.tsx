@@ -23,7 +23,7 @@ import DeleteModal from "../atoms/modals/DeleteModal";
 interface SandBoxProps {}
 
 const SandBox: FunctionComponent<SandBoxProps> = () => {
-	const usersPerPage = 100;
+	const usersPerPage = 50;
 	const {decodedToken} = useToken();
 	const {isAdmin} = useUserContext();
 	const [users, setUsers] = useState<User[]>([]);
@@ -55,64 +55,65 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 				email?.includes(query)
 			);
 		});
-	}, [searchTerm,users]);
+	}, [searchTerm, users]);
 
 	const usersToDisplay = useMemo(() => {
 		if (userSearch && searchTerm) {
 			return userSearch;
 		}
 		return users;
-	}, [userSearch, users,searchTerm]);
+	}, [userSearch, users, searchTerm]);
 
 	const currentUsers = useMemo(() => {
 		return usersToDisplay.slice(startIndex, startIndex + usersPerPage);
 	}, [usersToDisplay, startIndex]);
 
 	useEffect(() => {
-		if (isAdmin) {
-			getAllUsers()
-				.then((res) => {
-					setUsers(res);
-					setISLoading(false);
-				})
-				.catch((err) => {
-					console.log(err);
-					errorMSG("Error fetching users.");
-					setISLoading(false);
-				});
-		} else return;
-	}, [render, isAdmin]);
+		getAllUsers(currentPage, usersPerPage)
+			.then((res) => {
+				setUsers(res);
+			})
+			.catch((err) => {
+				console.log(err);
+				errorMSG("Error fetching users.");
+			})
+			.finally(() => setISLoading(false));
+	}, []);
 
 	const refresh = () => setRender(!render);
 
 	const handleEdit = useCallback((userId: string) => {
-		if (selectedUserId || !selectedUserId) setSelectedUserId(userId);
+		setSelectedUserId(userId);
 	}, []);
 
-	const handleDelete = (userId: string) => {
-		try {
-			deleteUserById(userId)
-				.then(() => {
-					setUsers((prevUsers: User[]) =>
-						prevUsers.filter((user) => user._id !== userId),
-					);
-					infoMSG("User deleted successfully.");
-				})
-				.catch((err) => {
-					console.log(err);
-					errorMSG("Error deleting user.");
-				});
-		} catch (error) {
-			console.log(error);
-			errorMSG("Failed to delete user.");
-		}
-	};
+	const handleDelete = useCallback(
+		(userId: string) => {
+			try {
+				deleteUserById(userId)
+					.then((res) => {
+						setUsers((prevUsers: User[]) =>
+							prevUsers.filter((user) => user._id !== res._id),
+						);
+						console.log(res._id);
+
+						infoMSG("User deleted successfully.");
+					})
+					.catch((err) => {
+						console.log(err);
+						errorMSG("Error deleting user.");
+					});
+			} catch (error) {
+				console.log(error);
+				errorMSG("Failed to delete user.");
+			}
+		},
+		[currentPage, usersPerPage],
+	);
 
 	const handleSearch = useCallback((name: string) => {
 		setSearchTerm(name);
-		setUserSearch(filteredUsers);
 		setCurrentPage(1);
-	}, [filteredUsers]);
+	}, []);
 
 	// Loading state
 	if (isLoading) return <Loading />;
@@ -161,76 +162,6 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 					</form>
 				</div>
 			</div>
-			{/* Displaying the user result or all users */}
-			{userSearch && searchTerm && (
-				<div
-					style={{backgroundColor: theme.background, color: theme.color}}
-					className='user-found card my-3 min-vh-100'
-				>
-					<h3>Users Found</h3>
-					{userSearch.map((user) => (
-						<div
-							style={{
-								backgroundColor: theme.background,
-								color: theme.color,
-							}}
-							className='card  fw-bold'
-							key={user._id}
-						>
-							<div className='card-body'>
-								<p>
-									<strong>Name:</strong> {user.name.first}
-								</p>
-								<p>
-									<strong>Email:</strong> {user.email}
-								</p>
-								<Link to={`/userDetails/${user._id}`}>
-									<img
-										className='img-fluid'
-										src={user.image.url || "/avatar-design.png"}
-										alt={user.name.first}
-										style={{
-											width: "100px",
-											height: "100px",
-											borderRadius: "50%",
-										}}
-									/>
-								</Link>
-							</div>
-
-							{isLoading && isAdmin && (
-								<>
-									<div className='d-flex text-end justify-content-end my-3'>
-										<Link to={`/userDetails/${user._id}`}>
-											<button
-												className='text-warning mx-5'
-												onClick={() =>
-													handleEdit(user._id as string)
-												}
-											>
-												{edit}
-											</button>
-										</Link>
-										<DeleteModal
-											toDelete='User account'
-											render={() => refresh()}
-											show={showDeleteModal}
-											onHide={onHide}
-											onDelete={() =>
-												handleDelete(user._id as string)
-											}
-											navigateTo={""}
-										/>
-										<button className='text-danger' onClick={onShow}>
-											{trash}
-										</button>
-									</div>
-								</>
-							)}
-						</div>
-					))}
-				</div>
-			)}
 			{!searchTerm && (
 				<div className='table-responsive'>
 					<table
@@ -276,19 +207,12 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 												</Link>
 											</td>
 											<td colSpan={1}>
-												<DeleteModal
-													toDelete='User account'
-													render={() => refresh()}
-													show={showDeleteModal}
-													onHide={onHide}
-													onDelete={() =>
-														handleDelete(user._id as string)
-													}
-													navigateTo={""}
-												/>
 												<button
 													className='text-danger '
-													onClick={onShow}
+													onClick={() => {
+														onShow();
+														setSelectedUserId(user._id as string);
+													}}
 												>
 													{trash}
 												</button>
@@ -301,6 +225,81 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 					</table>
 				</div>
 			)}
+			{/* Displaying the user result or all users */}
+			{userSearch && searchTerm && (
+				<div
+					style={{backgroundColor: theme.background, color: theme.color}}
+					className='user-found card my-3 min-vh-100'
+				>
+					<h3>Users Found</h3>
+					{userSearch.map((user) => (
+						<div
+							style={{
+								backgroundColor: theme.background,
+								color: theme.color,
+							}}
+							className='card  fw-bold'
+							key={user._id}
+						>
+							<div className='card-body'>
+								<p>
+									<strong>Name:</strong> {user.name.first}
+								</p>
+								<p>
+									<strong>Email:</strong> {user.email}
+								</p>
+								<Link to={`/userDetails/${user._id}`}>
+									<img
+										className='img-fluid'
+										src={user.image.url || "/avatar-design.png"}
+										alt={user.name.first}
+										style={{
+											width: "100px",
+											height: "100px",
+											borderRadius: "50%",
+										}}
+									/>
+								</Link>
+							</div>
+
+							{isAdmin && (
+								<>
+									<div className='d-flex text-end justify-content-end my-3'>
+										<Link to={`/userDetails/${user._id}`}>
+											<button
+												className='text-warning mx-5'
+												onClick={() => {
+													handleEdit(user._id as string);
+												}}
+											>
+												{edit}
+											</button>
+										</Link>
+
+										<button
+											className='text-danger'
+											onClick={() => {
+												onShow();
+												setSelectedUserId(user._id as string);
+											}}
+										>
+											{trash}
+										</button>
+									</div>
+								</>
+							)}
+						</div>
+					))}
+				</div>
+			)}
+			<DeleteModal
+				toDelete='User account'
+				render={() => refresh()}
+				show={showDeleteModal}
+				onHide={() => onHide()}
+				onDelete={() => handleDelete(selectedUserId)}
+				navigateTo={""}
+			/>
 		</main>
 	);
 };

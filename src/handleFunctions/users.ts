@@ -2,8 +2,9 @@ import {useNavigate} from "react-router-dom";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 import {deleteUserById} from "../services/userServices";
 import {pathes} from "../routes/Routes";
+import { User } from "../interfaces/User";
 
-// Edit user Handle Delete
+// EditUser handle Delete
 export const handleDelete_User = (userId: string) => {
 	const navigate = useNavigate();
 
@@ -20,4 +21,3 @@ export const handleDelete_User = (userId: string) => {
 		errorMSG("Failed to delete user.");
 	}
 };
-
