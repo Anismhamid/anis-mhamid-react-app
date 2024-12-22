@@ -73,8 +73,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 			.then((res) => {
 				setUsers(res);
 			})
-			.catch((err) => {
-				console.log(err);
+			.catch(() => {
 				errorMSG("Error fetching users.");
 			})
 			.finally(() => setISLoading(false));
@@ -94,16 +93,12 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 						setUsers((prevUsers: User[]) =>
 							prevUsers.filter((user) => user._id !== res._id),
 						);
-						console.log(res._id);
-
 						infoMSG("User deleted successfully.");
 					})
-					.catch((err) => {
-						console.log(err);
+					.catch(() => {
 						errorMSG("Error deleting user.");
 					});
 			} catch (error) {
-				console.log(error);
 				errorMSG("Failed to delete user.");
 			}
 		},
@@ -211,7 +206,9 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 													className='text-danger '
 													onClick={() => {
 														onShow();
-														setSelectedUserId(user._id as string);
+														setSelectedUserId(
+															user._id as string,
+														);
 													}}
 												>
 													{trash}

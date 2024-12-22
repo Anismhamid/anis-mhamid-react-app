@@ -21,8 +21,8 @@ export async function loginIn(login: UserLogin): Promise<any> {
 		const response = await axios.post(`${api}/login`, login);
 		return response;
 	} catch (error) {
-		console.log(error);
-		throw new Error("Login failed, please try again.");
+		errorMSG("Login failed, please try again.");
+		return null;
 	}
 }
 
@@ -35,8 +35,8 @@ export const getAllUsers = async (page: number, limit: number) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.log(error);
 		errorMSG("Filed to fetch data please try again later");
+		return null;
 	}
 };
 
@@ -46,19 +46,25 @@ export const getUserById = async (userId: string) => {
 		const response = await axios.request({...getUsers, url: `${api}/${userId}`});
 		return response.data;
 	} catch (error) {
-		console.log(error);
+		errorMSG("Unexpected error please try again");
+		return null;
 	}
 };
 
 // Register a new user
 export const registerNewUser = (user: User) => {
-	const response = axios.request({
-		...getUsers,
-		headers: {"Content-Type": "application/json"},
-		method: "post",
-		data: user,
-	});
-	return response;
+	try {
+		const response = axios.request({
+			...getUsers,
+			headers: {"Content-Type": "application/json"},
+			method: "post",
+			data: user,
+		});
+		return response;
+	} catch (error) {
+		errorMSG("Failed to register user. Please try again later.");
+		return null;
+	}
 };
 
 // Delete specific user by ID
@@ -71,7 +77,8 @@ export const deleteUserById = async (userId: string) => {
 		});
 		return response.data;
 	} catch (error) {
-		console.log(error);
+		errorMSG("Failed to delete user. Please try again later.");
+		return null;
 	}
 };
 
@@ -81,7 +88,7 @@ export const patchUserBusiness = async (
 	user: {isBusiness: boolean},
 ) => {
 	if (!token) {
-		throw new Error("Token not found.");
+		errorMSG("Token not found.");
 	}
 	try {
 		const response = await axios.patch(`${api}/${cardId}`, data, {
@@ -94,7 +101,7 @@ export const patchUserBusiness = async (
 		);
 		return response.data;
 	} catch (error) {
-		console.error("Failed to update user:", error);
+		errorMSG("Failed to update user. Please try again later.");
 		return null;
 	}
 };
@@ -111,6 +118,7 @@ export const putUserData = async (userId: string, data: User) => {
 
 		return response.data;
 	} catch (error) {
-		console.log(error);
+		errorMSG("Failed to update user data. Please try again later.");
+		return null;
 	}
 };
