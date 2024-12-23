@@ -52,21 +52,20 @@ export const getUserById = async (userId: string) => {
 };
 
 // Register a new user
-export const registerNewUser = (user: User) => {
+export const registerNewUser = async (user: User): Promise<any | null> => {
 	try {
-		const response = axios.request({
+		const response = await axios.request({
 			...getUsers,
 			headers: {"Content-Type": "application/json"},
 			method: "post",
 			data: user,
 		});
-		return response;
+		return response.data;
 	} catch (error) {
 		errorMSG("Failed to register user. Please try again later.");
 		return null;
 	}
 };
-
 // Delete specific user by ID
 export const deleteUserById = async (userId: string) => {
 	try {
