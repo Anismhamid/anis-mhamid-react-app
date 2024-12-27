@@ -165,7 +165,8 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 					>
 						<thead>
 							<tr>
-								<th colSpan={6}>Image</th>
+								<th colSpan={3}>Image</th>
+								<th colSpan={3}>email</th>
 								<th colSpan={4}>Full Name</th>
 								<th colSpan={1}>Edit</th>
 								<th colSpan={1}>Delete</th>
@@ -174,7 +175,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 						<tbody>
 							{currentUsers.map((user: User) => (
 								<tr key={user._id}>
-									<td colSpan={6}>
+									<td colSpan={3}>
 										<Link to={`/userDetails/${user._id}`}>
 											<img
 												className='img-fluid mx-5 rounded-5'
@@ -189,9 +190,11 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 											/>
 										</Link>
 									</td>
-									<td colSpan={4}>
+									<td colSpan={3}>
 										{user.name.first} {user.name.last}
 									</td>
+									<td colSpan={4}>{user.email}</td>
+
 									{decodedToken?.isAdmin && (
 										<>
 											<td colSpan={1}>

@@ -67,7 +67,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 									<button
 										className={`${
 											isActive(pathes.favCards)
-												? "text-danger"
+												? "text-info"
 												: "text-light"
 										} rounded-5 fs-5`}
 									>
@@ -92,7 +92,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 									<button
 										className={`${
 											isActive(pathes.profile)
-												? "text-danger"
+												? "text-info"
 												: "text-light"
 										} rounded-5 fs-5`}
 									>
@@ -114,7 +114,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 								<button
 									className={`${
 										isActive(pathes.cards)
-											? "text-danger"
+											? "text-info"
 											: "text-light"
 									} rounded-5 fs-2`}
 								>
@@ -141,7 +141,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 										<button
 											className={`${
 												isActive(pathes.myCards)
-													? "text-danger"
+													? "text-info"
 													: "text-light"
 											} rounded-5 fs-5`}
 										>
@@ -165,7 +165,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 									<button
 										className={`${
 											isActive(pathes.about)
-												? "text-danger"
+												? "text-info"
 												: "text-light"
 										} rounded-5 fs-6`}
 									>

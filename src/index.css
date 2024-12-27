@@ -91,7 +91,7 @@ button:focus-visible {
 
 .nav-link:hover,
 .log-rig:hover {
-	color: #3e87b8 !important;
+	color: #1c3791 !important;
 	font-weight: bold !important;
 }
 
@@ -164,11 +164,11 @@ img:hover {
 }
 
 .next-back-home:hover {
-	color: #d65d5d;
+	color: #184ab8;
 }
 
 .custom-border {
-	border: 1px solid #d2f6fc;
+	border: 1px solid #2e4dff31;
 	box-shadow: 0 0 6px inset;
 
 }

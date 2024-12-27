@@ -22,7 +22,6 @@ function App() {
 	};
 
 	return (
-		<>
 			<SiteTheme.Provider value={darkMode ? theme.dark : theme.light}>
 				<Router>
 					<ToastContainer />
@@ -39,7 +38,6 @@ function App() {
 					</Routes>
 				</Router>
 			</SiteTheme.Provider>
-		</>
 	);
 }
 
