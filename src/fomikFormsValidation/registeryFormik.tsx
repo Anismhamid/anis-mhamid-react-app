@@ -33,7 +33,7 @@ export const registeryFormikShcema = yup.object({
 	phone: yup
 		.string()
 		.required()
-		.min(10)
+		.min(9)
 		.max(10)
 		.matches(
 			/0\d([\d]{0,1})([-]{0,1})\d{7}/,

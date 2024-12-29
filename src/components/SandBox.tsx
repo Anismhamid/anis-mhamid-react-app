@@ -121,7 +121,6 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 			{/* Pagination */}
 			<div className='container-sm'>
 				<Pagination
-					
 					className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'
 				>
 					{[...Array(Math.ceil(usersToDisplay.length / usersPerPage))].map(
