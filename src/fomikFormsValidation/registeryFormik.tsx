@@ -36,7 +36,7 @@ export const registeryFormikShcema = yup.object({
 		.min(9)
 		.max(10)
 		.matches(
-			/0\d([\d]{0,1})([-]{0,1})\d{7}/,
+			/^(\(\d{3}\)\s?|\d{3}[-]?)\d{3}[-]?\d{4}$|^\d{10}$/,
 			"Invalid phone number format. Example: (123) 456-7890 or 123-456-7890",
 		),
 	email: yup
