@@ -15,7 +15,7 @@ const PageNotFound: FunctionComponent<PageNotFoundProps> = () => {
 					The page you're looking for might have been moved or doesn't exist.
 				</p>
 
-				{/* Search Bar (Optional) */}
+				{/* Search Bar */}
 				<div className='mt-4 mb-4'>
 					<input
 						type='text'

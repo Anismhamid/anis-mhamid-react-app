@@ -54,6 +54,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 			>
 				<div className='container-fluid'>
 					{/* Dark Mode Toggle Button */}
+					
 					<button
 						style={{backgroundColor: theme.background, color: theme.color}}
 						onClick={() => darkSetter()}
@@ -136,17 +137,17 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 											</NavLink>
 										</li>
 									)}
-										{isBusiness === true && (
-											<li className='nav-item'>
-												<NavLink
-													style={{color: theme.color}}
-													className='nav-link'
-													to={pathes.myCards}
-												>
-													My Cards
-												</NavLink>
-											</li>
-										)}
+									{isBusiness === true && (
+										<li className='nav-item'>
+											<NavLink
+												style={{color: theme.color}}
+												className='nav-link'
+												to={pathes.myCards}
+											>
+												My Cards
+											</NavLink>
+										</li>
+									)}
 									<li className='nav-item'>
 										<NavLink
 											style={{color: theme.color}}
@@ -171,7 +172,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									onClick={handleLogout}
 									className='fw-bold'
 								>
-									<span className="logout text-danger">
+									<span className='logout text-danger'>
 										LOG OUT <span>{logOut}</span>
 									</span>
 								</Link>
