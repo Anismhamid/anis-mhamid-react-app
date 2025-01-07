@@ -15,7 +15,12 @@ function App() {
 
 	useEffect(() => {
 		localStorage.setItem("darkMode", JSON.stringify(darkMode));
-	}, [darkMode]);
+    console.log(
+		"%cWelcome to Bcards!\n%cReact components are the bee's knees! 😄",
+		"font-size:1.5em;color:#4558c9;",
+		"color:#d61a7f;font-size:1em;",
+	);
+		}, [darkMode]);
 
 	const handleTheme = () => {
 		setDarkMode((oldprev) => !oldprev);

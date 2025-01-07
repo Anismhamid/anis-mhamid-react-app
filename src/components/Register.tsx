@@ -49,31 +49,43 @@ if (loading)return <Loading/>
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
 			<Button text={"Back"} path={() => navigate(-1)} />
 			<div className='container justify-content-center pt-5'>
+				<p className='text-center fs-6 my-3 fw-bold'>Download the app</p>
+				<hr className=' w-50 m-auto mb-2' />
+				<div className='row reg2 m-auto'>
+					<div className='col-6'>
+						<Link
+							rel='noopener noreferrer'
+							target='_Blank'
+							to='https://play.google.com/store'
+							aria-label='Download from Google Play'
+						>
+							<img
+								className='w-100 m-auto h-100'
+								src='/images/googlrPlay.png'
+								alt='Google Play Store'
+							/>
+						</Link>
+					</div>
+					<div className='col-6 '>
+						<Link
+							rel='noopener noreferrer'
+							target='_Blank'
+							to='https://www.apple.com/app-store/'
+							aria-label='Download from Apple Store'
+						>
+							<img
+								className='w-100 m-auto h-100'
+								src='/images/Apple.png'
+								alt='Apple Store'
+							/>
+						</Link>
+					</div>
+				</div>
+				<hr className=' w-75 mt-2 mb-3 m-auto automatic-border' />
 				<form
 					onSubmit={registeryFormik.handleSubmit}
 					className='shadow-lg p-4 rounded-4 py-5 border'
 				>
-					<p className='text-center fs-6 my-3 fw-bold'>Download the app</p>
-					<hr />
-					<div className='d-flex align-items-center py-1 justify-content-around bg-black'>
-						<Link to='https://play.google.com/store'>
-							<img
-								className='rounded-5'
-								style={{maxWidth: "200px"}}
-								src='/images/googlrPlay.png'
-								alt=''
-							/>
-						</Link>
-						<Link to='https://apps.microsoft.com/home?hl=en-US&gl=US'>
-							<img
-								className='rounded-5'
-								style={{maxWidth: "200px"}}
-								src='/images/microsoft.png'
-								alt=''
-							/>
-						</Link>
-					</div>
-					<hr />
 					<h1 className='text-center py-5'>REGISTER</h1>
 					{/* First and Middle Name */}
 					<div className='row mb-3'>

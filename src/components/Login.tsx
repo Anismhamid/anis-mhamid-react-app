@@ -1,4 +1,4 @@
-import {FunctionComponent, useState, useEffect, useContext} from "react";
+import {FunctionComponent, useState, useEffect, useContext, useCallback} from "react";
 import {Link, useNavigate} from "react-router-dom";
 import {getUserById, loginIn} from "../services/userServices";
 import {pathes} from "../routes/Routes";
@@ -11,6 +11,7 @@ import {errorMSG, wellcomeMSG} from "../atoms/taosyify/Toastify";
 import Loading from "./Loading";
 import {SiteTheme} from "../theme/theme";
 import {closedEye, eye} from "../fontAwesome/Icons";
+import SocilasModal from "../atoms/socialsModal/SocilasModal";
 
 interface LoginProps {}
 
@@ -22,6 +23,9 @@ const Login: FunctionComponent<LoginProps> = () => {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState<boolean>(false);
 	const {decodedToken} = useToken();
+	const [showSocialModal, setShowSocialModall] = useState<boolean>(false);
+	const onShowSocialModal = useCallback(() => setShowSocialModall(true), []);
+	const onHideSocialModal = useCallback(() => setShowSocialModall(false), []);
 
 	useEffect(() => {
 		const token = localStorage.bCards_token;
@@ -97,154 +101,187 @@ const Login: FunctionComponent<LoginProps> = () => {
 	if (loading) return <Loading />;
 
 	return (
-		<main
-			className='pt-5'
-			style={{backgroundColor: theme.background, color: theme.color}}
-		>
-			{formik.error && <p className=' text-danger'>{formik.error}</p>}
-
-			<form
-				className='login shadow-lg p-4 rounded-4 border'
-				onSubmit={formik.handleSubmit}
+		<>
+			<main
+				className='pt-5'
+				style={{backgroundColor: theme.background, color: theme.color}}
 			>
-				<h2 className='text-center text-primary mb-4'>Login</h2>
-				<div className='form-floating mb-3'>
-					<input
-						type='email'
-						autoComplete='off'
-						className={`form-control ${
-							formik.touched.email && formik.errors.email
-								? "is-invalid"
-								: ""
-						}`}
-						id='email'
-						name='email'
-						placeholder='name@example.com'
-						value={formik.values.email}
-						onBlur={formik.handleBlur}
-						onChange={formik.handleChange}
-						disabled={loading}
-						aria-label='Email address'
-					/>
-					{formik.touched.email && formik.errors.email && (
-						<div className='invalid-feedback'>{formik.errors.email}</div>
-					)}
-					<label htmlFor='email' className='form-label fw-bold text-secondary'>
-						Email address
-					</label>
-				</div>
+				{formik.error && <p className=' text-danger'>{formik.error}</p>}
 
-				<div className='form-floating mb-3'>
-					<input
-						type={showPassword ? "text" : "password"}
-						autoComplete='off'
-						className={`form-control ${
-							formik.touched.password && formik.errors.password
-								? "is-invalid"
-								: ""
-						}`}
-						id='password'
-						name='password'
-						placeholder='Password'
-						value={formik.values.password}
-						onBlur={formik.handleBlur}
-						onChange={formik.handleChange}
-						disabled={loading}
-						aria-label='Password'
-					/>
-					<button
-						type='button'
-						onClick={() => setShowPassword((prev) => !prev)}
-						style={{
-							position: "absolute",
-							right: "10px",
-							top: "50%",
-							transform: "translateY(-50%)",
-						}}
-						className='btn btn-link'
-					>
-						{showPassword ? eye : closedEye}{" "}
-					</button>
-					{formik.touched.password && formik.errors.password && (
-						<div className='invalid-feedback'>{formik.errors.password}</div>
-					)}
-					<label
-						htmlFor='password'
-						className='form-label fw-bold text-secondary'
-					>
-						Password
-					</label>
-				</div>
-				<button
-					type='submit'
-					className='btn btn-primary w-100 py-2 mt-4 fw-bold shadow-sm'
-					disabled={!formik.dirty || !formik.isValid || loading}
+				<form
+					className='login shadow-lg p-4 rounded-4'
+					onSubmit={formik.handleSubmit}
+					aria-labelledby='login-form'
 				>
-					{loading ? "Logging in..." : "Login"}
-				</button>
-				<hr />
-				<div className='container'>
-					<Link className='my-3' to={"/facebook-account"}>
-						<img
-							src='/images/facebook.png'
-							className='img-fluid face m-2'
-							alt='Facebook login'
+					<h2 className='text-center text-primary mb-4' id='login-form'>
+						Login
+					</h2>
+					<div className='form-floating mb-3'>
+						<input
+							type='email'
+							autoComplete='off'
+							className={`form-control ${
+								formik.touched.email && formik.errors.email
+									? "is-invalid"
+									: ""
+							}`}
+							id='email'
+							name='email'
+							placeholder='name@example.com'
+							value={formik.values.email}
+							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							disabled={loading}
+							aria-label='Enter your email address'
 						/>
-						Log in with Facebook
-					</Link>
+						{formik.touched.email && formik.errors.email && (
+							<div className='invalid-feedback'>{formik.errors.email}</div>
+						)}
+						<label
+							htmlFor='email'
+							className='form-label fw-bold text-secondary'
+						>
+							Email address
+						</label>
+					</div>
+
+					<div className='form-floating mb-3'>
+						<input
+							type={showPassword ? "text" : "password"}
+							autoComplete='off'
+							className={`form-control ${
+								formik.touched.password && formik.errors.password
+									? "is-invalid"
+									: ""
+							}`}
+							id='password'
+							name='password'
+							placeholder='Password'
+							value={formik.values.password}
+							onBlur={formik.handleBlur}
+							onChange={formik.handleChange}
+							disabled={loading}
+							aria-label='Enter your password'
+						/>
+						<button
+							type='button'
+							onClick={() => setShowPassword((prev) => !prev)}
+							style={{
+								position: "absolute",
+								right: "10px",
+								top: "50%",
+								transform: "translateY(-50%)",
+							}}
+							className='btn btn-link'
+							aria-label={`Toggle password visibility`}
+						>
+							{showPassword ? eye : closedEye}{" "}
+						</button>
+						{formik.touched.password && formik.errors.password && (
+							<div className='invalid-feedback'>
+								{formik.errors.password}
+							</div>
+						)}
+						<label
+							htmlFor='password'
+							className='form-label fw-bold text-secondary'
+						>
+							Password
+						</label>
+					</div>
+					<button
+						type='submit'
+						className='btn btn-primary w-100 py-2 mt-4 fw-bold shadow-sm'
+						disabled={!formik.dirty || !formik.isValid || loading}
+						aria-label={loading ? "Logging in" : "Submit login form"}
+					>
+						{loading ? "Logging in..." : "Login"}
+					</button>
 					<hr />
-					<Link className='fw-bold d-block my-3' to={"/google-account"}>
-						<img
-							aria-disabled='true'
-							src='/images/google.png'
-							className='img-fluid face m-2'
-							alt='Google login'
-						/>
-						log in with Google
-					</Link>
+					<div className='container'>
+						<button
+							onClick={() => {
+								onShowSocialModal();
+							}}
+							className='fw-bold d-block my-3 m-auto'
+						>
+							<img
+								src='/images/facebook.png'
+								className='img-fluid face m-2'
+								alt='Facebook login'
+								aria-label='Facebook login button'
+							/>
+							Log in with Facebook
+						</button>
+						<hr />
+						<button
+							onClick={() => {
+								onShowSocialModal();
+							}}
+							className='fw-bold d-block my-3 m-auto'
+							aria-label='Log in with Google'
+						>
+							<img
+								aria-disabled='true'
+								src='/images/google.png'
+								className='img-fluid face m-2'
+								alt='Google login'
+								aria-label='Google login button'
+							/>
+							log in with Google
+						</button>
+					</div>
+				</form>
+				<div className='row border reg rounded-4 mb-2 h-100'>
+					<div className='col'>
+						<p style={{fontSize: "16px"}} className=' fw-bold text-center '>
+							Don't have an account?
+							<Link to='/register' aria-label='Go to registration page'>
+								<span className=' text-primary mx-2'>Register Now</span>
+							</Link>
+						</p>
+					</div>
 				</div>
-			</form>
-			<div className='row border reg'>
-				<div className='col'>
-					<p style={{fontSize: "16px"}} className=' fw-bold text-center '>
-						Don't have an account?
-						<Link to='/register'>
-							<span className=' text-primary mx-2'>Register Now</span>
+				<hr className=' w-75 m-auto automatic-border mt-2' />
+				<p className='text-center mt-3 display-6'>Download the app</p>
+				<div className='row reg2 m-auto'>
+					<div className='col-6'>
+						<Link
+							rel='noopener noreferrer'
+							target='_Blank'
+							to='https://play.google.com/store'
+							aria-label='Download from Google Play'
+						>
+							<img
+								className='w-100 m-auto h-100'
+								src='/images/googlrPlay.png'
+								alt='Google Play Store'
+							/>
 						</Link>
-					</p>
+					</div>
+					<div className='col-6 '>
+						<Link
+							rel='noopener noreferrer'
+							target='_Blank'
+							to='https://www.apple.com/app-store/'
+							aria-label='Download from Apple Store'
+						>
+							<img
+								className='w-100 m-auto h-100'
+								src='/images/Apple.png'
+								alt='Apple Store'
+							/>
+						</Link>
+					</div>
 				</div>
-			</div>
-			<p className='text-center fs-6 my-3 fw-bold'>Download the app</p>
-			<hr />
-			<div className='row reg2 m-auto'>
-				<div className='col-6'>
-					<Link
-						rel='noopener noreferrer'
-						target='_Blank'
-						to='https://play.google.com/store'
-					>
-						<img
-							className='w-100 m-auto h-100'
-							src='/images/googlrPlay.png'
-							alt=''
-						/>
-					</Link>
-				</div>
-				<div className='col-6 '>
-					<Link
-						rel='noopener noreferrer'
-						target='_Blank'
-						to='https://apps.microsoft.com/home?hl=en-US&gl=US'
-					>
-						<img
-							className='w-100 m-auto h-100'
-							src='/images/microsoft.png'
-							alt=''
-						/>
-					</Link>
-				</div>
-			</div>
-		</main>
+			</main>
+			<SocilasModal
+				show={showSocialModal}
+				onHide={onHideSocialModal}
+				bodyText={"Comming Soon . . ."}
+				header={`Connect with yor account`}
+			/>
+		</>
 	);
 };
 
