@@ -12,6 +12,7 @@ import {
 	registeryFormikValues,
 } from "../fomikFormsValidation/registeryFormik";
 import Button from "../atoms/buttons/Button";
+import Loading from "./Loading";
 
 interface RegisterProps {}
 
@@ -42,9 +43,11 @@ const Register: FunctionComponent<RegisterProps> = () => {
 		},
 	});
 
+if (loading)return <Loading/>
+
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<Button text={"Back"} path={()=>navigate(-1)}/>
+			<Button text={"Back"} path={() => navigate(-1)} />
 			<div className='container justify-content-center pt-5'>
 				<form
 					onSubmit={registeryFormik.handleSubmit}
