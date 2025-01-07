@@ -1,4 +1,5 @@
 import {
+	faArrowDown,
 	faArrowLeft,
 	faArrowRight,
 	faBriefcase,
@@ -6,6 +7,7 @@ import {
 	faEdit,
 	faEye,
 	faEyeSlash,
+	faFaceAngry,
 	faHeart,
 	faHome,
 	faInfoCircle,
@@ -36,3 +38,4 @@ export const about = <FontAwesomeIcon icon={faInfoCircle} />;
 export const logOut = <FontAwesomeIcon icon={faRightFromBracket} />;
 export const eye = <FontAwesomeIcon icon={faEye} />;
 export const closedEye = <FontAwesomeIcon icon={faEyeSlash} />;
+export const downArrow = <FontAwesomeIcon icon={faArrowDown} />;

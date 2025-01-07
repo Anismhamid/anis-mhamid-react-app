@@ -135,7 +135,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								<h5 className='mb-0 card-subtitle'>{user.email || ""}</h5>
 							</div>
 							{user && (
-								<p className=' mx-5 success rounded-5 px-1 fw-bold'>Active</p>
+								<p className=' mx-5 success rounded-5 px-1'>Active</p>
 							)}
 						</div>
 						<div className='row  py-2 lead border rounded-3'>

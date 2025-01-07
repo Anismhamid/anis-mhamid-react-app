@@ -1,5 +1,9 @@
 @import "../node_modules/bootstrap//dist/css/bootstrap.min.css";
-
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@100..900&display=swap');
+:root {
+	--font-family-system: Heebo,
+		serif;
+}
 .modal {
 	transition: opacity 0.3s ease-in-out;
 	-webkit-transition: opacity 0.3s ease-in-out;
@@ -12,11 +16,12 @@
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
+	font-family: var(--font-family-system);
 }
 
 main {
-	min-height: 90vh;
-	padding-bottom: 80px;
+	min-height: 99%;
+	padding-bottom: 106px;
 }
 
 .card2 {
@@ -30,7 +35,8 @@ main {
 
 .login {
 	max-width: 20rem;
-	margin: 150px auto
+	margin: auto;
+	padding: 100px;
 }
 
 a {
@@ -109,6 +115,48 @@ img {
 	-moz-transition: all 0.3s ease-in-out;
 	-ms-transition: all 0.3s ease-in-out;
 	-o-transition: all 0.3s ease-in-out;
+}
+
+.insta {
+	font-size: 5rem;
+}
+
+.face {
+	width: 1rem;
+	margin-left: 10px;
+}
+
+input.form-control {
+	border-radius: 3px;
+	background: #fafafa;
+	font-size: small;
+
+	&:focus {
+		border: none;
+		border: 1px solid #000;
+	}
+}
+
+.forgetLink {
+	font-size: 14px;
+
+	&:hover {
+		color: black;
+	}
+}
+
+
+.reg {
+	width: 22rem;
+	margin: 0 auto;
+	margin-top: 5.6rem;
+	padding: 10px;
+}
+
+.reg2 {
+	width: 22rem;
+	margin: 0 auto;
+	margin-top: 20px;
 }
 
 img:hover {

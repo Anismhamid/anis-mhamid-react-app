@@ -1,28 +1,36 @@
-import {FunctionComponent, useContext} from "react";
+import {FunctionComponent, useContext, useState} from "react";
 import {FormikValues, useFormik} from "formik";
 import {User} from "../interfaces/User";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {pathes} from "../routes/Routes";
 import {registerNewUser} from "../services/userServices";
 import {errorMSG, successMSG} from "../atoms/taosyify/Toastify";
 import CardsInput from "../atoms/modals/CardsInput";
 import {SiteTheme} from "../theme/theme";
-import { registeryFormikShcema, registeryFormikValues } from "../fomikFormsValidation/registeryFormik";
+import {
+	registeryFormikShcema,
+	registeryFormikValues,
+} from "../fomikFormsValidation/registeryFormik";
+import Button from "../atoms/buttons/Button";
 
 interface RegisterProps {}
 
 const Register: FunctionComponent<RegisterProps> = () => {
 	const navigate = useNavigate();
 	const theme = useContext(SiteTheme);
+	const [loading, setLoading] = useState(false);
 
 	const registeryFormik: FormikValues = useFormik<User>({
 		initialValues: registeryFormikValues,
 		validationSchema: registeryFormikShcema,
+
 		onSubmit: (values: User) => {
+			setLoading(true);
 			try {
 				registerNewUser(values)
 					.then(() => {
 						navigate(pathes.login);
+						setLoading(false);
 						successMSG(`Please Login to get in Bcards`);
 					})
 					.catch((err) => {
@@ -36,11 +44,33 @@ const Register: FunctionComponent<RegisterProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
+			<Button text={"Back"} path={()=>navigate(-1)}/>
 			<div className='container justify-content-center pt-5'>
 				<form
 					onSubmit={registeryFormik.handleSubmit}
 					className='shadow-lg p-4 rounded-4 py-5 border'
 				>
+					<p className='text-center fs-6 my-3 fw-bold'>Download the app</p>
+					<hr />
+					<div className='d-flex align-items-center py-1 justify-content-around bg-black'>
+						<Link to='https://play.google.com/store'>
+							<img
+								className='rounded-5'
+								style={{maxWidth: "200px"}}
+								src='/images/googlrPlay.png'
+								alt=''
+							/>
+						</Link>
+						<Link to='https://apps.microsoft.com/home?hl=en-US&gl=US'>
+							<img
+								className='rounded-5'
+								style={{maxWidth: "200px"}}
+								src='/images/microsoft.png'
+								alt=''
+							/>
+						</Link>
+					</div>
+					<hr />
 					<h1 className='text-center py-5'>REGISTER</h1>
 					{/* First and Middle Name */}
 					<div className='row mb-3'>

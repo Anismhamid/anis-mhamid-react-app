@@ -1,5 +1,5 @@
 import {FunctionComponent, useState, useEffect, useContext} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {getUserById, loginIn} from "../services/userServices";
 import {pathes} from "../routes/Routes";
 import * as yup from "yup";
@@ -97,98 +97,151 @@ const Login: FunctionComponent<LoginProps> = () => {
 	if (loading) return <Loading />;
 
 	return (
-		<main style={{backgroundColor: theme.background, color: theme.color}}>
-			<div className='row justify-content-center'>
-				<div className='col-md-6'>
-					<form
-						onSubmit={formik.handleSubmit}
-						className='login shadow-lg p-4 rounded-4 border'
+		<main
+			className='pt-5'
+			style={{backgroundColor: theme.background, color: theme.color}}
+		>
+			{formik.error && <p className=' text-danger'>{formik.error}</p>}
+
+			<form
+				className='login shadow-lg p-4 rounded-4 border'
+				onSubmit={formik.handleSubmit}
+			>
+				<h2 className='text-center text-primary mb-4'>Login</h2>
+				<div className='form-floating mb-3'>
+					<input
+						type='email'
+						autoComplete='off'
+						className={`form-control ${
+							formik.touched.email && formik.errors.email
+								? "is-invalid"
+								: ""
+						}`}
+						id='email'
+						name='email'
+						placeholder='name@example.com'
+						value={formik.values.email}
+						onBlur={formik.handleBlur}
+						onChange={formik.handleChange}
+						disabled={loading}
+						aria-label='Email address'
+					/>
+					{formik.touched.email && formik.errors.email && (
+						<div className='invalid-feedback'>{formik.errors.email}</div>
+					)}
+					<label htmlFor='email' className='form-label fw-bold text-secondary'>
+						Email address
+					</label>
+				</div>
+
+				<div className='form-floating mb-3'>
+					<input
+						type={showPassword ? "text" : "password"}
+						autoComplete='off'
+						className={`form-control ${
+							formik.touched.password && formik.errors.password
+								? "is-invalid"
+								: ""
+						}`}
+						id='password'
+						name='password'
+						placeholder='Password'
+						value={formik.values.password}
+						onBlur={formik.handleBlur}
+						onChange={formik.handleChange}
+						disabled={loading}
+						aria-label='Password'
+					/>
+					<button
+						type='button'
+						onClick={() => setShowPassword((prev) => !prev)}
+						style={{
+							position: "absolute",
+							right: "10px",
+							top: "50%",
+							transform: "translateY(-50%)",
+						}}
+						className='btn btn-link'
 					>
-						<h2 className='text-center text-primary mb-4'>Login</h2>
-
-						<div className='form-floating mb-3'>
-							<input
-								type='email'
-								autoComplete='off'
-								className={`form-control ${
-									formik.touched.email && formik.errors.email
-										? "is-invalid"
-										: ""
-								}`}
-								id='email'
-								name='email'
-								placeholder='name@example.com'
-								value={formik.values.email}
-								onBlur={formik.handleBlur}
-								onChange={formik.handleChange}
-								disabled={loading}
-								aria-label='Email address'
-							/>
-							{formik.touched.email && formik.errors.email && (
-								<div className='invalid-feedback'>
-									{formik.errors.email}
-								</div>
-							)}
-							<label
-								htmlFor='email'
-								className='form-label fw-bold text-secondary'
-							>
-								Email address
-							</label>
-						</div>
-
-						<div className='form-floating mb-3'>
-							<input
-								type={showPassword ? "text" : "password"}
-								autoComplete='off'
-								className={`form-control ${
-									formik.touched.password && formik.errors.password
-										? "is-invalid"
-										: ""
-								}`}
-								id='password'
-								name='password'
-								placeholder='Password'
-								value={formik.values.password}
-								onBlur={formik.handleBlur}
-								onChange={formik.handleChange}
-								disabled={loading}
-								aria-label='Password'
-							/>
-							<button
-								type='button'
-								onClick={() => setShowPassword((prev) => !prev)}
-								style={{
-									position: "absolute",
-									right: "10px",
-									top: "50%",
-									transform: "translateY(-50%)",
-								}}
-								className='btn btn-link'
-							>
-								{showPassword ? eye : closedEye}{" "}
-							</button>
-							{formik.touched.password && formik.errors.password && (
-								<div className='invalid-feedback'>
-									{formik.errors.password}
-								</div>
-							)}
-							<label
-								htmlFor='password'
-								className='form-label fw-bold text-secondary'
-							>
-								Password
-							</label>
-						</div>
-
-						<button
-							type='submit'
-							className='btn btn-primary w-100 py-2 mt-4 fw-bold shadow-sm'
-							disabled={!formik.dirty || !formik.isValid || loading}
-						>
-							{loading ? "Logging in..." : "Login"}
-						</button>
-					</form>
+						{showPassword ? eye : closedEye}{" "}
+					</button>
+					{formik.touched.password && formik.errors.password && (
+						<div className='invalid-feedback'>{formik.errors.password}</div>
+					)}
+					<label
+						htmlFor='password'
+						className='form-label fw-bold text-secondary'
+					>
+						Password
+					</label>
+				</div>
+				<button
+					type='submit'
+					className='btn btn-primary w-100 py-2 mt-4 fw-bold shadow-sm'
+					disabled={!formik.dirty || !formik.isValid || loading}
+				>
+					{loading ? "Logging in..." : "Login"}
+				</button>
+				<hr />
+				<div className='container'>
+					<Link className='my-3' to={"/facebook-account"}>
+						<img
+							src='/images/facebook.png'
+							className='img-fluid face m-2'
+							alt='Facebook login'
+						/>
+						Log in with Facebook
+					</Link>
+					<hr />
+					<Link className='fw-bold d-block my-3' to={"/google-account"}>
+						<img
+							aria-disabled='true'
+							src='/images/google.png'
+							className='img-fluid face m-2'
+							alt='Google login'
+						/>
+						log in with Google
+					</Link>
+				</div>
+			</form>
+			<div className='row border reg'>
+				<div className='col'>
+					<p style={{fontSize: "16px"}} className=' fw-bold text-center '>
+						Don't have an account?
+						<Link to='/register'>
+							<span className=' text-primary mx-2'>Register Now</span>
+						</Link>
+					</p>
+				</div>
+			</div>
+			<p className='text-center fs-6 my-3 fw-bold'>Download the app</p>
+			<hr />
+			<div className='row reg2 m-auto'>
+				<div className='col-6'>
+					<Link
+						rel='noopener noreferrer'
+						target='_Blank'
+						to='https://play.google.com/store'
+					>
+						<img
+							className='w-100 m-auto h-100'
+							src='/images/googlrPlay.png'
+							alt=''
+						/>
+					</Link>
+				</div>
+				<div className='col-6 '>
+					<Link
+						rel='noopener noreferrer'
+						target='_Blank'
+						to='https://apps.microsoft.com/home?hl=en-US&gl=US'
+					>
+						<img
+							className='w-100 m-auto h-100'
+							src='/images/microsoft.png'
+							alt=''
+						/>
+					</Link>
 				</div>
 			</div>
 		</main>
