@@ -120,9 +120,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 			<hr className=' w-25' />
 			{/* Pagination */}
 			<div className='container-sm'>
-				<Pagination
-					className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'
-				>
+				<Pagination className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'>
 					{[...Array(Math.ceil(usersToDisplay.length / usersPerPage))].map(
 						(_, i) => (
 							<Pagination.Item
@@ -292,7 +290,8 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 				</div>
 			)}
 			<DeleteModal
-				toDelete='User account'
+				method='Delete'
+				toDelete='Are you sure you want to Delete This User? this User will be permanently removed. This action cannot be undone.'
 				render={() => refresh()}
 				show={showDeleteModal}
 				onHide={() => onHide()}
