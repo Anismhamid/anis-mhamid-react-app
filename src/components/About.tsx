@@ -71,7 +71,7 @@ const About: FunctionComponent<AboutProps> = () => {
 					<Link to='mailto:support@bcards.com' className='text-primary'>
 						support@bcards.com
 					</Link>
-					<p>&copy; {new Date().getFullYear()} bCards. All Rights Reserved.</p>
+					<p>&copy; 2024 bCards. All Rights Reserved.</p>
 				</footer>
 			</div>
 		</main>

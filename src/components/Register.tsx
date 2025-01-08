@@ -1,4 +1,4 @@
-import {FunctionComponent, useContext, useState} from "react";
+import {FunctionComponent, useContext, useEffect, useState} from "react";
 import {FormikValues, useFormik} from "formik";
 import {User} from "../interfaces/User";
 import {Link, useNavigate} from "react-router-dom";
@@ -13,6 +13,8 @@ import {
 } from "../fomikFormsValidation/registeryFormik";
 import Button from "../atoms/buttons/Button";
 import Loading from "./Loading";
+import {useUserContext} from "../context/UserContext";
+import useToken from "../hooks/useToken";
 
 interface RegisterProps {}
 
@@ -20,6 +22,13 @@ const Register: FunctionComponent<RegisterProps> = () => {
 	const navigate = useNavigate();
 	const theme = useContext(SiteTheme);
 	const [loading, setLoading] = useState(false);
+	const {setIsLogedIn} = useUserContext();
+	const {decodedToken} = useToken();
+
+	useEffect(() => {
+		const token = localStorage.getItem("bCards_token");
+		setIsLogedIn(!!token);
+	}, [decodedToken]);
 
 	const registeryFormik: FormikValues = useFormik<User>({
 		initialValues: registeryFormikValues,
@@ -43,7 +52,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 		},
 	});
 
-if (loading)return <Loading/>
+	if (loading) return <Loading />;
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
@@ -81,14 +90,16 @@ if (loading)return <Loading/>
 						</Link>
 					</div>
 				</div>
-				<hr className=' w-75 mt-2 mb-3 m-auto automatic-border' />
+				<div className='one'>
+					<hr className='w-75 m-auto automatic-border m-5' />
+				</div>
+				<h1 className='text-center py-1 '>REGISTER</h1>
 				<form
 					onSubmit={registeryFormik.handleSubmit}
-					className='shadow-lg p-4 rounded-4 py-5 border'
+					className='shadow p-4 rounded-4 py-5 border'
 				>
-					<h1 className='text-center py-5'>REGISTER</h1>
 					{/* First and Middle Name */}
-					<div className='row mb-3'>
+					<div className='row'>
 						<div className='col-md-6 col-sm-12'>
 							<CardsInput
 								name={"name.first"}
@@ -116,7 +127,7 @@ if (loading)return <Loading/>
 						</div>
 					</div>
 					{/* Last Name and Phone */}
-					<div className='row mb-3'>
+					<div className='row'>
 						<div className='col-md-6 col-sm-12'>
 							<CardsInput
 								name={"name.last"}
@@ -144,7 +155,7 @@ if (loading)return <Loading/>
 						</div>
 					</div>
 					{/* Email and Password */}
-					<div className='row mb-3'>
+					<div className='row'>
 						<div className='col-md-6 col-sm-12'>
 							<CardsInput
 								name={"email"}
@@ -173,7 +184,7 @@ if (loading)return <Loading/>
 					</div>
 
 					{/* Image URL and Alt Text */}
-					<div className='row mb-3'>
+					<div className='row'>
 						<div className='col-md-6 col-sm-12'>
 							<div className='form-floating mb-3'>
 								<input
@@ -220,7 +231,7 @@ if (loading)return <Loading/>
 					</div>
 
 					{/* Address fields */}
-					<div className='row mb-3'>
+					<div className='row'>
 						<div className='col-md-6 col-sm-12'>
 							<CardsInput
 								name={"address.state"}
@@ -247,7 +258,7 @@ if (loading)return <Loading/>
 							/>
 						</div>
 					</div>
-					<div className='row mt-3'>
+					<div className='row '>
 						<div className='col-md-6 col-sm-12 mt-2'>
 							<CardsInput
 								name={"address.city"}
@@ -274,7 +285,7 @@ if (loading)return <Loading/>
 						</div>
 					</div>
 					{/* House number and Zip */}
-					<div className='row mt-3'>
+					<div className='row '>
 						<div className='col-md-6 col-sm-12 mt-2'>
 							<CardsInput
 								name={"address.houseNumber"}

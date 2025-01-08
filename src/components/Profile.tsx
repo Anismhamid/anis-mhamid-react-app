@@ -98,7 +98,9 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	}
 
 	return (
-		<main style={{backgroundColor: theme.background, color: theme.color}}>
+		<main
+			style={{backgroundColor: theme.background, color: theme.color}}
+		>
 			<Button text='Home' path={() => navigate(pathes.cards)} />
 			<h6 className='lead display-5 my-3 fw-bold'>Profile</h6>
 			<hr className=' w-25' />
@@ -216,13 +218,14 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								<span className='text-warning'>Edit {edit}</span>
 							</button>
 							<button onClick={() => onShow()} className='col-6'>
-								<span className='text-danger'>Delete {trash}</span>
+								<span className='text-danger'>Deactive {trash}</span>
 							</button>
 						</div>
 					</div>
 				</div>
 				<DeleteModal
-					toDelete='User account'
+					method='Deactive'
+					toDelete='Are you sure you want to deactivate your account? All of your data will be permanently removed. This action cannot be undone.'
 					show={showDleteModal}
 					onHide={() => onHide()}
 					onDelete={() => handleDelete(user._id)}

@@ -102,10 +102,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 
 	return (
 		<>
-			<main
-				className='pt-5'
-				style={{backgroundColor: theme.background, color: theme.color}}
-			>
+			<main style={{backgroundColor: theme.background, color: theme.color}}>
 				{formik.error && <p className=' text-danger'>{formik.error}</p>}
 
 				<form
@@ -242,7 +239,9 @@ const Login: FunctionComponent<LoginProps> = () => {
 						</p>
 					</div>
 				</div>
-				<hr className=' w-75 m-auto automatic-border mt-2' />
+				<div className='one'>
+					<hr className='w-75 m-auto automatic-border m-5' />
+				</div>
 				<p className='text-center mt-3 display-6'>Download the app</p>
 				<div className='row reg2 m-auto'>
 					<div className='col-6'>
@@ -261,13 +260,14 @@ const Login: FunctionComponent<LoginProps> = () => {
 					</div>
 					<div className='col-6 '>
 						<Link
+							className='icons'
 							rel='noopener noreferrer'
 							target='_Blank'
 							to='https://www.apple.com/app-store/'
 							aria-label='Download from Apple Store'
 						>
 							<img
-								className='w-100 m-auto h-100'
+								className='image w-100 m-auto h-100'
 								src='/images/Apple.png'
 								alt='Apple Store'
 							/>

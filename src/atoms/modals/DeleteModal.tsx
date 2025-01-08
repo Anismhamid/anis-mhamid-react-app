@@ -10,6 +10,7 @@ interface DeleteModalProps {
 	render: Function;
 	toDelete: string;
 	navigateTo: string;
+	method: string;
 }
 
 const DeleteModal: FunctionComponent<DeleteModalProps> = ({
@@ -19,6 +20,7 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 	render,
 	toDelete,
 	navigateTo,
+	method,
 }) => {
 	const navigate = useNavigate();
 	return (
@@ -30,15 +32,13 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 				keyboard={false}
 				centered
 			>
-				<Modal.Header className='bg-danger' closeButton>
-					<Modal.Title className={"text-warning fs-1"}>
-						warning {errorCircle}
+				<Modal.Header closeButton>
+					<Modal.Title className={"text-danger fs-1"}>
+						{errorCircle} Delete
 					</Modal.Title>
 				</Modal.Header>
 				<Modal.Body>
-					<div className='h5 text-danger fw-bold'>
-						you sure want to delet this {toDelete} ?
-					</div>
+					<div className='h5 text-danger fw-bold'>{toDelete} ?</div>
 				</Modal.Body>
 				<Modal.Footer>
 					<Button
@@ -47,10 +47,10 @@ const DeleteModal: FunctionComponent<DeleteModalProps> = ({
 							onDelete();
 							render();
 							navigate(navigateTo || "");
-							onHide()
+							onHide();
 						}}
 					>
-						DELETE
+						{method}
 					</Button>
 					<Button variant='secondary' onClick={() => onHide()}>
 						Close

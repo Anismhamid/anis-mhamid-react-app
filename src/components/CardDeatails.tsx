@@ -43,11 +43,7 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 			<h6 className='lead display-5 mx-3 my-3 fw-bold'>Card Details</h6>
 			<hr className=' w-25' />
 			<div className='card-details-image'>
-				<img
-					className='img-fluid'
-					src={card.image.url}
-					alt={card.image.alt}
-				/>
+				<img className='img-fluid' src={card.image.url} alt={card.image.alt} />
 			</div>
 
 			<NextCardButton />
@@ -162,16 +158,19 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 				) : null}
 			</div>
 			<DeleteModal
-				toDelete="Card"
+				method='Delete Card'
+				toDelete='Are you sure you want to Delete This Card? this card will be permanently removed. This action cannot be undone.'
 				render={() => onHideDeleteCardModal()}
 				show={showDeleteModal}
 				onHide={() => onHideDeleteCardModal()}
 				onDelete={() => {
 					handleDeleteCard_Cards(
 						cardToDelete as string,
-						setCards((prev) => prev.filter((c) => c._id !== cardToDelete))
+						setCards((prev) => prev.filter((c) => c._id !== cardToDelete)),
 					);
-				} } navigateTo={"-1"}			/>
+				}}
+				navigateTo={"-1"}
+			/>
 		</main>
 	);
 };

@@ -243,8 +243,11 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						))}
 
 						<DeleteModal
+							method={
+								"Delete"
+							}
 							navigateTo={""}
-							toDelete='Card'
+							toDelete='CardAre you sure you want to Delete This Card? this card will be permanently removed. This action cannot be undone.'
 							render={() => onHideDeleteCardModal()}
 							show={showDeleteModal}
 							onHide={() => onHideDeleteCardModal()}
