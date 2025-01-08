@@ -351,7 +351,8 @@ const EditUser: FunctionComponent<EditUserProps> = () => {
 				</form>
 			</div>
 			<DeleteModal
-				toDelete='User account'
+				method='Delete'
+				toDelete='Are you sure you want to Delete This Account? this Account will be permanently removed. This action cannot be undone.'
 				render={() => onHideDeleteCardModal()}
 				show={showDeleteModal}
 				onHide={() => onHideDeleteCardModal()}
