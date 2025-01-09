@@ -1,7 +1,8 @@
 import axios from "axios";
 import {User, UserLogin} from "../interfaces/User";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
-const api: string = `${import.meta.env.VITE_API_URL}`;
+
+const api: string = import.meta.env.VITE_API_URL;
 
 const token = {
 	"x-auth-token":
@@ -45,7 +46,7 @@ export const getUserById = async (userId: string) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}/${userId}`,
+			url: `${api}/users/${userId}`,
 		});
 		return response.data;
 	} catch (error) {
@@ -74,7 +75,7 @@ export const deleteUserById = async (userId: string) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}/${userId}`,
+			url: `${api}/users/${userId}`,
 			method: "delete",
 		});
 		return response.data;
@@ -93,7 +94,7 @@ export const patchUserBusiness = async (
 		errorMSG("Token not found.");
 	}
 	try {
-		const response = await axios.patch(`${api}/${cardId}`, data, {
+		const response = await axios.patch(`${api}/users/${cardId}`, data, {
 			headers: token,
 		});
 		infoMSG(
@@ -113,7 +114,7 @@ export const putUserData = async (userId: string, data: User) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}/${userId}`,
+			url: `${api}/users/${userId}`,
 			method: "put",
 			data: data,
 		});
