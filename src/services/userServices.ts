@@ -1,7 +1,7 @@
 import axios from "axios";
 import {User, UserLogin} from "../interfaces/User";
 import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
-const api: string = `${import.meta.env.VITE_API_URL}/users`;
+const api: string = `${import.meta.env.VITE_API_URL}`;
 
 const token = {
 	"x-auth-token":
@@ -11,7 +11,7 @@ const token = {
 const getUsers = {
 	method: "get",
 	maxBodyLength: Infinity,
-	url: api,
+	url: `${api}/users`,
 	headers: token,
 };
 
@@ -43,7 +43,10 @@ export const getAllUsers = async (page: number, limit: number) => {
 // Get specific user by ID
 export const getUserById = async (userId: string) => {
 	try {
-		const response = await axios.request({...getUsers, url: `${api}/${userId}`});
+		const response = await axios.request({
+			...getUsers,
+			url: `${api}/${userId}`,
+		});
 		return response.data;
 	} catch (error) {
 		errorMSG("Unexpected error please try again");
