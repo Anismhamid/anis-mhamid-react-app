@@ -18,7 +18,7 @@ const getUsers = {
 // Login function
 export async function loginIn(login: UserLogin): Promise<any> {
 	try {
-		const response = await axios.post(`${api}/login`, login);
+		const response = await axios.post(`${api}/users/login`, login);
 		return response;
 	} catch (error) {
 		errorMSG("Login failed, please try again.");
