@@ -19,7 +19,7 @@ const getUsers = {
 // Login function
 export async function loginIn(login: UserLogin): Promise<any> {
 	try {
-		const response = await axios.post(`${api}/users/login`, login);
+		const response = await axios.post(`${getUsers.url}/login`, login);
 		return response;
 	} catch (error) {
 		errorMSG("Login failed, please try again.");
@@ -32,7 +32,7 @@ export const getAllUsers = async (page: number, limit: number) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}?page=${page}&limit=${limit}`,
+			url: `${getUsers.url}?page=${page}&limit=${limit}`,
 		});
 		return response.data;
 	} catch (error) {
@@ -46,7 +46,7 @@ export const getUserById = async (userId: string) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}/users/${userId}`,
+			url: `${getUsers.url}/${userId}`,
 		});
 		return response.data;
 	} catch (error) {
@@ -75,7 +75,7 @@ export const deleteUserById = async (userId: string) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}/users/${userId}`,
+			url: `${getUsers.url}/${userId}`,
 			method: "delete",
 		});
 		return response.data;
@@ -94,7 +94,7 @@ export const patchUserBusiness = async (
 		errorMSG("Token not found.");
 	}
 	try {
-		const response = await axios.patch(`${api}/users/${cardId}`, data, {
+		const response = await axios.patch(`${getUsers.url}/${cardId}`, data, {
 			headers: token,
 		});
 		infoMSG(
@@ -114,7 +114,7 @@ export const putUserData = async (userId: string, data: User) => {
 	try {
 		const response = await axios.request({
 			...getUsers,
-			url: `${api}/users/${userId}`,
+			url: `${getUsers.url}/${userId}`,
 			method: "put",
 			data: data,
 		});

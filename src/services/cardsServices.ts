@@ -25,7 +25,7 @@ export const getLikedCardById = async (userId: string) => {
 	try {
 		const response = await axios.request({
 			...getCards,
-			url: `${api}/cards?likes=${userId}`,
+			url: `${getCards.url}?likes=${userId}`,
 		});
 		return response.data;
 	} catch (error) {
@@ -46,7 +46,7 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 	try {
 		const updatedCard: Cards[] = await axios.request({
 			method: "patch",
-			url: `${api}/cards/${payload.cardId}?likes=${userId}`,
+			url: `${getCards.url}/${payload.cardId}?likes=${userId}`,
 			headers: {
 				"x-auth-token": token,
 			},
@@ -66,7 +66,7 @@ export const getMyCards = async (userId: string) => {
 		const response = await axios.request({
 			...getCards,
 			headers: {"x-auth-token": token},
-			url: `${api}/cards/my-cards?user_id=${userId}`,
+			url: `${getCards.url}/my-cards?user_id=${userId}`,
 		});
 
 		return response.data;
@@ -102,7 +102,7 @@ export const putCard = async (cardId: string, newCard: Cards) => {
 	}
 
 	try {
-		const response = await axios.put(`${api}/cards/${cardId}`, newCard, {
+		const response = await axios.put(`${getCards.url}/${cardId}`, newCard, {
 			headers: {"x-auth-token": token},
 		});
 
@@ -117,7 +117,7 @@ export const getCardById = async (cardId: string) => {
 	let token: string | null = localStorage.getItem("bCards_token");
 	if (!token) return;
 	try {
-		const response = await axios.get(`${api}/cards/${cardId}`, {
+		const response = await axios.get(`${getCards.url}/${cardId}`, {
 			headers: {},
 		});
 		return response.data;
@@ -133,7 +133,7 @@ export const deleteCardById = async (cardId: string) => {
 		errorMSG("Authentication required. Please log in.");
 	}
 	try {
-		const response = await axios.delete(`${api}/cards/${cardId}`, {
+		const response = await axios.delete(`${getCards.url}/${cardId}`, {
 			headers: {
 				"x-auth-token": token,
 				"Content-Type": "application/json",
