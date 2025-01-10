@@ -101,6 +101,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 		<main
 			style={{backgroundColor: theme.background, color: theme.color}}
 		>
+			<hr />
 			<Button text='Home' path={() => navigate(pathes.cards)} />
 			<h6 className='lead display-5 my-3 fw-bold'>Profile</h6>
 			<hr className=' w-25' />
@@ -135,10 +136,10 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								</h2>
 								<hr />
 								<h5 className='mb-0 card-subtitle'>{user.email || ""}</h5>
-							</div>
 							{user && (
-								<p className=' mx-5 success rounded-5 px-1'>Active</p>
+								<span className='mx-5 success rounded-5 px-1'>Active</span>
 							)}
+							</div>
 						</div>
 						<div className='row  py-2 lead border rounded-3'>
 							<div className='col-5'>

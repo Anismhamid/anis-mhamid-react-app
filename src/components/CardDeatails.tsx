@@ -43,7 +43,14 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 			<h6 className='lead display-5 mx-3 my-3 fw-bold'>Card Details</h6>
 			<hr className=' w-25' />
 			<div className='card-details-image'>
-				<img className='img-fluid' src={card.image.url} alt={card.image.alt} />
+				<img
+					style={{
+						height: "300px",
+					}}
+					className='img-fluid'
+					src={card.image.url}
+					alt={card.image.alt}
+				/>
 			</div>
 
 			<NextCardButton />

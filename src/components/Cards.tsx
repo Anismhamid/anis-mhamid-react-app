@@ -24,6 +24,7 @@ import {
 } from "../handleFunctions/cards";
 import {Pagination} from "react-bootstrap";
 import DeleteAndEditButtons from "../atoms/buttons/DeleteAndEditButtons";
+import ImageModal from "../atoms/modals/ImageModal";
 
 interface CardsHomeProps {}
 
@@ -38,6 +39,16 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const {isAdmin, setIsLogedIn, isBusiness} = useUserContext();
 	const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
 	const [cardToDelete, setCardToDelete] = useState<SetStateAction<string>>("");
+	const [onShowImageModal, setOnShowImageModal] = useState<boolean>(false);
+	const [cardImageUrl, setCardImageUrl] = useState<string>("");
+	const [cardImageAlt, setCardImageAlt] = useState<string>("");
+
+	const OnShowImageCardModal = useCallback(() => setOnShowImageModal(true), []);
+	const OnHideImageCardModal = () => {
+		setOnShowImageModal(false);
+		setCardImageUrl("");
+		setCardImageAlt("");
+	};
 	const onShowDeleteCardModal = useCallback(() => setShowDeleteModal(true), []);
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
@@ -140,24 +151,31 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 										color: theme.color,
 									}}
 								>
-									<Link
-										to={`${pathes.cardDetails.replace(
-											":cardId",
-											card._id as string,
-										)}`}
-									>
-										<img
-											className='card-img-top'
-											src={card.image.url}
-											alt={card.image.alt}
-											style={{
-												height: "200px",
-											}}
-										/>
-									</Link>
+									<img
+										onClick={() => {
+											setCardImageUrl(card.image.url);
+											setCardImageAlt(card.image.alt);
+											OnShowImageCardModal();
+										}}
+										className='card-img-top img'
+										src={card.image.url}
+										alt={card.image.alt}
+										style={{
+											height: "300px",
+										}}
+									/>
+
 									<div className='card-body'>
 										<h5 className='card-title text-center'>
-											{card.title}
+											<Link
+												className=' text-decoration-none'
+												to={`${pathes.cardDetails.replace(
+													":cardId",
+													card._id as string,
+												)}`}
+											>
+												{card.title}
+											</Link>
 										</h5>
 										<h6 className='card-subtitle text-center mb-2 text-secondary'>
 											{card.subtitle}
@@ -239,13 +257,18 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 										)}
 									</div>
 								</div>
+								<ImageModal
+									show={onShowImageModal}
+									onHide={() => {
+										OnHideImageCardModal();
+									}}
+									image={cardImageUrl}
+									imageName={cardImageAlt}
+								/>
 							</div>
 						))}
-
 						<DeleteModal
-							method={
-								"Delete"
-							}
+							method={"Delete"}
 							navigateTo={""}
 							toDelete='CardAre you sure you want to Delete This Card? this card will be permanently removed. This action cannot be undone.'
 							render={() => onHideDeleteCardModal()}
