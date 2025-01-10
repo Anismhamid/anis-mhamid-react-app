@@ -25,14 +25,14 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		if (decodedToken) {
+		if (!decodedToken._id) {
+			setIsLogedIn(false);
+			setIsAdmin(false);
+		} else if (decodedToken) {
 			setAuth(decodedToken);
 			setIsLogedIn(true);
 			setIsAdmin(decodedToken.isAdmin);
 			setIsBusiness(decodedToken.isBusiness);
-		} else {
-			setIsLogedIn(false);
-			setIsAdmin(false);
 		}
 	}, [decodedToken, setAuth, setIsLogedIn, setIsAdmin, setIsBusiness]);
 
@@ -50,11 +50,10 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 		<header className='w-100 sticky-top'>
 			<nav
 				style={{backgroundColor: theme.background, color: theme.color}}
-				className='navbar navbar-expand-lg shadow-lg'
+				className='navbar navbar-expand-lg shadow'
 			>
 				<div className='container-fluid'>
 					{/* Dark Mode Toggle Button */}
-					
 					<button
 						style={{backgroundColor: theme.background, color: theme.color}}
 						onClick={() => darkSetter()}
@@ -172,6 +171,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									onClick={handleLogout}
 									className='fw-bold'
 								>
+									<hr />
 									<span className='logout text-danger'>
 										LOG OUT <span>{logOut}</span>
 									</span>
@@ -184,6 +184,7 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									}}
 									className='fw-bold'
 								>
+									<hr />
 									<Link
 										style={{
 											color: theme.color,

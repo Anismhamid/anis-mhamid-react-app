@@ -14,7 +14,7 @@
 	-o-transition: opacity 0.3s ease-in-out;
 }
 
-main{
+main {
 	min-height: 100vh !important;
 }
 
@@ -28,6 +28,7 @@ main{
 main {
 	min-height: 99%;
 	padding-bottom: 106px;
+	padding-top: 50px;
 }
 
 .card2 {
@@ -42,16 +43,15 @@ main {
 .login {
 	max-width: 20rem;
 	margin: auto;
-	padding: 100px;
 }
 
 a {
-	color: #646cff;
+	color: #7DB2BB;
 	text-decoration: inherit;
 }
 
 a:hover {
-	color: #535bf2;
+	color: #7DB2BB;
 }
 
 
@@ -95,15 +95,19 @@ button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
 
+.logo {
+	max-width: 200px;
+}
+
 .logout:hover {
-	padding: 6px;
+	padding-left: 6px;
 	outline: 4px auto -webkit-focus-ring-color;
 }
 
 
 .nav-link:hover,
 .log-rig:hover {
-	color: #1c3791 !important;
+	color: #7db2bb !important;
 	font-weight: bold !important;
 }
 
@@ -153,15 +157,14 @@ input.form-control {
 
 
 .reg {
-
-	width: 22rem;
+	max-width: 19rem;
 	margin: 0 auto;
 	margin-top: 5.6rem;
 	padding: 10px;
 }
 
 .reg2 {
-	width: 22rem;
+	max-width: 18rem;
 	margin: 0 auto;
 	margin-top: 20px;
 }
@@ -207,8 +210,9 @@ img:hover {
 
 .card-details-image {
 	overflow: hidden;
-	object-fit: cover;
-	max-width: 26rem;
+	max-width: 28rem;
+	min-height: 280px;
+	max-height: 400px;
 	border-radius: 25%;
 	-webkit-border-radius: 25%;
 	-moz-border-radius: 25%;
@@ -217,6 +221,7 @@ img:hover {
 	box-shadow: 0px 0px 2px 0px rgb(57, 142, 163), 0px 6px 30px 1px rgb(0, 0, 0);
 	margin: auto;
 }
+
 
 .next-back-home:hover {
 	color: #184ab8;
@@ -235,7 +240,7 @@ img:hover {
 }
 
 .one {
-	width: 450px;
+	max-width: 250px;
 	height: 50px;
 	background: #00000000;
 	margin: auto;
