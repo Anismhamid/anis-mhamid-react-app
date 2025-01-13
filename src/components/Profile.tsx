@@ -98,22 +98,19 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 	}
 
 	return (
-		<main
-			style={{backgroundColor: theme.background, color: theme.color}}
-		>
+		<main style={{backgroundColor: theme.background, color: theme.color}}>
+			<h6 className='lead display-5 pt-3 fw-bold'>Profile</h6>
 			<hr />
 			<Button text='Home' path={() => navigate(pathes.cards)} />
-			<h6 className='lead display-5 my-3 fw-bold'>Profile</h6>
-			<hr className=' w-25' />
-			<div className='container m-auto'>
+			{user && <span className='m-5 success rounded-5 px-2'>Active</span>}
+			<div className='container m-auto mt-5'>
 				<div
 					style={{
 						backgroundColor: theme.background,
 						color: theme.color,
-						maxWidth: "40rem",
 						margin: "auto",
 					}}
-					className='card shadow-lg rounded-4 p-1'
+					className='shadow-lg rounded-4 p-1 border'
 					data-bs-theme='dark'
 				>
 					<div className='card-body'>
@@ -124,46 +121,45 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										src={user.image.url}
 										alt='Profile image'
 										className=' shadow rounded rounded-5 border p-1 border-dark-subtle shadow'
-										width='150'
-										height='150'
+										width='200'
+										height='160'
 									/>
 								</Link>
 							</div>
 							<div className=''>
-								<h2 className='card-title mb-2  '>
+								<h2 className='card-title mb-2'>
 									<strong>{user && user.name.first} </strong>
 									{user && user.name.last}
 								</h2>
 								<hr />
 								<h5 className='mb-0 card-subtitle'>{user.email || ""}</h5>
-							{user && (
-								<span className='mx-5 success rounded-5 px-1'>Active</span>
-							)}
 							</div>
 						</div>
-						<div className='row  py-2 lead border rounded-3'>
+						<div className='row bg-light text-dark py-2 lead shadow rounded-top-3'>
 							<div className='col-5'>
-								<h5 className=' '>Phone</h5>
+								<h5 >
+									Phone
+								</h5>
 							</div>
 							<div className='col-5'>{user.phone}</div>
 						</div>
-						<div className='row py-2'>
+						<div className=' row filter py-4'>
 							<div className='col-5'>
-								<h5>User Role</h5>
+								<h5 className='my-5'>User Role</h5>
 							</div>
 							<div className='col-5'>
 								<p
 									className={
 										user.isAdmin
-											? "text-success fw-bold"
-											: "text-info fw-bold"
+											? "text-success fw-bold fs-5"
+											: "text-info fw-bold fs-5"
 									}
 								>
 									{user.isAdmin ? "Administrator" : "Client"}
 								</p>
 							</div>
 						</div>
-						<div className='row border rounded-1'>
+						<div className='row rounded-bottom-3  bg-light py-2 lead shadow'>
 							<div className='col-5'>
 								<h5>Business account</h5>
 							</div>
@@ -171,8 +167,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 								<p
 									className={
 										user.isBusiness === true
-											? "text-success fw-bold"
-											: "text-danger fw-bold"
+											? "text-success"
+											: "text-danger"
 									}
 								>
 									{user.isBusiness === true ? "Yes" : "No"}
@@ -201,7 +197,7 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 										bodyText={"You need to login again"}
 									/>
 									<label
-										className='form-check-label fw-bold'
+										className='form-check-label fw-bold fs-6'
 										htmlFor='flexSwitchCheckChecked'
 									>
 										{user.isBusiness

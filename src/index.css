@@ -22,10 +22,13 @@
 }
 
 main {
-	min-height:90%;
 	padding-bottom: 106px;
-	padding-top: 50px;
-	min-height: 100vh !important;
+	background: url('../public/bg2.png');
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	min-height: 90vh;
 }
 
 .card2 {
@@ -87,8 +90,9 @@ button:focus-visible {
 }
 
 .logout:hover {
-	padding-left: 6px;
-	outline: 4px auto -webkit-focus-ring-color;
+	padding: 6px;
+	outline: 1px auto red;
+
 }
 
 
@@ -197,9 +201,8 @@ input.form-control {
 
 .card-details-image {
 	overflow: hidden;
-	max-width: 28rem;
-	min-height: 280px;
-	max-height: 400px;
+	max-width: fit-content;
+	max-height: fit-content;
 	border-radius: 25%;
 	-webkit-border-radius: 25%;
 	-moz-border-radius: 25%;
@@ -289,4 +292,14 @@ input.form-control {
 		-o-transform: translate(-20%);
 
 	}
+}
+
+.filter {
+	position: relative;
+	overflow: hidden;
+	border: 1px solid #3f3f3f36;
+	background: url('../public/bg.png'), rgba(255, 255, 255, 0.116);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center;
 }

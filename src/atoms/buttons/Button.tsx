@@ -19,7 +19,7 @@ const Button: FunctionComponent<ButtonProps> = ({text,path}) => {
 				style={{backgroundColor: theme.background, color: theme.color}}
 				className='w-100'
 			>
-				<span className='fs-4 next-back-home fw-bold'>{text}</span>
+				<span className='fs-5 next-back-home fw-bold'>{text}</span>
 			</button>
 		</div>
 	);

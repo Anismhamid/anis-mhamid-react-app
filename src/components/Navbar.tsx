@@ -169,9 +169,8 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									}}
 									to={pathes.cards}
 									onClick={handleLogout}
-									className='fw-bold'
+									className='fw-bold text-decoration-none'
 								>
-									<hr />
 									<span className='logout text-danger'>
 										LOG OUT <span>{logOut}</span>
 									</span>
@@ -184,7 +183,6 @@ const Navbar: FunctionComponent<NavbarProps> = ({darkSetter}) => {
 									}}
 									className='fw-bold'
 								>
-									<hr />
 									<Link
 										style={{
 											color: theme.color,

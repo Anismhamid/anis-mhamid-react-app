@@ -39,9 +39,19 @@ const CardDetails: FunctionComponent<CardDetailsProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background, color: theme.color}}>
+			<div className='row w-100'>
+				<div className='col-md-4 col-lg-3'>
+					<h6
+						style={{backgroundColor: theme.background}}
+						className='lead display-5 p-3 fw-bold rounded-5 border'
+					>
+						Card Details
+					</h6>
+				</div>
+			</div>
+
+			<hr />
 			<Button text='Home' path={() => navigate(pathes.cards)} />
-			<h6 className='lead display-5 mx-3 my-3 fw-bold'>Card Details</h6>
-			<hr className=' w-25' />
 			<div className='card-details-image'>
 				<img
 					style={{

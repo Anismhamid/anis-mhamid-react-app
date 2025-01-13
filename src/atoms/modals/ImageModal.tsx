@@ -1,5 +1,6 @@
-import {FunctionComponent} from "react";
+import {FunctionComponent, useContext} from "react";
 import {Modal} from "react-bootstrap";
+import {SiteTheme, theme} from "../../theme/theme";
 
 interface ImageModalProps {
 	show: boolean;
@@ -14,16 +15,29 @@ const ImageModal: FunctionComponent<ImageModalProps> = ({
 	imageName,
 	show,
 }) => {
+	const theme = useContext(SiteTheme);
 	return (
 		<Modal show={show} onHide={() => onHide()} fullscreen={true}>
-			<Modal.Header closeButton />
-			<img
-				key={image}
-				className=' img-fluid w-100 m-auto'
-				src={image}
-				alt={imageName}
-				style={{width: "100%", height: "auto"}}
+			<Modal.Header
+				closeButton
+				style={{background: theme.background, color: theme.color}}
 			/>
+			<Modal.Body
+				style={{background: theme.background, color: theme.color}}
+				className=' d-flex justify-content-center align-items-center'
+			>
+				<img
+					key={image}
+					className='m-auto'
+					src={image}
+					alt={imageName}
+					style={{
+						maxWidth: "100%",
+						maxHeight: "100%",
+						objectFit: "contain",
+					}}
+				/>
+			</Modal.Body>
 		</Modal>
 	);
 };

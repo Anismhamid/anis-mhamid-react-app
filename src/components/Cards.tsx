@@ -110,7 +110,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 					</div>
 				)}
 				{/* Search Bar */}
-				<div className='custom-border rounded-3 p-2'>
+				<div className=' rounded-3 p-2'>
 					<label htmlFor='searchCard' className='mb-2 display-6'>
 						Search
 					</label>
@@ -131,6 +131,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 						/>
 					</form>
 				</div>
+				<hr />
 				{/* Pagination */}
 				<div className='container-sm mt-3'>
 					<Pagination className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'>
@@ -162,6 +163,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 										alt={card.image.alt}
 										style={{
 											height: "300px",
+											cursor: "pointer",
 										}}
 									/>
 
@@ -284,6 +286,12 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 							}}
 						/>
 					</div>
+				</div>
+				{/* Pagination */}
+				<div className='container-sm mt-3'>
+					<Pagination className='m-auto w-100 d-flex justify-content-center mb-3 flex-wrap'>
+						{paginationItems}
+					</Pagination>
 				</div>
 			</div>
 		</main>

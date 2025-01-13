@@ -9,9 +9,11 @@ const Loading: FunctionComponent<LoadingProps> = () => {
 
 	return (
 		<main style={{backgroundColor: theme.background}}>
-			<div className={styless.loader}>
-				<span className={styless.loaderText}>Loading</span>
-				<span className={styless.load}></span>
+			<div className={styless.container}>
+				<div className={styless.loader}>
+					<span className={styless.loaderText}>Loading</span>
+					<span className={styless.load}></span>
+				</div>
 			</div>
 		</main>
 	);
