@@ -124,7 +124,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 							name='searchCard'
 							className='form-control me-2 search-input'
 							type='search'
-							placeholder='card name /phone /email /country'
+							placeholder='card name   |   phone   |   email   |   country'
 							aria-label='Search'
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}

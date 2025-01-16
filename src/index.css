@@ -298,7 +298,7 @@ input.form-control {
 	position: relative;
 	overflow: hidden;
 	border: 1px solid #3f3f3f36;
-	background: url('../public/bg.png'), rgba(255, 255, 255, 0.116);
+	background: url('../public/bg.png'), rgba(255, 255, 255, 0.356);
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
