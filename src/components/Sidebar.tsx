@@ -21,7 +21,7 @@ const Sidebar: FunctionComponent<SidebarProps> = () => {
 			{isLogedIn && (
 				<footer
 					style={{backgroundColor: theme.background, color: theme.color}}
-					className='footer fixed-bottom d-flex '
+					className='footer fixed-bottom d-flex flex-grow-1 '
 				>
 					{isAdmin && (
 						<div

@@ -168,19 +168,19 @@ input.form-control {
 	-o-transform: scale(1.1);
 }
 
+.footer-icon {
+	width: 30px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
 .footer {
 	min-height: 40px;
-	max-height: 40px;
+	max-height: 20px;
 	width: 100%;
 	z-index: 100;
 
-	& .footer-icon {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		position: relative;
-
-	}
 
 	& div {
 		font-size: 1.5rem;
@@ -302,4 +302,12 @@ input.form-control {
 	background-size: cover;
 	background-repeat: no-repeat;
 	background-position: center;
+}
+.inset-shadow{
+/* From https://css.glass */
+	background: rgba(255, 255, 255, 0.27);
+	border-radius: 16px;
+	box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(0px);
+	-webkit-backdrop-filter: blur(0px);
 }

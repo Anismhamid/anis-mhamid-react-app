@@ -120,9 +120,9 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									<img
 										src={user.image.url}
 										alt='Profile image'
-										className=' shadow rounded rounded-5 border p-1 border-dark-subtle shadow'
-										width='200'
-										height='160'
+										className='shadow rounded-2 border p-1 border-dark-subtle'
+										width='100'
+										height='100'
 									/>
 								</Link>
 							</div>
@@ -131,8 +131,8 @@ const Profile: FunctionComponent<ProfileProps> = () => {
 									<strong>{user && user.name.first} </strong>
 									{user && user.name.last}
 								</h2>
-								<hr />
 								<h5 className='mb-0 card-subtitle'>{user.email || ""}</h5>
+								<hr />
 							</div>
 						</div>
 						<div className='row bg-light text-dark py-2 lead shadow rounded-top-3'>

@@ -119,7 +119,7 @@ const SandBox: FunctionComponent<SandBoxProps> = () => {
 				<div className='col-md-4 col-lg-3'>
 					<h6
 						style={{backgroundColor: theme.background}}
-						className='lead display-5 p-3 fw-bold rounded-5 border'
+						className='inset-shadow lead display-5 p-3 fw-bold  rounded-end-pill'
 					>
 						SandBox
 					</h6>

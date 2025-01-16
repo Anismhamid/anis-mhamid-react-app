@@ -112,6 +112,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 				{/* Search Bar */}
 				<div className=' rounded-3 p-2'>
 					<label htmlFor='searchCard' className='mb-2 display-6'>
+
 						Search
 					</label>
 					<form
