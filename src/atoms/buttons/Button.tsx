@@ -11,7 +11,7 @@ const Button: FunctionComponent<ButtonProps> = ({text,path}) => {
 
 	return (
 		<div
-			className={`text-start mb-5 rounded rounded-bottom-3 border-end border-3 border-bottom`}
+			className={`text-start p-1 mb-5 rounded rounded-bottom-3 border-end border-3 border-bottom`}
 			style={{width: "7rem"}}
 		>
 			<button
