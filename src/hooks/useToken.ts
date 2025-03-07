@@ -19,14 +19,14 @@ function useToken() {
 					const currentTime = Date.now() / 5000;
 
 					if (decoded.exp < currentTime) {
-						localStorage.removeItem("token");
+						localStorage.removeItem("bCards_token");
 						setAfterDecode(null);
 					} else {
 						setAfterDecode(decoded);
 					}
 				} catch (error) {
 					console.log("Invalid token:", error);
-					localStorage.removeItem("token");
+					localStorage.removeItem("bCards_token");
 					setAfterDecode(null);
 				}
 			}

@@ -232,7 +232,7 @@ const AddNewCardForm: FunctionComponent<AddNewCardFormProps> = ({refresh}) => {
 						<CardsInput
 							placeholder='zip'
 							name='address.zip'
-							type='number'
+							type='string'
 							value={formik.values.address.zip}
 							error={formik.errors.address?.zip}
 							touched={formik.touched.address?.zip}

@@ -16,7 +16,7 @@ export interface Cards {
 		city: string;
 		street: string;
 		houseNumber: number;
-		zip?: number;
+		zip?: string;
 	};
 	bizNumber?: number;
 	likes?: string[];

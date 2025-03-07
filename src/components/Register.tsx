@@ -26,7 +26,7 @@ const Register: FunctionComponent<RegisterProps> = () => {
 	const {decodedToken} = useToken();
 
 	useEffect(() => {
-		const token = localStorage.getItem("bCards_token");
+		const token = JSON.parse(localStorage.getItem("bCards_token")as string);
 		setIsLogedIn(!!token);
 	}, [decodedToken]);
 

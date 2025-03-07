@@ -17,7 +17,7 @@ export const cardsFormikValues = {
 		city: "",
 		street: "",
 		houseNumber: 0,
-		zip: 0,
+		zip: "0",
 	},
 };
 

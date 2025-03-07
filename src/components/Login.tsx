@@ -88,7 +88,7 @@ const Login: FunctionComponent<LoginProps> = () => {
 			loginIn(values)
 				.then((res) => {
 					setLoading(false);
-					localStorage.setItem("bCards_token", res.data);
+					JSON.stringify(localStorage.setItem("bCards_token", res.data));
 					navigate(pathes.cards);
 				})
 				.catch(() => {

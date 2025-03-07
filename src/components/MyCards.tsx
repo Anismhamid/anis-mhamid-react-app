@@ -39,7 +39,7 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 
 	useEffect(() => {
 		if (!decodedToken || !decodedToken._id) return;
-		getMyCards(decodedToken._id)
+		getMyCards()
 			.then((res: Cards[]) => {
 				setCards(
 					res.reverse().map((card: Cards) => ({
@@ -114,15 +114,18 @@ const MyCards: FunctionComponent<MyCardsProps> = () => {
 												address
 												<hr className=' w-25' />
 												<span className='card-text text-start lead'>
-													{card.address.state},
+													{card.address?.state},
 												</span>
 												<span className='mx-2 card-text text-start '>
-													{card.address.city}
+													{card.address?.city}
 												</span>
 												<p className='card-text text-start lead'>
-													{card.address.street},
+													{card.address?.street},
 													<span className='mx-2 card-text text-start'>
-														{card.address.houseNumber}
+														{card.address?.houseNumber}
+													</span>
+													<span className='mx-2 card-text text-start'>
+														{card.address?.zip}
 													</span>
 												</p>
 											</div>

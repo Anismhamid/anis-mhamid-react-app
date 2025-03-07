@@ -4,16 +4,12 @@ import {errorMSG, infoMSG} from "../atoms/taosyify/Toastify";
 
 const api: string = import.meta.env.VITE_API_URL;
 
-const token = {
-	"x-auth-token":
-		"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTNhNjA4ZDFjN2NkODBjMWZkMjc1MzIiLCJpc0J1c2luZXNzIjp0cnVlLCJpc0FkbWluIjp0cnVlLCJpYXQiOjE3MzQ2NDEzNDh9.VxjyYRGzg3twgIaBeUhw-neIfMbfmDj9qSzUdEgiiZg",
-};
-
 const getUsers = {
 	method: "get",
-	maxBodyLength: Infinity,
 	url: `${api}/users`,
-	headers: token,
+	headers: {
+		Authorization: localStorage.getItem("bCards_token"),
+	},
 };
 
 // Login function
@@ -44,9 +40,10 @@ export const getAllUsers = async (page: number, limit: number) => {
 // Get specific user by ID
 export const getUserById = async (userId: string) => {
 	try {
-		const response = await axios.request({
-			...getUsers,
-			url: `${getUsers.url}/${userId}`,
+		const response = await axios.get(`${getUsers.url}/${userId}`,{
+			headers: {
+				Authorization:JSON.parse(localStorage.getItem("bCards_token")as string),
+			}
 		});
 		return response.data;
 	} catch (error) {
@@ -58,14 +55,12 @@ export const getUserById = async (userId: string) => {
 // Register a new user
 export const registerNewUser = async (user: User): Promise<any | null> => {
 	try {
-		const response = await axios.request({
-			...getUsers,
+		const response = await axios.post(getUsers.url, user, {
 			headers: {"Content-Type": "application/json"},
-			method: "post",
-			data: user,
 		});
 		return response.data;
 	} catch (error) {
+		console.log(error);
 		errorMSG("Failed to register user. Please try again later.");
 		return null;
 	}
@@ -80,6 +75,8 @@ export const deleteUserById = async (userId: string) => {
 		});
 		return response.data;
 	} catch (error) {
+		console.log(error);
+
 		errorMSG("Failed to delete user. Please try again later.");
 		return null;
 	}
@@ -90,12 +87,11 @@ export const patchUserBusiness = async (
 	data: {isBusiness: boolean},
 	user: {isBusiness: boolean},
 ) => {
-	if (!token) {
-		errorMSG("Token not found.");
-	}
 	try {
 		const response = await axios.patch(`${getUsers.url}/${cardId}`, data, {
-			headers: token,
+			headers: {
+				Authorization: JSON.parse(localStorage.getItem("bCards_token") as string),
+			},
 		});
 		infoMSG(
 			`administration has been changed for ${response.data.email} to ${

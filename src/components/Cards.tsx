@@ -53,7 +53,7 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 	const onHideDeleteCardModal = useCallback(() => setShowDeleteModal(false), []);
 
 	useEffect(() => {
-		const token = localStorage.getItem("bCards_token");
+		const token = localStorage.getItem("bCards_token") ;
 		setIsLogedIn(!!token);
 	}, [decodedToken]);
 
@@ -66,15 +66,13 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 		return allCards.filter((card) => {
 			const cardName = `${card.title}`.toLowerCase();
 			const phone = card.phone.toLowerCase();
-			const country = card.address.country.toLowerCase();
+			// const country = card.address.country.toLowerCase();
 			const email = card.email.toLowerCase();
 			setIsLoading(false);
 
 			return (
-				cardName.includes(query) ||
-				phone.includes(query) ||
-				email.includes(query) ||
-				country.includes(query)
+				cardName.includes(query) || phone.includes(query) || email.includes(query)
+				// country.includes(query)
 			);
 		});
 	}, [allCards, searchTerm]);
@@ -112,7 +110,6 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 				{/* Search Bar */}
 				<div className=' rounded-3 p-2'>
 					<label htmlFor='searchCard' className='mb-2 display-6'>
-
 						Search
 					</label>
 					<form
@@ -188,9 +185,9 @@ const CardsHome: FunctionComponent<CardsHomeProps> = () => {
 											<h5>Phone:</h5>
 											<p>{card.phone}</p>
 											<h5>Address:</h5>
-											<p>
+											{/* <p>
 												{card.address.city},{card.address.street}
-											</p>
+											</p> */}
 											<h5>{card.email}</h5>
 										</div>
 

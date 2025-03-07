@@ -23,7 +23,7 @@
 
 main {
 	padding-bottom: 106px;
-	background: url('../public/bg2.png');
+	background: url('/bg2.png');
 	background-size: cover;
 	background-position: center;
 	background-repeat: no-repeat;

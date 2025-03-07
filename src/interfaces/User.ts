@@ -1,26 +1,29 @@
 export interface User {
-	_id?: "";
+	_id?: string;
 	name: {
 		first: string;
 		middle?: string;
 		last: string;
 	};
 	phone: string;
-	email?: string;
-	password?: string;
-	image: {
-		url?: string;
+	email: string;
+	password: string;
+	image?: {
+		url: string;
 		alt?: string;
 	};
-	address: {
-		state?: string;
-		country: string;
-		city: string;
-		street: string;
-		houseNumber: number;
-		zip: number;
-	};
+	address: Address;
 	isBusiness?: boolean;
+	isAdmin?: boolean;
+}
+
+interface Address {
+	state?: string;
+	country: string;
+	city: string;
+	street: string;
+	houseNumber: number;
+	zip: number;
 }
 
 export interface UserLogin {

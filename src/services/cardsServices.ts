@@ -6,9 +6,10 @@ const api: string = import.meta.env.VITE_API_URL;
 
 const getCards: AxiosRequestConfig = {
 	method: "get",
-	maxBodyLength: Infinity,
 	url: `${api}/cards`,
-	headers: {},
+	headers: {
+		Authorization: localStorage.getItem("bCards_token"),
+	},
 };
 
 export const getAllCards = async () => {
@@ -17,7 +18,6 @@ export const getAllCards = async () => {
 		return response.data;
 	} catch (error) {
 		errorMSG("Failed to load cards. Please try again laetr");
-		return null;
 	}
 };
 
@@ -59,71 +59,60 @@ export const updateLikeStatus = async (cardId: string, userId: string): Promise<
 	}
 };
 
-export const getMyCards = async (userId: string) => {
-	let token: string | null = localStorage.getItem("bCards_token");
-	if (!token) return;
+export const getMyCards = async () => {
 	try {
-		const response = await axios.request({
-			...getCards,
-			headers: {"x-auth-token": token},
-			url: `${getCards.url}/my-cards?user_id=${userId}`,
+		const response = await axios.get(`${getCards.url}/my-cards`, {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: localStorage.getItem("bCards_token"),
+			},
 		});
-
 		return response.data;
 	} catch (error) {
-		errorMSG("Failed to fetch your cards. Please try again later.");
-		return null;
+		console.log(error);
 	}
 };
 
 export const createNewCard = async (card: Cards) => {
-	let token: string | null = localStorage.getItem("bCards_token");
-	if (!token) return;
 	try {
-		let response: Cards = await axios.request({
-			...getCards,
-			method: "post",
-			headers: {"x-auth-token": token},
-			data: card,
+		let response = await axios.post(`${api}/cards`, card, {
+			headers: {
+				Authorization: localStorage.getItem("bCards_token"),
+			},
 		});
-		return response;
+		return response.data;
 	} catch (error) {
-		errorMSG("Authentication Error");
-		return null;
+		errorMSG(error as string);
 	}
 };
 
 export const putCard = async (cardId: string, newCard: Cards) => {
-	const token = localStorage.bCards_token;
-
-	if (!token) {
-		errorMSG("Error while making authentication please try againg later.");
-		return null;
-	}
-
 	try {
-		const response = await axios.put(`${getCards.url}/${cardId}`, newCard, {
-			headers: {"x-auth-token": token},
-		});
+		const token = localStorage.getItem("bCards_token");
 
+		if (!token)
+			errorMSG("Error while making authentication please try againg later.");
+
+		const response = await axios.put(`${getCards.url}/${cardId}`, newCard, {
+			headers: {
+				Authorization: token,
+			},
+		});
 		return response.data;
 	} catch (error) {
 		errorMSG("Failed to update card. Please try again later.");
-		return null;
 	}
 };
 
 export const getCardById = async (cardId: string) => {
-	let token: string | null = localStorage.getItem("bCards_token");
-	if (!token) return;
 	try {
-		const response = await axios.get(`${getCards.url}/${cardId}`, {
-			headers: {},
-		});
+		// let token: string | null = localStorage.getItem("bCards_token");
+		// if (!token)
+		// errorMSG("Failed to fetch card. Authentication error. Please log in.");
+		const response = await axios.get(`${getCards.url}/${cardId}`);
 		return response.data;
 	} catch (error) {
 		errorMSG("Failed to fetch card. Please try again later.");
-		return null;
 	}
 };
 
